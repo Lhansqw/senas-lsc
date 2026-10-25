@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Icono provisional: mano abierta estilizada dentro de la zona segura (66 dp) del icono adaptable. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Palma -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M38,56 L70,56 L70,70 Q70,80 60,80 L48,80 Q38,80 38,70 Z" />
+    <!-- Dedos -->
+    <path android:fillColor="#FFFFFF" android:pathData="M40,58 L40,38 Q40,34 43.5,34 Q47,34 47,38 L47,58 Z" />
+    <path android:fillColor="#FFFFFF" android:pathData="M49,58 L49,32 Q49,28 52.5,28 Q56,28 56,32 L56,58 Z" />
+    <path android:fillColor="#FFFFFF" android:pathData="M58,58 L58,34 Q58,30 61.5,30 Q65,30 65,34 L65,58 Z" />
+    <path android:fillColor="#FFFFFF" android:pathData="M66,60 L66,42 Q66,38 69,38 Q72,38 72,42 L72,62 Z" />
+    <!-- Pulgar -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M38,66 L30,56 Q28,53 30.5,51 Q33,49 35,52 L42,60 Z" />
+</vector>

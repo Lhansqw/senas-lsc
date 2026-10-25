@@ -3,9 +3,9 @@
 Aplicación Android que reconoce señas de la **Lengua de Señas Colombiana (LSC)** con la cámara
 del teléfono y las convierte en texto en español mediante inteligencia artificial.
 
-> **Estado:** fase 1 — alcance, viabilidad y arquitectura. Todavía no hay código de la
-> aplicación. El reconocedor funcionará con un **vocabulario limitado y verificado**; no traduce
-> toda la LSC.
+> **Estado:** fase 2 — proyecto Android base (Kotlin, Compose, Gradle Kotlin DSL). Todavía no
+> reconoce señas. El reconocedor funcionará con un **vocabulario limitado y verificado**; no
+> traduce toda la LSC.
 
 ## Cómo funciona (resumen)
 
@@ -33,6 +33,17 @@ Dos componentes de IA, independientes entre sí:
 | [04 · Modelos de IA](docs/04-modelos.md) | Modelo visual, modelo de lenguaje, local frente a nube |
 | [05 · Entorno](docs/05-entorno.md) | Programas que hay que instalar |
 | [06 · MVP y fases](docs/06-mvp-y-fases.md) | Alcance del MVP, vocabulario inicial y plan de fases |
+| [Fase 2 · Proyecto Android](docs/fase-02-proyecto-android.md) | Versiones, archivos y cómo comprobar que compila |
+
+## Compilar y probar
+
+```bash
+./gradlew test             # pruebas unitarias (Windows: gradlew.bat test)
+./gradlew assembleDebug    # APK de depuración en app/build/outputs/apk/debug/
+```
+
+Requisitos: Android Studio reciente, JDK 17 o superior y SDK de Android 37 (ver
+[docs/05-entorno.md](docs/05-entorno.md)).
 
 ## Estructura prevista del repositorio
 
