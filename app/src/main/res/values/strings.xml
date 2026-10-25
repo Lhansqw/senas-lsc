@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Señas LSC</string>
+
+    <string name="inicio_titulo">Reconocimiento de Lengua de Señas Colombiana</string>
+    <string name="inicio_descripcion">Esta versión prepara el proyecto. El reconocimiento con la cámara llegará en las siguientes fases.</string>
+    <string name="inicio_version">Versión %1$s</string>
+
+    <string name="dispositivo_titulo">Tu dispositivo</string>
+    <string name="dispositivo_android">Android</string>
+    <string name="dispositivo_ram">Memoria RAM</string>
+    <string name="dispositivo_nucleos">Núcleos del procesador</string>
+    <string name="dispositivo_reconocedor">Reconocedor de señas local</string>
+    <string name="dispositivo_interprete">Modelo de lenguaje local</string>
+
+    <string name="estado_disponible">Disponible</string>
+    <string name="estado_no_disponible">No disponible</string>
+    <string name="estado_solo_reglas">Solo intérprete por reglas</string>
+
+    <string name="limitaciones_titulo">Limitaciones</string>
+    <string name="limitaciones_texto">La aplicación reconocerá un vocabulario limitado de señas verificadas de la LSC. No traduce toda la lengua de señas. Las frases que proponga la IA se mostrarán aparte y siempre podrás corregirlas.</string>
+</resources>

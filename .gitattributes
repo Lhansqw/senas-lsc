@@ -4,3 +4,4 @@
 *.task binary
 *.png binary
 *.jpg binary
+*.jar binary

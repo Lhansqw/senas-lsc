@@ -47,7 +47,7 @@ concreta de comprobar que funciona.
 | Fase | Entregable | Cómo se comprueba |
 |---|---|---|
 | **1. Alcance** ✅ | Esta documentación: viabilidad, arquitectura, datos, modelos, entorno, MVP | Revisión del documento |
-| **2. Proyecto Android** | Proyecto Gradle (Kotlin DSL) con catálogo de versiones, Compose y configuración base | Compila y abre una pantalla en el teléfono |
+| **2. Proyecto Android** ✅ | Proyecto Gradle (Kotlin DSL) con catálogo de versiones, Compose y configuración base | Compila y abre una pantalla en el teléfono |
 | **3. Estructura modular** | Módulos de la tabla del doc. 02 con sus contratos y pruebas JUnit de `:sequence` e `:interpreter:rules` | `./gradlew test` en verde |
 | **4. Cámara** | CameraX con permiso explicado, vista previa y análisis con descarte de fotogramas | Vista previa fluida; contador de FPS de análisis |
 | **5. MediaPipe** | Holistic Landmarker → `LandmarkFrame`, puntos dibujados sobre la vista previa | Puntos estables en tiempo real; latencia medida |
