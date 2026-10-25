@@ -3,7 +3,7 @@
 # Android Studio marca en amarillo las que tengan una versión más reciente.
 
 [versions]
-agp = "9.4.0"                 # requiere Gradle 9.6+ y JDK 17+; API máxima 37
+agp = "9.4.1"                 # requiere Gradle 9.6+ y JDK 17+; API máxima 37
 kotlin = "2.4.20"             # versión de KGP y del compilador de Compose
 compose-bom = "2026.08.00"    # Compose 1.12: compileSdk 37 y AGP 9.1.1 o superior
 core-ktx = "1.19.1"
