@@ -1,0 +1,6 @@
+* text=auto eol=lf
+*.bat text eol=crlf
+*.tflite binary
+*.task binary
+*.png binary
+*.jpg binary

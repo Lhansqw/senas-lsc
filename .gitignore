@@ -1,0 +1,33 @@
+# Android / Gradle
+.gradle/
+build/
+local.properties
+*.iml
+.idea/
+.cxx/
+.externalNativeBuild/
+captures/
+*.apk
+*.aab
+*.keystore
+*.jks
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Datos y modelos grandes (se descargan con scripts)
+training/data/
+training/outputs/
+*.litertlm
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Secretos
+.env
+secrets.properties
