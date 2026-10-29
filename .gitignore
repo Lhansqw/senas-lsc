@@ -23,6 +23,8 @@ venv/
 training/data/
 training/outputs/
 *.litertlm
+# Modelo de MediaPipe: lo descarga Gradle (tarea descargarModeloHolistic)
+vision/landmarks/src/main/assets/holistic_landmarker.task
 
 # Sistema
 .DS_Store

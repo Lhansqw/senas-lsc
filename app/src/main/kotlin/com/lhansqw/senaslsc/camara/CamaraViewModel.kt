@@ -1,7 +1,7 @@
 package com.lhansqw.senaslsc.camara
 
-import androidx.camera.core.ImageProxy
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import com.lhansqw.senaslsc.camera.AnalizadorFotogramas
 import com.lhansqw.senaslsc.camera.ControladorCamara
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -9,21 +9,25 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 /**
- * Conserva el controlador de cámara al girar el teléfono: la pantalla se recrea, pero los casos de
- * uso de CameraX se reutilizan y solo se vuelven a vincular al nuevo ciclo de vida.
+ * Conserva la cámara y el modelo de MediaPipe al girar el teléfono: la pantalla se recrea, pero
+ * los casos de uso de CameraX y el modelo ya cargado se reutilizan.
  */
-class CamaraViewModel : ViewModel() {
+class CamaraViewModel(application: Application) : AndroidViewModel(application) {
 
     val controlador = ControladorCamara()
+    val landmarks = AnalizadorLandmarks(application)
 
     private val _cargaSimuladaMs = MutableStateFlow(0L)
 
-    /** Retardo artificial por fotograma para comprobar que se descartan fotogramas (solo pruebas). */
+    /** Retardo artificial por fotograma para comprobar el descarte de fotogramas (solo pruebas). */
     val cargaSimuladaMs: StateFlow<Long> = _cargaSimuladaMs.asStateFlow()
 
     init {
-        // En la fase 5 este analizador se sustituye por MediaPipe.
-        controlador.analizador = AnalizadorCargaSimulada { _cargaSimuladaMs.value }
+        controlador.analizador = AnalizadorFotogramas { imagen ->
+            landmarks.analizar(imagen)
+            val retardo = _cargaSimuladaMs.value
+            if (retardo > 0) Thread.sleep(retardo)
+        }
     }
 
     fun establecerCargaSimulada(ms: Long) {
@@ -31,17 +35,13 @@ class CamaraViewModel : ViewModel() {
     }
 
     fun alternarAnalisis() {
-        controlador.establecerAnalisisActivo(!controlador.analisisActivo.value)
+        val activar = !controlador.analisisActivo.value
+        controlador.establecerAnalisisActivo(activar)
+        if (!activar) landmarks.limpiar()
     }
-}
 
-/**
- * Analizador provisional: no mira los píxeles, solo ocupa el hilo el tiempo indicado. Sirve para
- * ver que, con un análisis lento, los FPS de análisis bajan y la vista previa sigue fluida.
- */
-private class AnalizadorCargaSimulada(private val retardoMs: () -> Long) : AnalizadorFotogramas {
-    override fun analizar(imagen: ImageProxy) {
-        val ms = retardoMs()
-        if (ms > 0) Thread.sleep(ms)
+    override fun onCleared() {
+        controlador.analizador = null
+        landmarks.close()
     }
 }

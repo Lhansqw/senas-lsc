@@ -73,6 +73,8 @@ private fun VistaCamara(onVolver: () -> Unit, viewModel: CamaraViewModel = viewM
     val rendimiento by controlador.rendimiento.collectAsStateWithLifecycle()
     val analisisActivo by controlador.analisisActivo.collectAsStateWithLifecycle()
     val cargaSimulada by viewModel.cargaSimuladaMs.collectAsStateWithLifecycle()
+    val landmarks by viewModel.landmarks.resultado.collectAsStateWithLifecycle()
+    val estadoModelo by viewModel.landmarks.estadoModelo.collectAsStateWithLifecycle()
     val descripcionVista = stringResource(R.string.camara_vista_previa)
 
     Box(Modifier.fillMaxSize().background(Color.Black)) {
@@ -85,11 +87,16 @@ private fun VistaCamara(onVolver: () -> Unit, viewModel: CamaraViewModel = viewM
             )
         }
 
+        val activa = estado as? EstadoCamara.Activa
+        if (activa != null && analisisActivo) {
+            CapaLandmarks(resultado = landmarks, espejo = activa.frontal, modifier = Modifier.fillMaxSize())
+        }
+
         when (val e = estado) {
             EstadoCamara.Iniciando -> CircularProgressIndicator(Modifier.align(Alignment.Center))
             EstadoCamara.SinCamara -> MensajeCentral(stringResource(R.string.camara_sin_camara))
             is EstadoCamara.Error -> MensajeCentral(e.mensaje)
-            is EstadoCamara.Activa -> Unit
+            is EstadoCamara.Activa -> (estadoModelo as? EstadoModelo.Error)?.let { MensajeCentral(it.mensaje) }
         }
 
         Column(
@@ -99,7 +106,7 @@ private fun VistaCamara(onVolver: () -> Unit, viewModel: CamaraViewModel = viewM
                 .padding(12.dp),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
-            PanelMetricas(estado, rendimiento, analisisActivo)
+            PanelMetricas(estado, rendimiento, analisisActivo, estadoModelo, landmarks)
 
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 if (BuildConfig.DEBUG) {
@@ -124,7 +131,13 @@ private fun VistaCamara(onVolver: () -> Unit, viewModel: CamaraViewModel = viewM
 }
 
 @Composable
-private fun PanelMetricas(estado: EstadoCamara, rendimiento: Rendimiento, analisisActivo: Boolean) {
+private fun PanelMetricas(
+    estado: EstadoCamara,
+    rendimiento: Rendimiento,
+    analisisActivo: Boolean,
+    estadoModelo: EstadoModelo,
+    landmarks: ResultadoLandmarks?,
+) {
     val activa = estado as? EstadoCamara.Activa
     val es = Locale.forLanguageTag("es-CO")
     val lineas = buildList {
@@ -143,6 +156,24 @@ private fun PanelMetricas(estado: EstadoCamara, rendimiento: Rendimiento, analis
                     String.format(es, "%.1f", rendimiento.latenciaMaximaMs),
                 ),
             )
+        }
+        if (analisisActivo) {
+            when (estadoModelo) {
+                EstadoModelo.SinCargar -> add(stringResource(R.string.mediapipe_cargando))
+                is EstadoModelo.Error -> add(stringResource(R.string.mediapipe_error))
+                EstadoModelo.Listo -> landmarks?.let { r ->
+                    add(stringResource(R.string.mediapipe_inferencia, r.inferenciaMs))
+                    val manos = listOfNotNull(r.frame.manoIzquierda, r.frame.manoDerecha).size
+                    add(
+                        stringResource(
+                            R.string.mediapipe_detectado,
+                            manos,
+                            stringResource(if (r.frame.cuerpo != null) R.string.si else R.string.no),
+                            stringResource(if (r.frame.rostro != null) R.string.si else R.string.no),
+                        ),
+                    )
+                }
+            }
         }
         activa?.resolucionAnalisis?.let { add(stringResource(R.string.camara_resolucion, it.width, it.height)) }
         activa?.let {
