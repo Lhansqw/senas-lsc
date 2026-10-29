@@ -11,6 +11,7 @@ activity = "1.13.0"
 lifecycle = "2.11.0"
 camerax = "1.6.2"             # estable de agosto de 2026; minSdk 23
 mediapipe = "1.1.1"           # tasks-vision; misma versión que el ejemplo oficial de Holistic
+litert = "2.3.0"              # LiteRT (CompiledModel); versión de la documentación oficial
 junit = "4.13.2"
 
 [libraries]
@@ -29,6 +30,8 @@ androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycl
 androidx-camera-compose = { group = "androidx.camera", name = "camera-compose", version.ref = "camerax" }
 
 mediapipe-tasks-vision = { group = "com.google.mediapipe", name = "tasks-vision", version.ref = "mediapipe" }
+
+litert = { group = "com.google.ai.edge.litert", name = "litert", version.ref = "litert" }
 
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
 compose-ui = { group = "androidx.compose.ui", name = "ui" }
