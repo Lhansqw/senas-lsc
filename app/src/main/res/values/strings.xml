@@ -74,4 +74,6 @@
     <string name="propuesta_origen_local">Propuesta de la IA en el teléfono</string>
     <string name="propuesta_origen_remoto">Propuesta de la IA en la nube</string>
     <string name="propuesta_incierta">Interpretación incierta: %1$s</string>
+    <string name="propuesta_generando">La IA del teléfono está preparando una frase…</string>
+    <string name="propuesta_ia_descartada">La respuesta de la IA no superó la validación y se muestra la de reglas (%1$s).</string>
 </resources>
