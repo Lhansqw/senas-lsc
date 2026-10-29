@@ -29,22 +29,27 @@ de señas confirmadas**. Se puede reentrenar o sustituir uno sin tocar el otro.
 | Módulo | Tipo | Responsabilidad | Depende de |
 |---|---|---|---|
 | `:app` | Android app | Navegación, inyección de dependencias, pantallas Compose | todos |
-| `:core:model` | Kotlin puro | Tipos de dominio: `LandmarkFrame`, `PrediccionSeña`, `SeñaConfirmada`, `PropuestaFrase` | — |
-| `:core:common` | Kotlin puro | Resultados tipados, reloj, utilidades de corrutinas | — |
-| `:camera` | Android lib | CameraX, rotación, espejo, ciclo de vida | `:core:*` |
-| `:vision:landmarks` | Android lib | Envoltorio de MediaPipe → `LandmarkFrame` | `:core:model` |
-| `:recognizer:api` | Kotlin puro | Interfaz `ReconocedorSeñas` y vocabulario | `:core:model` |
-| `:recognizer:litert` | Android lib | Implementación con LiteRT, selección CPU/GPU | `:recognizer:api` |
-| `:sequence` | Kotlin puro | Ventanas, suavizado, confirmación, segmentación por pausas | `:core:model` |
-| `:interpreter:api` | Kotlin puro | Interfaz `Interprete`, contrato JSON y su validador | `:core:model` |
-| `:interpreter:rules` | Kotlin puro | Intérprete determinista (une glosas sin inventar) | `:interpreter:api` |
-| `:interpreter:litertlm` | Android lib | Modelo de lenguaje local con LiteRT-LM | `:interpreter:api` |
-| `:interpreter:remote` | Android lib | Proveedor remoto (fase 10, desactivado por defecto) | `:interpreter:api` |
-| `:data:history` | Android lib | Room, historial cifrado, borrado | `:core:model` |
+| `:core:model` ✅ | Kotlin puro | Tipos de dominio: `LandmarkFrame`, `Vocabulario`, `PrediccionSena`, `SenaConfirmada`, `PropuestaFrase` | — |
+| `:recognizer:api` ✅ | Kotlin puro | Interfaz `ReconocedorSenas` y `FichaModelo` | `:core:model` |
+| `:sequence` ✅ | Kotlin puro | `VentanaDeslizante`, `FiltroTemporal`, `ConstructorSecuencia` | `:core:model` |
+| `:interpreter:api` ✅ | Kotlin puro | Interfaz `Interprete`, `PlantillaPrompt` y `ValidadorRespuesta` | `:core:model` |
+| `:interpreter:rules` ✅ | Kotlin puro | `InterpreteReglas`: une significados sin inventar | `:interpreter:api` |
+| `:camera` | Android lib | CameraX, rotación, espejo, ciclo de vida (fase 4) | `:core:model` |
+| `:vision:landmarks` | Android lib | Envoltorio de MediaPipe → `LandmarkFrame` (fase 5) | `:core:model` |
+| `:recognizer:litert` | Android lib | Implementación con LiteRT, selección CPU/GPU (fase 7) | `:recognizer:api` |
+| `:interpreter:litertlm` | Android lib | Modelo de lenguaje local con LiteRT-LM (fase 8) | `:interpreter:api` |
+| `:data:history` | Android lib | Room, historial cifrado, borrado (fase 9) | `:core:model` |
+| `:interpreter:remote` | Android lib | Proveedor remoto, desactivado por defecto (fase 10) | `:interpreter:api` |
 
-Los módulos **Kotlin puro** (`:core`, `:sequence`, `:recognizer:api`, `:interpreter:api`,
-`:interpreter:rules`) se prueban con JUnit en el ordenador, sin emulador. Ahí vive la lógica que
-decide qué se muestra al usuario, así que es la parte con más pruebas.
+✅ = creado en la fase 3. Los módulos Android se crean en la fase que los necesita, para no
+mantener módulos vacíos. El antiguo `:core:common` no hizo falta: el vocabulario vive en
+`:core:model` y no se necesitan utilidades compartidas todavía.
+
+Los identificadores del código van sin «ñ» (`SenaConfirmada`, `ReconocedorSenas`) para evitar
+problemas de codificación en nombres de archivo y herramientas; los textos visibles sí la usan.
+
+Los módulos **Kotlin puro** se prueban con JUnit en el ordenador, sin emulador. Ahí vive la lógica
+que decide qué se muestra al usuario, así que es la parte con más pruebas.
 
 ## Contratos principales
 
@@ -58,32 +63,40 @@ data class LandmarkFrame(
     val rostro: List<Punto3D>?,          // subconjunto relevante (cejas, boca)
 )
 
+/** Seña del vocabulario: id estable ("lsc.gracias"), glosa, significado y tipo. */
+data class EntradaVocabulario(
+    val id: String, val glosa: String, val significado: String,
+    val tipo: TipoSena,                  // LETRA, NUMERO, PALABRA
+    val interrogativa: Boolean = false,
+    val variante: String? = null,
+)
+
 /** Salida cruda del modelo para una ventana de fotogramas. */
-data class PrediccionSeña(
+data class PrediccionSena(
+    val ventanaInicioMs: Long,
     val ventanaFinMs: Long,
     val candidatas: List<Candidata>,     // ordenadas por probabilidad
     val desconocida: Boolean,            // el modelo rechaza la entrada
 )
 
 /** Seña aceptada por el filtro temporal: es lo único que ve el intérprete. */
-data class SeñaConfirmada(
-    val id: String,                      // p. ej. "lsc.gracias"
-    val glosa: String,                   // "GRACIAS"
-    val significado: String,             // "gracias"
-    val confianza: Float,                // 0..1, calibrada
+data class SenaConfirmada(
+    val entrada: EntradaVocabulario,
+    val confianza: Float,                // media de las ventanas que la confirmaron
     val inicioMs: Long,
     val finMs: Long,
 )
 
-interface ReconocedorSeñas {
+interface ReconocedorSenas : AutoCloseable {
     val vocabulario: Vocabulario
-    suspend fun predecir(ventana: List<LandmarkFrame>): PrediccionSeña
-    fun cerrar()
+    val ficha: FichaModelo
+    val fotogramasPorVentana: Int
+    suspend fun predecir(ventana: List<LandmarkFrame>): PrediccionSena
 }
 
 interface Interprete {
     val origen: OrigenInterpretacion     // REGLAS, LOCAL, REMOTO
-    suspend fun proponer(secuencia: List<SeñaConfirmada>): PropuestaFrase
+    suspend fun proponer(secuencia: List<SenaConfirmada>, contexto: String? = null): PropuestaFrase
 }
 ```
 
@@ -107,6 +120,10 @@ Reglas fijas, independientes del modelo que se use:
 
 - Con **una sola seña** no se llama al modelo de lenguaje: se muestra su significado.
 - Las señas con confianza por debajo del umbral se marcan como inciertas y el modelo lo sabe.
+- El modelo puede reordenar las señas (la gramática de la LSC no sigue el orden del español),
+  pero no usar una seña más veces de las reconocidas. Si omite alguna, debe marcar la propuesta
+  como incierta y explicar por qué.
+- `ValidadorRespuesta` (`:interpreter:api`) comprueba todas estas reglas; está probado.
 - La propuesta nunca sustituye la secuencia reconocida: ambas se ven a la vez.
 - Una corrección del usuario es definitiva; la IA no la vuelve a modificar.
 

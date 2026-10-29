@@ -42,6 +42,12 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:model"))
+    implementation(project(":recognizer:api"))
+    implementation(project(":sequence"))
+    implementation(project(":interpreter:api"))
+    implementation(project(":interpreter:rules"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
