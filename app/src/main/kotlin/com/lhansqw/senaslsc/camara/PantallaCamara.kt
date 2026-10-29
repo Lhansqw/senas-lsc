@@ -40,6 +40,7 @@ import com.lhansqw.senaslsc.R
 import com.lhansqw.senaslsc.camera.EstadoCamara
 import com.lhansqw.senaslsc.camera.Rendimiento
 import com.lhansqw.senaslsc.permisos.ConPermisoCamara
+import com.lhansqw.senaslsc.reconocimiento.PanelReconocimiento
 import com.lhansqw.senaslsc.ui.theme.TemaSenasLSC
 import java.util.Locale
 
@@ -75,6 +76,7 @@ private fun VistaCamara(onVolver: () -> Unit, viewModel: CamaraViewModel = viewM
     val cargaSimulada by viewModel.cargaSimuladaMs.collectAsStateWithLifecycle()
     val landmarks by viewModel.landmarks.resultado.collectAsStateWithLifecycle()
     val estadoModelo by viewModel.landmarks.estadoModelo.collectAsStateWithLifecycle()
+    val reconocimiento by viewModel.senas.estado.collectAsStateWithLifecycle()
     val descripcionVista = stringResource(R.string.camara_vista_previa)
 
     Box(Modifier.fillMaxSize().background(Color.Black)) {
@@ -111,6 +113,14 @@ private fun VistaCamara(onVolver: () -> Unit, viewModel: CamaraViewModel = viewM
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 if (BuildConfig.DEBUG) {
                     SelectorCargaSimulada(cargaSimulada, viewModel::establecerCargaSimulada)
+                }
+                if (analisisActivo && activa != null) {
+                    PanelReconocimiento(
+                        estado = reconocimiento,
+                        onInterpretar = viewModel.senas::interpretar,
+                        onBorrarUltima = viewModel.senas::eliminarUltima,
+                        onLimpiar = viewModel.senas::limpiar,
+                    )
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
                     OutlinedButton(
