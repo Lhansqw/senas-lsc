@@ -3,8 +3,9 @@
 Aplicación Android que reconoce señas de la **Lengua de Señas Colombiana (LSC)** con la cámara
 del teléfono y las convierte en texto en español mediante inteligencia artificial.
 
-> **Estado:** fase 5 — la cámara detecta en tiempo real los puntos de manos, cuerpo y rostro con
-> MediaPipe y los dibuja sobre la vista previa. Todavía no reconoce señas. El reconocedor
+> **Estado:** fase 7 — cadena de reconocimiento completa con LiteRT (características, ventana
+> temporal, modelo, filtro, secuencia y propuesta por reglas), lista para el modelo que se
+> entrenará en la fase 6. Sin modelo, la app lo indica y no muestra señas. El reconocedor
 > funcionará con un **vocabulario limitado y verificado**; no traduce toda la LSC.
 
 ## Cómo funciona (resumen)
@@ -37,6 +38,7 @@ Dos componentes de IA, independientes entre sí:
 | [Fase 3 · Estructura modular](docs/fase-03-estructura-modular.md) | Módulos, lógica de confirmación de señas, validador y pruebas |
 | [Fase 4 · Cámara](docs/fase-04-camara.md) | CameraX, permiso, descarte de fotogramas y cómo probarlo en el teléfono |
 | [Fase 5 · MediaPipe](docs/fase-05-mediapipe.md) | Holistic Landmarker, puntos que se guardan, regla del espejo y cómo probarlo |
+| [Fase 7 · Reconocedor LiteRT](docs/fase-07-reconocedor-litert.md) | Contrato del modelo, características, `modelo.json` y flujo de reconocimiento |
 
 ## Compilar y probar
 
@@ -61,11 +63,12 @@ senas-lsc/
 ├── interpreter/rules/     Intérprete por reglas (sin modelo de lenguaje)
 ├── camera/                Captura con CameraX (librería Android)
 ├── vision/landmarks/      Puntos de referencia con MediaPipe (librería Android)
+├── recognizer/litert/     Reconocedor con LiteRT (librería Android; ver MODELO.md)
 └── docs/                  Documentación del proyecto
 ```
 
 Se añadirán en sus fases: `training/` (6, Python),
-`recognizer/litert/` (7), `interpreter/litertlm/` (8), `data/history/` (9).
+`interpreter/litertlm/` (8), `data/history/` (9).
 
 ## Autor
 
