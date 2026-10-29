@@ -49,7 +49,7 @@ concreta de comprobar que funciona.
 | **1. Alcance** ✅ | Esta documentación: viabilidad, arquitectura, datos, modelos, entorno, MVP | Revisión del documento |
 | **2. Proyecto Android** ✅ | Proyecto Gradle (Kotlin DSL) con catálogo de versiones, Compose y configuración base | Compila y abre una pantalla en el teléfono |
 | **3. Estructura modular** ✅ | Módulos Kotlin puros del doc. 02 con sus contratos, filtro temporal, validador e intérprete por reglas, con pruebas JUnit | `./gradlew test` en verde |
-| **4. Cámara** | CameraX con permiso explicado, vista previa y análisis con descarte de fotogramas | Vista previa fluida; contador de FPS de análisis |
+| **4. Cámara** ✅ | CameraX con permiso explicado, vista previa y análisis con descarte de fotogramas | Vista previa fluida; contador de FPS de análisis |
 | **5. MediaPipe** | Holistic Landmarker → `LandmarkFrame`, puntos dibujados sobre la vista previa | Puntos estables en tiempo real; latencia medida |
 | **6. Datos y entrenamiento** | `training/`: descarga, extracción de puntos, entrenamiento, evaluación por persona, exportación `.tflite`; herramienta de grabación | Informe de métricas reproducible |
 | **7. LiteRT en Android** | `:recognizer:litert` con el modelo real y filtro temporal | Reconoce el vocabulario en el teléfono; misma salida que en Python para un mismo ejemplo |

@@ -2,8 +2,11 @@
 <resources>
     <string name="app_name">Señas LSC</string>
 
+    <string name="accion_volver">Volver</string>
+
     <string name="inicio_titulo">Reconocimiento de Lengua de Señas Colombiana</string>
-    <string name="inicio_descripcion">Esta versión prepara el proyecto. El reconocimiento con la cámara llegará en las siguientes fases.</string>
+    <string name="inicio_descripcion">La cámara ya funciona. El reconocimiento de señas llegará en las siguientes fases.</string>
+    <string name="inicio_abrir_camara">Abrir cámara</string>
     <string name="inicio_version">Versión %1$s</string>
 
     <string name="dispositivo_titulo">Tu dispositivo</string>
@@ -19,4 +22,27 @@
 
     <string name="limitaciones_titulo">Limitaciones</string>
     <string name="limitaciones_texto">La aplicación reconocerá un vocabulario limitado de señas verificadas de la LSC. No traduce toda la lengua de señas. Las frases que proponga la IA se mostrarán aparte y siempre podrás corregirlas.</string>
+
+    <!-- Permiso de cámara -->
+    <string name="permiso_titulo">La app necesita la cámara</string>
+    <string name="permiso_texto">Para reconocer señas, la app tiene que ver tus manos con la cámara frontal mientras esta pantalla está abierta.</string>
+    <string name="permiso_texto_rechazado">Sin la cámara la app no puede ver las señas. Puedes permitirla ahora o volver al inicio.</string>
+    <string name="permiso_titulo_denegado">Cámara desactivada</string>
+    <string name="permiso_texto_denegado">El permiso de cámara está bloqueado para esta app. Para usar el reconocimiento, actívalo en Ajustes → Permisos → Cámara.</string>
+    <string name="permiso_privacidad">Las imágenes se procesan en el teléfono. No se guardan ni se envían a Internet.</string>
+    <string name="permiso_pedir">Permitir cámara</string>
+    <string name="permiso_abrir_ajustes">Abrir ajustes</string>
+
+    <!-- Cámara -->
+    <string name="camara_vista_previa">Vista previa de la cámara</string>
+    <string name="camara_sin_camara">Este dispositivo no tiene una cámara disponible.</string>
+    <string name="camara_fps">Análisis: %1$s FPS</string>
+    <string name="camara_latencia">Latencia: %1$s ms (máx. %2$s ms)</string>
+    <string name="camara_resolucion">Resolución de análisis: %1$d×%2$d</string>
+    <string name="camara_frontal">Cámara frontal</string>
+    <string name="camara_trasera">Cámara trasera (no hay frontal)</string>
+    <string name="camara_analisis_pausado">Análisis en pausa</string>
+    <string name="camara_pausar">Pausar análisis</string>
+    <string name="camara_reanudar">Reanudar análisis</string>
+    <string name="camara_carga_simulada">Carga simulada por fotograma (prueba)</string>
 </resources>

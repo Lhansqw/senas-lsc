@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -35,6 +36,7 @@ import com.lhansqw.senaslsc.ui.theme.TemaSenasLSC
 fun PantallaInicio(
     perfil: PerfilDispositivo,
     capacidad: CapacidadDispositivo,
+    onAbrirCamara: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -57,6 +59,12 @@ fun PantallaInicio(
                 text = stringResource(R.string.inicio_descripcion),
                 style = MaterialTheme.typography.bodyLarge,
             )
+
+            Button(
+                onClick = onAbrirCamara,
+                enabled = capacidad.reconocedorLocal,
+                modifier = Modifier.fillMaxWidth(),
+            ) { Text(stringResource(R.string.inicio_abrir_camara)) }
 
             TarjetaDispositivo(perfil, capacidad)
             TarjetaLimitaciones()
@@ -144,6 +152,6 @@ private fun estado(disponible: Boolean): String =
 private fun VistaPreviaInicio() {
     val perfil = PerfilDispositivo(nivelApi = 34, ramTotalMb = 3_800, esDispositivoBajaMemoria = false, nucleos = 8)
     TemaSenasLSC(colorDinamico = false) {
-        PantallaInicio(perfil, EvaluadorCapacidad.evaluar(perfil))
+        PantallaInicio(perfil, EvaluadorCapacidad.evaluar(perfil), onAbrirCamara = {})
     }
 }
