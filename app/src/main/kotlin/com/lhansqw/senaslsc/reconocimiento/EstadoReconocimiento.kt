@@ -34,4 +34,8 @@ data class EstadoReconocimiento(
     val secuenciaCerrada: Boolean = false,
     /** Propuesta de frase para la última secuencia cerrada. */
     val propuesta: PropuestaFrase? = null,
+    /** El modelo de lenguaje está preparando una propuesta mejor que la de reglas. */
+    val generando: Boolean = false,
+    /** Por qué se descartó la última respuesta del modelo de lenguaje, si se descartó. */
+    val motivoDescarteIa: String? = null,
 )
