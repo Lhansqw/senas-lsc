@@ -3,8 +3,8 @@
 Aplicación Android que reconoce señas de la **Lengua de Señas Colombiana (LSC)** con la cámara
 del teléfono y las convierte en texto en español mediante inteligencia artificial.
 
-> **Estado:** fase 2 — proyecto Android base (Kotlin, Compose, Gradle Kotlin DSL). Todavía no
-> reconoce señas. El reconocedor funcionará con un **vocabulario limitado y verificado**; no
+> **Estado:** fase 3 — estructura modular: contratos, filtro temporal, validador del modelo de
+> lenguaje e intérprete por reglas, con pruebas. Todavía no usa la cámara ni reconoce señas. El reconocedor funcionará con un **vocabulario limitado y verificado**; no
 > traduce toda la LSC.
 
 ## Cómo funciona (resumen)
@@ -34,6 +34,7 @@ Dos componentes de IA, independientes entre sí:
 | [05 · Entorno](docs/05-entorno.md) | Programas que hay que instalar |
 | [06 · MVP y fases](docs/06-mvp-y-fases.md) | Alcance del MVP, vocabulario inicial y plan de fases |
 | [Fase 2 · Proyecto Android](docs/fase-02-proyecto-android.md) | Versiones, archivos y cómo comprobar que compila |
+| [Fase 3 · Estructura modular](docs/fase-03-estructura-modular.md) | Módulos, lógica de confirmación de señas, validador y pruebas |
 
 ## Compilar y probar
 
@@ -45,21 +46,21 @@ Dos componentes de IA, independientes entre sí:
 Requisitos: Android Studio reciente, JDK 17 o superior y SDK de Android 37 (ver
 [docs/05-entorno.md](docs/05-entorno.md)).
 
-## Estructura prevista del repositorio
+## Estructura del repositorio
 
 ```
 senas-lsc/
-├── app/                 Aplicación Android (Kotlin, Jetpack Compose)
-├── core/                Tipos de dominio y utilidades sin dependencias de Android
-├── camera/              Captura con CameraX
-├── vision/              Extracción de puntos de referencia con MediaPipe
-├── recognizer/          Contrato del reconocedor + implementación LiteRT
-├── sequence/            Filtro temporal y construcción de la secuencia
-├── interpreter/         Contrato del intérprete + implementaciones (reglas, local, remota)
-├── data/                Historial local
-├── training/            Python: preparación de datos, entrenamiento, evaluación y exportación
-└── docs/                Documentación del proyecto
+├── app/                   Aplicación Android (Kotlin, Jetpack Compose)
+├── core/model/            Tipos de dominio, sin dependencias de Android
+├── recognizer/api/        Contrato del reconocedor visual
+├── sequence/              Ventanas, filtro temporal y secuencia de señas
+├── interpreter/api/       Contrato del intérprete, instrucciones y validador
+├── interpreter/rules/     Intérprete por reglas (sin modelo de lenguaje)
+└── docs/                  Documentación del proyecto
 ```
+
+Se añadirán en sus fases: `camera/` (4), `vision/` (5), `training/` (6, Python),
+`recognizer/litert/` (7), `interpreter/litertlm/` (8), `data/history/` (9).
 
 ## Autor
 
