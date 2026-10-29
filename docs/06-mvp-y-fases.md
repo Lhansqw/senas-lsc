@@ -59,7 +59,7 @@ concreta de comprobar que funciona.
 | **5. MediaPipe** ✅ | Holistic Landmarker → `LandmarkFrame`, puntos dibujados sobre la vista previa | Puntos estables en tiempo real; latencia medida |
 | **6. Datos y entrenamiento** ⏸️ | `training/`: descarga, extracción de puntos, entrenamiento, evaluación por persona, exportación `.tflite`; herramienta de grabación | Informe de métricas reproducible |
 | **7. LiteRT en Android** ✅ | `:recognizer:litert` contra el contrato del modelo, filtro temporal e interfaz | Pruebas del flujo con un modelo simulado; con el modelo real (tras la fase 6): misma salida que en Python para un mismo ejemplo |
-| **8. Modelo de lenguaje** | `:interpreter:litertlm` con Gemma, contrato JSON y validador | Pruebas de que nunca usa señas no detectadas |
+| **8. Modelo de lenguaje** ✅ | `:interpreter:litertlm` con Gemma, contrato JSON y validador | Pruebas de que nunca usa señas no detectadas |
 | **9. Interfaz de resultados** | Paneles de señas y propuesta, confianza, edición, copiar, historial, vocabulario | Pruebas de interfaz y revisión de accesibilidad (TalkBack, contraste, tamaños) |
 | **10. Local frente a nube** | Selección de intérprete según dispositivo; evaluación del remoto con consentimiento | Comparativa de calidad, latencia y coste |
 | **11. Optimización** | Cuantización, GPU, frecuencia de inferencia, comparación GRU frente a Transformer | Latencia p95 y batería medidas antes y después |
