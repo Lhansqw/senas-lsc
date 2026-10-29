@@ -11,11 +11,12 @@ import androidx.compose.runtime.setValue
 import com.lhansqw.senaslsc.camara.PantallaCamara
 import com.lhansqw.senaslsc.dispositivo.EvaluadorCapacidad
 import com.lhansqw.senaslsc.dispositivo.LectorPerfilDispositivo
+import com.lhansqw.senaslsc.ia.PantallaIa
 import com.lhansqw.senaslsc.ui.PantallaInicio
 import com.lhansqw.senaslsc.ui.theme.TemaSenasLSC
 
 /** Pantallas de la app. La navegación es simple todavía: no hace falta una librería. */
-private enum class Pantalla { INICIO, CAMARA }
+private enum class Pantalla { INICIO, CAMARA, IA }
 
 class MainActivity : ComponentActivity() {
 
@@ -35,8 +36,10 @@ class MainActivity : ComponentActivity() {
                         perfil = perfil,
                         capacidad = capacidad,
                         onAbrirCamara = { pantalla = Pantalla.CAMARA },
+                        onAbrirIa = { pantalla = Pantalla.IA },
                     )
                     Pantalla.CAMARA -> PantallaCamara(onVolver = { pantalla = Pantalla.INICIO })
+                    Pantalla.IA -> PantallaIa(onVolver = { pantalla = Pantalla.INICIO })
                 }
             }
         }
