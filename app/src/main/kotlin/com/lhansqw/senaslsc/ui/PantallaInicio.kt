@@ -13,6 +13,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -37,6 +38,7 @@ fun PantallaInicio(
     perfil: PerfilDispositivo,
     capacidad: CapacidadDispositivo,
     onAbrirCamara: () -> Unit,
+    onAbrirIa: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -65,6 +67,10 @@ fun PantallaInicio(
                 enabled = capacidad.reconocedorLocal,
                 modifier = Modifier.fillMaxWidth(),
             ) { Text(stringResource(R.string.inicio_abrir_camara)) }
+            OutlinedButton(
+                onClick = onAbrirIa,
+                modifier = Modifier.fillMaxWidth(),
+            ) { Text(stringResource(R.string.inicio_abrir_ia)) }
 
             TarjetaDispositivo(perfil, capacidad)
             TarjetaLimitaciones()
@@ -152,6 +158,6 @@ private fun estado(disponible: Boolean): String =
 private fun VistaPreviaInicio() {
     val perfil = PerfilDispositivo(nivelApi = 34, ramTotalMb = 3_800, esDispositivoBajaMemoria = false, nucleos = 8)
     TemaSenasLSC(colorDinamico = false) {
-        PantallaInicio(perfil, EvaluadorCapacidad.evaluar(perfil), onAbrirCamara = {})
+        PantallaInicio(perfil, EvaluadorCapacidad.evaluar(perfil), onAbrirCamara = {}, onAbrirIa = {})
     }
 }
