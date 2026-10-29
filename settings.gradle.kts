@@ -27,6 +27,7 @@ include(":app")
 
 // Módulos Kotlin puros: lógica y contratos, probados con JUnit sin emulador.
 include(":core:model")
+include(":core:descargas")
 include(":recognizer:api")
 include(":sequence")
 include(":interpreter:api")
