@@ -72,7 +72,7 @@ class ProcesadorSenas(context: Context) : AutoCloseable {
             is ResultadoCarga.Cargado -> {
                 reconocedor = r.reconocedor
                 val c = r.contrato
-                EstadoModeloSenas.Listo(c.nombre, c.version, c.entradas.size, c.metricas) to
+                EstadoModeloSenas.Listo(c.nombre, c.version, c.entradas.size, c.metricas, c.entradas.associate { it.id to it.glosa }) to
                     MotorSenas(r.reconocedor.vocabulario, c.fotogramas, c.duracionVentanaMs)
             }
             ResultadoCarga.SinModelo -> EstadoModeloSenas.SinModelo to null

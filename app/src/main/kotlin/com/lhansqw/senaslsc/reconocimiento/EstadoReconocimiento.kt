@@ -16,6 +16,8 @@ sealed interface EstadoModeloSenas {
         val version: String,
         val numeroSenas: Int,
         val metricas: Map<String, Float>,
+        /** Glosa de cada seña del vocabulario, para mostrar lo que el modelo está viendo. */
+        val glosas: Map<String, String> = emptyMap(),
     ) : EstadoModeloSenas
 
     data class Invalido(val errores: List<String>) : EstadoModeloSenas
