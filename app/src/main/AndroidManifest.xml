@@ -4,6 +4,7 @@
     <!-- La app no pide permisos todavía. La cámara se añade en la fase 4. -->
 
     <application
+        android:name=".SenasApp"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:icon="@mipmap/ic_launcher"
