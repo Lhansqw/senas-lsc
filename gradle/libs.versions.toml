@@ -12,6 +12,8 @@ lifecycle = "2.11.0"
 camerax = "1.6.2"             # estable de agosto de 2026; minSdk 23
 mediapipe = "1.1.1"           # tasks-vision; misma versión que el ejemplo oficial de Holistic
 litert = "2.3.0"              # LiteRT (CompiledModel); versión de la documentación oficial
+litertlm = "0.18.1"           # LiteRT-LM; requiere Kotlin 2.3 o superior (metadatos 2.4.0)
+coroutines = "1.11.0"
 junit = "4.13.2"
 
 [libraries]
@@ -32,6 +34,9 @@ androidx-camera-compose = { group = "androidx.camera", name = "camera-compose", 
 mediapipe-tasks-vision = { group = "com.google.mediapipe", name = "tasks-vision", version.ref = "mediapipe" }
 
 litert = { group = "com.google.ai.edge.litert", name = "litert", version.ref = "litert" }
+
+litertlm-android = { group = "com.google.ai.edge.litertlm", name = "litertlm-android", version.ref = "litertlm" }
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
 compose-ui = { group = "androidx.compose.ui", name = "ui" }
