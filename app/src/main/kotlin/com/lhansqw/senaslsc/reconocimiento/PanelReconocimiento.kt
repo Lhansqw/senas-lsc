@@ -87,10 +87,7 @@ private fun Contenido(
     )
     resumenMetricas(modelo.metricas)?.let { Texto(it, TEXTO_SECUNDARIO) }
 
-    val glosas = estado.senas.associate { it.id to it.entrada.glosa }
-    val enCurso = textoPrediccionEnCurso(estado.ultimaPrediccion) { id ->
-        glosas[id] ?: id.substringAfter('.').uppercase()
-    }
+    val enCurso = textoPrediccionEnCurso(estado.ultimaPrediccion) { id -> modelo.glosas[id] }
     Texto(
         if (enCurso != null) stringResource(R.string.reconocedor_viendo, enCurso) else stringResource(R.string.reconocedor_viendo_nada),
         TEXTO_SECUNDARIO,
