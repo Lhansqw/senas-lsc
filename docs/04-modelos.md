@@ -70,9 +70,9 @@ documentación oficial a octubre de 2026), CPU por defecto y GPU opcional.
 ### Decisión
 
 1. **Por defecto: intérprete de reglas.** La app funciona completa sin modelo de lenguaje.
-2. **Opcional local: Gemma 4 E2B mediante LiteRT-LM** (`com.google.ai.edge.litertlm:litertlm-android`),
-   descargado bajo demanda solo si el teléfono cumple los requisitos. Es la opción que cumple el
-   requisito de IA integrada sin sacrificar privacidad.
+2. **Opcional local: Gemma 4 E2B mediante LiteRT-LM** (`com.google.ai.edge.litertlm:litertlm-android`
+   0.18.1), descargado bajo demanda solo si el teléfono cumple los requisitos (implementado en la
+   fase 8). Es la opción que cumple el requisito de IA integrada sin sacrificar privacidad.
 3. **Remoto: se evalúa en la fase 10** y queda desactivado por defecto.
 
 Los tamaños y requisitos se vuelven a comprobar en la fase 8 contra la documentación oficial y un
