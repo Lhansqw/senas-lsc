@@ -47,6 +47,7 @@ dependencies {
     implementation(project(":sequence"))
     implementation(project(":interpreter:api"))
     implementation(project(":interpreter:rules"))
+    implementation(project(":camera"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
@@ -58,6 +59,7 @@ dependencies {
     implementation(libs.compose.ui.graphics)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material3)
+    implementation(libs.androidx.camera.compose)
     debugImplementation(libs.compose.ui.tooling)
 
     testImplementation(libs.junit)

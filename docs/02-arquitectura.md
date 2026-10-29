@@ -34,14 +34,14 @@ de señas confirmadas**. Se puede reentrenar o sustituir uno sin tocar el otro.
 | `:sequence` ✅ | Kotlin puro | `VentanaDeslizante`, `FiltroTemporal`, `ConstructorSecuencia` | `:core:model` |
 | `:interpreter:api` ✅ | Kotlin puro | Interfaz `Interprete`, `PlantillaPrompt` y `ValidadorRespuesta` | `:core:model` |
 | `:interpreter:rules` ✅ | Kotlin puro | `InterpreteReglas`: une significados sin inventar | `:interpreter:api` |
-| `:camera` | Android lib | CameraX, rotación, espejo, ciclo de vida (fase 4) | `:core:model` |
+| `:camera` ✅ | Android lib | `ControladorCamara` (CameraX), `MedidorRendimiento` (fase 4) | — |
 | `:vision:landmarks` | Android lib | Envoltorio de MediaPipe → `LandmarkFrame` (fase 5) | `:core:model` |
 | `:recognizer:litert` | Android lib | Implementación con LiteRT, selección CPU/GPU (fase 7) | `:recognizer:api` |
 | `:interpreter:litertlm` | Android lib | Modelo de lenguaje local con LiteRT-LM (fase 8) | `:interpreter:api` |
 | `:data:history` | Android lib | Room, historial cifrado, borrado (fase 9) | `:core:model` |
 | `:interpreter:remote` | Android lib | Proveedor remoto, desactivado por defecto (fase 10) | `:interpreter:api` |
 
-✅ = creado en la fase 3. Los módulos Android se crean en la fase que los necesita, para no
+✅ = ya creado (fases 3 y 4). Los módulos Android se crean en la fase que los necesita, para no
 mantener módulos vacíos. El antiguo `:core:common` no hizo falta: el vocabulario vive en
 `:core:model` y no se necesitan utilidades compartidas todavía.
 
