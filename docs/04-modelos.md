@@ -13,9 +13,13 @@ Se entrena sobre **coordenadas de MediaPipe**, no sobre imágenes:
 - Los trabajos sobre LSC con MediaPipe + redes temporales (LSTM/GRU) obtienen los mejores
   resultados publicados con estos volúmenes de datos.
 
-Extractor: **MediaPipe Holistic Landmarker** (`com.google.mediapipe:tasks-vision`), que devuelve
-manos, cuerpo y rostro en una sola llamada. Alternativa si resulta lento en gama media: Hand
-Landmarker + Pose Landmarker (lite), sin rostro. Se decide con mediciones en la fase 5.
+Extractor: **MediaPipe Holistic Landmarker** (`com.google.mediapipe:tasks-vision` 1.1.1), que
+devuelve manos, cuerpo y rostro en una sola llamada (implementado en la fase 5). Alternativa si
+resulta lento en gama media: Hand Landmarker + Pose Landmarker (lite), sin rostro. Se decide con
+las mediciones en teléfonos reales (fase 11).
+
+Los puntos que se conservan y su orden están en `vision/landmarks/.../Subconjuntos.kt`
+(versión 1): manos 2 × 21, cuerpo 7 y rostro 39. La imagen llega a MediaPipe **sin espejo**.
 
 ### Características por fotograma
 

@@ -8,6 +8,7 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.core.SurfaceRequest
+import androidx.camera.core.resolutionselector.AspectRatioStrategy
 import androidx.camera.core.resolutionselector.ResolutionSelector
 import androidx.camera.core.resolutionselector.ResolutionStrategy
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -85,13 +86,21 @@ class ControladorCamara(private val configuracion: ConfiguracionCamara = Configu
     private val medidor = MedidorRendimiento()
     private var ultimaPublicacionNs = 0L
 
-    private val vistaPrevia = Preview.Builder().build().apply {
-        setSurfaceProvider { solicitud -> _surfaceRequest.value = solicitud }
-    }
+    // Vista previa y análisis en 4:3: así cubren el mismo campo de visión y los puntos de
+    // MediaPipe se pueden dibujar exactamente encima de la imagen.
+    private val vistaPrevia = Preview.Builder()
+        .setResolutionSelector(
+            ResolutionSelector.Builder()
+                .setAspectRatioStrategy(AspectRatioStrategy.RATIO_4_3_FALLBACK_AUTO_STRATEGY)
+                .build(),
+        )
+        .build()
+        .apply { setSurfaceProvider { solicitud -> _surfaceRequest.value = solicitud } }
 
     private val analisis = ImageAnalysis.Builder()
         .setResolutionSelector(
             ResolutionSelector.Builder()
+                .setAspectRatioStrategy(AspectRatioStrategy.RATIO_4_3_FALLBACK_AUTO_STRATEGY)
                 .setResolutionStrategy(
                     ResolutionStrategy(
                         configuracion.resolucionAnalisis,

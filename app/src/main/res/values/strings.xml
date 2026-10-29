@@ -5,7 +5,7 @@
     <string name="accion_volver">Volver</string>
 
     <string name="inicio_titulo">Reconocimiento de Lengua de Señas Colombiana</string>
-    <string name="inicio_descripcion">La cámara ya funciona. El reconocimiento de señas llegará en las siguientes fases.</string>
+    <string name="inicio_descripcion">La cámara ya detecta tus manos, tu cuerpo y tu rostro. El reconocimiento de señas llegará en las siguientes fases.</string>
     <string name="inicio_abrir_camara">Abrir cámara</string>
     <string name="inicio_version">Versión %1$s</string>
 
@@ -45,4 +45,12 @@
     <string name="camara_pausar">Pausar análisis</string>
     <string name="camara_reanudar">Reanudar análisis</string>
     <string name="camara_carga_simulada">Carga simulada por fotograma (prueba)</string>
+
+    <!-- MediaPipe -->
+    <string name="mediapipe_cargando">MediaPipe: cargando modelo…</string>
+    <string name="mediapipe_error">MediaPipe: error al cargar el modelo</string>
+    <string name="mediapipe_inferencia">MediaPipe: %1$d ms por fotograma</string>
+    <string name="mediapipe_detectado">Manos: %1$d · Cuerpo: %2$s · Rostro: %3$s</string>
+    <string name="si">sí</string>
+    <string name="no">no</string>
 </resources>

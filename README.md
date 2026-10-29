@@ -3,9 +3,9 @@
 Aplicación Android que reconoce señas de la **Lengua de Señas Colombiana (LSC)** con la cámara
 del teléfono y las convierte en texto en español mediante inteligencia artificial.
 
-> **Estado:** fase 4 — cámara frontal con CameraX: permiso explicado, vista previa y análisis de
-> fotogramas en segundo plano con descarte de los atrasados. Todavía no reconoce señas. El
-> reconocedor funcionará con un **vocabulario limitado y verificado**; no traduce toda la LSC.
+> **Estado:** fase 5 — la cámara detecta en tiempo real los puntos de manos, cuerpo y rostro con
+> MediaPipe y los dibuja sobre la vista previa. Todavía no reconoce señas. El reconocedor
+> funcionará con un **vocabulario limitado y verificado**; no traduce toda la LSC.
 
 ## Cómo funciona (resumen)
 
@@ -36,6 +36,7 @@ Dos componentes de IA, independientes entre sí:
 | [Fase 2 · Proyecto Android](docs/fase-02-proyecto-android.md) | Versiones, archivos y cómo comprobar que compila |
 | [Fase 3 · Estructura modular](docs/fase-03-estructura-modular.md) | Módulos, lógica de confirmación de señas, validador y pruebas |
 | [Fase 4 · Cámara](docs/fase-04-camara.md) | CameraX, permiso, descarte de fotogramas y cómo probarlo en el teléfono |
+| [Fase 5 · MediaPipe](docs/fase-05-mediapipe.md) | Holistic Landmarker, puntos que se guardan, regla del espejo y cómo probarlo |
 
 ## Compilar y probar
 
@@ -45,7 +46,8 @@ Dos componentes de IA, independientes entre sí:
 ```
 
 Requisitos: Android Studio reciente, JDK 17 o superior y SDK de Android 37 (ver
-[docs/05-entorno.md](docs/05-entorno.md)).
+[docs/05-entorno.md](docs/05-entorno.md)). La primera compilación necesita Internet para descargar
+el modelo de MediaPipe.
 
 ## Estructura del repositorio
 
@@ -58,10 +60,11 @@ senas-lsc/
 ├── interpreter/api/       Contrato del intérprete, instrucciones y validador
 ├── interpreter/rules/     Intérprete por reglas (sin modelo de lenguaje)
 ├── camera/                Captura con CameraX (librería Android)
+├── vision/landmarks/      Puntos de referencia con MediaPipe (librería Android)
 └── docs/                  Documentación del proyecto
 ```
 
-Se añadirán en sus fases: `vision/` (5), `training/` (6, Python),
+Se añadirán en sus fases: `training/` (6, Python),
 `recognizer/litert/` (7), `interpreter/litertlm/` (8), `data/history/` (9).
 
 ## Autor
