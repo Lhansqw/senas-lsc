@@ -2,6 +2,8 @@ package com.lhansqw.senaslsc.reconocimiento
 
 import android.content.Context
 import com.lhansqw.senaslsc.core.model.LandmarkFrame
+import com.lhansqw.senaslsc.ia.ControladorIaLocal
+import com.lhansqw.senaslsc.interpreter.ResultadoGenerativo
 import com.lhansqw.senaslsc.recognizer.litert.CargadorReconocedor
 import com.lhansqw.senaslsc.recognizer.litert.ReconocedorLiteRT
 import com.lhansqw.senaslsc.recognizer.litert.ResultadoCarga
@@ -27,8 +29,10 @@ import java.util.concurrent.Executors
  *   (capacidad [CAPACIDAD], DROP_OLDEST): se trabaja siempre con lo reciente y la latencia no crece.
  * - Las órdenes del usuario (interpretar, borrar, limpiar) se ejecutan en el mismo hilo, entre
  *   fotograma y fotograma, así que nunca hay dos accesos simultáneos al coordinador.
+ * - Si hay IA local ([ia]), las frases cerradas se le piden en su propio hilo; mientras tanto el
+ *   reconocimiento sigue, y el resultado se aplica de vuelta en este hilo.
  */
-class ProcesadorSenas(context: Context) : AutoCloseable {
+class ProcesadorSenas(context: Context, private val ia: ControladorIaLocal? = null) : AutoCloseable {
 
     private val contextoApp = context.applicationContext
     private val hilo = Executors.newSingleThreadExecutor { tarea -> Thread(tarea, "senas-reconocedor") }
@@ -37,6 +41,7 @@ class ProcesadorSenas(context: Context) : AutoCloseable {
 
     private var coordinador = CoordinadorReconocimiento(null, null, EstadoModeloSenas.Cargando)
     private var reconocedor: ReconocedorLiteRT? = null
+    private var iaDisponible = false
 
     private val _estado = MutableStateFlow(EstadoReconocimiento())
     val estado: StateFlow<EstadoReconocimiento> = _estado.asStateFlow()
@@ -47,6 +52,15 @@ class ProcesadorSenas(context: Context) : AutoCloseable {
             for (frame in fotogramas) {
                 coordinador.alRecibirFotograma(frame)
                 publicar()
+                atenderSolicitudes()
+            }
+        }
+        ia?.let { controlador ->
+            ambito.launch {
+                controlador.estado.collect { estadoIa ->
+                    iaDisponible = estadoIa.disponible
+                    coordinador.refinamientoDisponible = iaDisponible
+                }
             }
         }
     }
@@ -64,6 +78,24 @@ class ProcesadorSenas(context: Context) : AutoCloseable {
         ambito.launch {
             accion()
             publicar()
+            atenderSolicitudes()
+        }
+    }
+
+    /** Si el coordinador dejó una frase para la IA, se la pide sin bloquear este hilo. */
+    private fun atenderSolicitudes() {
+        val solicitud = coordinador.tomarSolicitud() ?: return
+        val controlador = ia ?: return
+        val coordinadorDeLaSolicitud = coordinador
+        ambito.launch {
+            val resultado = controlador.interpretar(solicitud.senas)
+                ?: ResultadoGenerativo.Descartada(
+                    listOf("La IA local no está disponible."),
+                    coordinadorDeLaSolicitud.estado.propuesta ?: return@launch,
+                )
+            // De vuelta en el hilo del reconocedor: se aplica solo si la frase no ha cambiado.
+            coordinadorDeLaSolicitud.aplicarRefinamiento(solicitud.id, resultado)
+            publicar()
         }
     }
 
@@ -79,7 +111,9 @@ class ProcesadorSenas(context: Context) : AutoCloseable {
             is ResultadoCarga.Invalido -> EstadoModeloSenas.Invalido(r.errores) to null
             is ResultadoCarga.Fallo -> EstadoModeloSenas.Fallo(r.mensaje) to null
         }
-        coordinador = CoordinadorReconocimiento(reconocedor, motor, estadoModelo)
+        coordinador = CoordinadorReconocimiento(reconocedor, motor, estadoModelo).also {
+            it.refinamientoDisponible = iaDisponible
+        }
         publicar()
     }
 
