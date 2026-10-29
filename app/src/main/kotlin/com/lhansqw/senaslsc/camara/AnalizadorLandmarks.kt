@@ -46,6 +46,10 @@ class AnalizadorLandmarks(context: Context) : AnalizadorFotogramas, AutoCloseabl
     private val _estadoModelo = MutableStateFlow<EstadoModelo>(EstadoModelo.SinCargar)
     val estadoModelo: StateFlow<EstadoModelo> = _estadoModelo.asStateFlow()
 
+    /** Recibe cada fotograma convertido en puntos (en el hilo de análisis); no debe bloquear. */
+    @Volatile
+    var alExtraer: ((LandmarkFrame) -> Unit)? = null
+
     override fun analizar(imagen: ImageProxy) {
         synchronized(bloqueo) {
             if (cerrado || _estadoModelo.value is EstadoModelo.Error) return
@@ -60,6 +64,7 @@ class AnalizadorLandmarks(context: Context) : AnalizadorFotogramas, AutoCloseabl
                 altoImagen = bitmap.height,
                 inferenciaMs = extraccion.inferenciaMs,
             )
+            alExtraer?.invoke(extraccion.frame)
         }
     }
 
