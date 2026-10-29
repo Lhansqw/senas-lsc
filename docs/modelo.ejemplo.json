@@ -1,0 +1,30 @@
+{
+  "formato": 1,
+  "nombre": "reconocedor-lsc",
+  "version": "0.1.0",
+  "lengua": "lsc",
+  "caracteristicas": {
+    "version": 1,
+    "version_subconjuntos": 1,
+    "por_fotograma": 352
+  },
+  "ventana": {
+    "fotogramas": 32,
+    "duracion_ms": 1000
+  },
+  "salida": {
+    "etiquetas": ["sin_sena", "lsc.hola", "lsc.gracias", "lsc.como"],
+    "etiqueta_sin_sena": "sin_sena",
+    "temperatura": 1.0,
+    "umbral_energia": null
+  },
+  "vocabulario": [
+    { "id": "lsc.hola", "glosa": "HOLA", "significado": "hola", "tipo": "palabra" },
+    { "id": "lsc.gracias", "glosa": "GRACIAS", "significado": "gracias", "tipo": "palabra" },
+    { "id": "lsc.como", "glosa": "CÓMO", "significado": "cómo", "tipo": "palabra", "interrogativa": true }
+  ],
+  "datos_entrenamiento": [
+    "EJEMPLO: este archivo solo ilustra el formato; no corresponde a ningún modelo entrenado"
+  ],
+  "metricas": {}
+}
