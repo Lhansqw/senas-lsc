@@ -53,4 +53,25 @@
     <string name="mediapipe_detectado">Manos: %1$d · Cuerpo: %2$s · Rostro: %3$s</string>
     <string name="si">sí</string>
     <string name="no">no</string>
+
+    <!-- Reconocimiento de señas -->
+    <string name="reconocedor_cargando">Cargando el reconocedor de señas…</string>
+    <string name="reconocedor_sin_modelo_titulo">Reconocedor de señas no instalado</string>
+    <string name="reconocedor_sin_modelo_texto">La cámara y la detección de manos funcionan, pero todavía no hay un modelo entrenado con señas de LSC. Cuando se entrene (fase 6), la app empezará a reconocer las señas de su vocabulario.</string>
+    <string name="reconocedor_invalido_titulo">El modelo de señas no es compatible con esta versión de la app</string>
+    <string name="reconocedor_fallo_titulo">No se pudo cargar el modelo de señas</string>
+    <string name="reconocedor_modelo">Modelo %1$s %2$s · %3$d señas</string>
+    <string name="reconocedor_viendo">Viendo: %1$s</string>
+    <string name="reconocedor_viendo_nada">Viendo: —</string>
+    <string name="reconocedor_sin_senas">Haz una seña frente a la cámara.</string>
+    <string name="reconocedor_senas_lector">Señas reconocidas: %1$s</string>
+    <string name="reconocedor_borrar_ultima">Borrar última</string>
+    <string name="reconocedor_limpiar">Limpiar</string>
+    <string name="reconocedor_interpretar">Interpretar</string>
+
+    <!-- Propuesta de frase -->
+    <string name="propuesta_origen_reglas">Propuesta (reglas, sin IA generativa)</string>
+    <string name="propuesta_origen_local">Propuesta de la IA en el teléfono</string>
+    <string name="propuesta_origen_remoto">Propuesta de la IA en la nube</string>
+    <string name="propuesta_incierta">Interpretación incierta: %1$s</string>
 </resources>
