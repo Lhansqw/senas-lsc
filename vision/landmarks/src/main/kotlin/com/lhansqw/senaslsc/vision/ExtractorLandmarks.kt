@@ -55,6 +55,7 @@ class ExtractorLandmarks private constructor(private val landmarker: HolisticLan
             manoDerecha = resultado.rightHandLandmarks().aPuntos(),
             pose = resultado.poseLandmarks().aPuntos(),
             rostro = resultado.faceLandmarks().aPuntos(),
+            relacionAspecto = imagen.width.toFloat() / imagen.height,
         )
         return Extraccion(frame, inferenciaMs)
     }

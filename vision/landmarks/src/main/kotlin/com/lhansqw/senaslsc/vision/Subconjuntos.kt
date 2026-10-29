@@ -71,11 +71,13 @@ object Subconjuntos {
         manoDerecha: List<Punto3D>,
         pose: List<Punto3D>,
         rostro: List<Punto3D>,
+        relacionAspecto: Float = 1f,
     ): LandmarkFrame = LandmarkFrame(
         timestampMs = timestampMs,
         manoIzquierda = manoIzquierda.takeIf { it.size == LandmarkFrame.PUNTOS_POR_MANO },
         manoDerecha = manoDerecha.takeIf { it.size == LandmarkFrame.PUNTOS_POR_MANO },
         cuerpo = pose.takeIf { it.size >= PUNTOS_POSE }?.let { puntos -> CUERPO.map { puntos[it] } },
         rostro = rostro.takeIf { it.size >= PUNTOS_ROSTRO_MINIMO }?.let { puntos -> ROSTRO.map { puntos[it] } },
+        relacionAspecto = relacionAspecto,
     )
 }
