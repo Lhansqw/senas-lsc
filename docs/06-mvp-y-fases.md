@@ -44,6 +44,12 @@ estático.
 Cada fase termina con un commit verificable: archivos completos, dependencias, comandos y una forma
 concreta de comprobar que funciona.
 
+> ⏸️ **La fase 6 (entrenamiento) se hará más adelante.** Las fases 7 a 10 se construyen contra un
+> *contrato de modelo* fijo (doc. fase 7): el formato de las características de entrada, la salida
+> y el archivo `modelo.json` que describe el modelo. Cuando se entrene, bastará con copiar el
+> modelo y su descripción; mientras tanto la app indica que no hay modelo instalado y no muestra
+> señas inventadas.
+
 | Fase | Entregable | Cómo se comprueba |
 |---|---|---|
 | **1. Alcance** ✅ | Esta documentación: viabilidad, arquitectura, datos, modelos, entorno, MVP | Revisión del documento |
@@ -51,7 +57,7 @@ concreta de comprobar que funciona.
 | **3. Estructura modular** ✅ | Módulos Kotlin puros del doc. 02 con sus contratos, filtro temporal, validador e intérprete por reglas, con pruebas JUnit | `./gradlew test` en verde |
 | **4. Cámara** ✅ | CameraX con permiso explicado, vista previa y análisis con descarte de fotogramas | Vista previa fluida; contador de FPS de análisis |
 | **5. MediaPipe** ✅ | Holistic Landmarker → `LandmarkFrame`, puntos dibujados sobre la vista previa | Puntos estables en tiempo real; latencia medida |
-| **6. Datos y entrenamiento** | `training/`: descarga, extracción de puntos, entrenamiento, evaluación por persona, exportación `.tflite`; herramienta de grabación | Informe de métricas reproducible |
+| **6. Datos y entrenamiento** ⏸️ | `training/`: descarga, extracción de puntos, entrenamiento, evaluación por persona, exportación `.tflite`; herramienta de grabación | Informe de métricas reproducible |
 | **7. LiteRT en Android** | `:recognizer:litert` con el modelo real y filtro temporal | Reconoce el vocabulario en el teléfono; misma salida que en Python para un mismo ejemplo |
 | **8. Modelo de lenguaje** | `:interpreter:litertlm` con Gemma, contrato JSON y validador | Pruebas de que nunca usa señas no detectadas |
 | **9. Interfaz de resultados** | Paneles de señas y propuesta, confianza, edición, copiar, historial, vocabulario | Pruebas de interfaz y revisión de accesibilidad (TalkBack, contraste, tamaños) |
