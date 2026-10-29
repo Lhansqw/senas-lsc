@@ -37,6 +37,7 @@ include(":interpreter:rules")
 include(":camera")
 include(":vision:landmarks")
 include(":recognizer:litert")
+include(":interpreter:litertlm")
 
 // Módulos Android que se añadirán en sus fases:
-// :interpreter:litertlm (8), :data:history (9), :interpreter:remote (10).
+// :data:history (9), :interpreter:remote (10).

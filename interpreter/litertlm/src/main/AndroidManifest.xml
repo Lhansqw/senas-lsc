@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Internet solo se usa para descargar el modelo de lenguaje cuando el usuario lo pide.
+        Las imágenes, los puntos y las frases nunca salen del teléfono desde este módulo.
+    -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+</manifest>
