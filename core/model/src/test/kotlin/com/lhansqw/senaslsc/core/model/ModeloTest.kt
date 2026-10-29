@@ -56,6 +56,12 @@ class ModeloTest {
     }
 
     @Test
+    fun `la relacion de aspecto debe ser positiva`() {
+        esperarError { LandmarkFrame(0, null, null, null, null, relacionAspecto = 0f) }
+        assertEquals(0.75f, LandmarkFrame(0, null, null, null, null, relacionAspecto = 0.75f).relacionAspecto, 0f)
+    }
+
+    @Test
     fun `prediccion exige candidatas ordenadas y calcula el margen`() {
         esperarError {
             PrediccionSena(0, 100, listOf(Candidata("lsc.a", 0.2f), Candidata("lsc.b", 0.7f)), desconocida = false)
