@@ -3,7 +3,9 @@ package com.lhansqw.senaslsc.camara
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.lhansqw.senaslsc.camera.AnalizadorFotogramas
+import com.lhansqw.senaslsc.SenasApp
 import com.lhansqw.senaslsc.camera.ControladorCamara
+import com.lhansqw.senaslsc.ia.ControladorIaLocal
 import com.lhansqw.senaslsc.reconocimiento.ProcesadorSenas
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,9 +19,20 @@ import kotlinx.coroutines.flow.asStateFlow
  */
 class CamaraViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val app = application as SenasApp
+
     val controlador = ControladorCamara()
     val landmarks = AnalizadorLandmarks(application)
-    val senas = ProcesadorSenas(application)
+
+    /** IA local: solo se carga si el teléfono es compatible, el modelo está instalado y el usuario la activó. */
+    val ia = ControladorIaLocal(
+        context = application,
+        compatible = app.capacidad.interpreteLocal,
+        motivoNoCompatible = app.capacidad.motivos.lastOrNull(),
+        rutaModelo = app.gestorModelo.rutaInstalado,
+        activadaPorUsuario = app.preferenciasIa.usarIaLocal.value,
+    )
+    val senas = ProcesadorSenas(application, ia)
 
     private val _cargaSimuladaMs = MutableStateFlow(0L)
 
@@ -54,5 +67,6 @@ class CamaraViewModel(application: Application) : AndroidViewModel(application) 
         landmarks.alExtraer = null
         landmarks.close()
         senas.close()
+        ia.close()
     }
 }
