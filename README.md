@@ -3,10 +3,10 @@
 Aplicación Android que reconoce señas de la **Lengua de Señas Colombiana (LSC)** con la cámara
 del teléfono y las convierte en texto en español mediante inteligencia artificial.
 
-> **Estado:** fase 7 — cadena de reconocimiento completa con LiteRT (características, ventana
-> temporal, modelo, filtro, secuencia y propuesta por reglas), lista para el modelo que se
-> entrenará en la fase 6. Sin modelo, la app lo indica y no muestra señas. El reconocedor
-> funcionará con un **vocabulario limitado y verificado**; no traduce toda la LSC.
+> **Estado:** fase 8 — reconocimiento con LiteRT listo para el modelo de la fase 6 y modelo de
+> lenguaje opcional en el teléfono (Gemma 4 E2B con LiteRT-LM) que mejora las frases, con
+> validación y respaldo por reglas. Sin modelo de señas, la app lo indica y no muestra señas.
+> El reconocedor funcionará con un **vocabulario limitado y verificado**; no traduce toda la LSC.
 
 ## Cómo funciona (resumen)
 
@@ -39,6 +39,7 @@ Dos componentes de IA, independientes entre sí:
 | [Fase 4 · Cámara](docs/fase-04-camara.md) | CameraX, permiso, descarte de fotogramas y cómo probarlo en el teléfono |
 | [Fase 5 · MediaPipe](docs/fase-05-mediapipe.md) | Holistic Landmarker, puntos que se guardan, regla del espejo y cómo probarlo |
 | [Fase 7 · Reconocedor LiteRT](docs/fase-07-reconocedor-litert.md) | Contrato del modelo, características, `modelo.json` y flujo de reconocimiento |
+| [Fase 8 · Modelo de lenguaje](docs/fase-08-modelo-lenguaje.md) | IA local con LiteRT-LM, instalación del modelo, validación y respaldo |
 
 ## Compilar y probar
 
@@ -56,7 +57,8 @@ el modelo de MediaPipe.
 ```
 senas-lsc/
 ├── app/                   Aplicación Android (Kotlin, Jetpack Compose)
-├── core/model/            Tipos de dominio, sin dependencias de Android
+├── core/model/            Tipos de dominio y lector JSON, sin dependencias de Android
+├── core/descargas/        Descarga reanudable, progreso y espacio (Kotlin puro)
 ├── recognizer/api/        Contrato del reconocedor visual
 ├── sequence/              Ventanas, filtro temporal y secuencia de señas
 ├── interpreter/api/       Contrato del intérprete, instrucciones y validador
@@ -64,11 +66,12 @@ senas-lsc/
 ├── camera/                Captura con CameraX (librería Android)
 ├── vision/landmarks/      Puntos de referencia con MediaPipe (librería Android)
 ├── recognizer/litert/     Reconocedor con LiteRT (librería Android; ver MODELO.md)
+├── interpreter/litertlm/  Modelo de lenguaje con LiteRT-LM y gestión de su archivo
 └── docs/                  Documentación del proyecto
 ```
 
 Se añadirán en sus fases: `training/` (6, Python),
-`interpreter/litertlm/` (8), `data/history/` (9).
+`data/history/` (9).
 
 ## Autor
 
