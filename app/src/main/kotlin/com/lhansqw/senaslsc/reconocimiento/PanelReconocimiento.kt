@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -95,6 +97,15 @@ private fun Contenido(
 
     FilaSenas(estado.senas)
     estado.propuesta?.let { Propuesta(it) }
+    if (estado.generando) {
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            CircularProgressIndicator(strokeWidth = 2.dp, modifier = Modifier.size(16.dp), color = TEXTO)
+            Texto(stringResource(R.string.propuesta_generando), TEXTO_SECUNDARIO)
+        }
+    }
+    estado.motivoDescarteIa?.let { motivo ->
+        Texto(stringResource(R.string.propuesta_ia_descartada, motivo), TEXTO_SECUNDARIO)
+    }
 
     Row(horizontalArrangement = Arrangement.spacedBy(4.dp), modifier = Modifier.fillMaxWidth()) {
         TextButton(onClick = onBorrarUltima, enabled = estado.senas.isNotEmpty()) {
