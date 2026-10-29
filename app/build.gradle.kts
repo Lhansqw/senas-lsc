@@ -55,6 +55,7 @@ dependencies {
     implementation(project(":camera"))
     implementation(project(":vision:landmarks"))
     implementation(project(":recognizer:litert"))
+    implementation(project(":interpreter:litertlm"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
