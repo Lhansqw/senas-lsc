@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- La app no pide permisos todavía. La cámara se añade en la fase 4. -->
+    <!--
+        Los permisos los declaran los módulos y se fusionan aquí:
+        - :camera → CAMERA (ver tus manos; las imágenes no se guardan).
+        - :interpreter:litertlm → INTERNET (solo para descargar el modelo de lenguaje si lo pides).
+    -->
 
     <application
         android:name=".SenasApp"
