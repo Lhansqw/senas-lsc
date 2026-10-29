@@ -9,6 +9,7 @@ import com.lhansqw.senaslsc.core.model.PropuestaFrase
 import com.lhansqw.senaslsc.core.model.Punto3D
 import com.lhansqw.senaslsc.core.model.TipoSena
 import com.lhansqw.senaslsc.core.model.Vocabulario
+import com.lhansqw.senaslsc.interpreter.ResultadoGenerativo
 import com.lhansqw.senaslsc.recognizer.FichaModelo
 import com.lhansqw.senaslsc.recognizer.ReconocedorSenas
 import com.lhansqw.senaslsc.sequence.MotorSenas
@@ -168,5 +169,99 @@ class CoordinadorReconocimientoTest {
         simular(c, 0, 2_500)
         ejecutar { c.interpretar() }
         assertEquals("propia: 1", c.estado.propuesta?.texto)
+    }
+
+    // --- Mejora asíncrona con el modelo de lenguaje -------------------------------------------
+
+    private fun propuestaIa(texto: String, ids: List<String>) =
+        PropuestaFrase(texto, ids, false, null, null, OrigenInterpretacion.LOCAL)
+
+    /** Deja una secuencia HOLA + GRACIAS cerrada con el refinamiento activado. */
+    private fun secuenciaCerrada(r: ReconocedorFalso, c: CoordinadorReconocimiento): Long {
+        c.refinamientoDisponible = true
+        r.actual = "lsc.hola"
+        var t = simular(c, 0, 2_500)
+        r.actual = "lsc.gracias"
+        t = simular(c, t, 2_500)
+        ejecutar { c.interpretar() }
+        return t
+    }
+
+    @Test
+    fun `con la ia disponible deja una solicitud y marca que esta generando`() {
+        val r = ReconocedorFalso(vocabulario)
+        val c = coordinador(r)
+        secuenciaCerrada(r, c)
+
+        assertEquals("Hola gracias.", c.estado.propuesta?.texto)  // reglas, de inmediato
+        assertTrue(c.estado.generando)
+        val solicitud = c.tomarSolicitud()
+        assertEquals(listOf("lsc.hola", "lsc.gracias"), solicitud?.senas?.map { it.id })
+        assertNull(c.tomarSolicitud())                              // solo se entrega una vez
+    }
+
+    @Test
+    fun `una respuesta aceptada sustituye la propuesta de reglas`() {
+        val r = ReconocedorFalso(vocabulario)
+        val c = coordinador(r)
+        secuenciaCerrada(r, c)
+        val solicitud = c.tomarSolicitud()!!
+
+        c.aplicarRefinamiento(solicitud.id, ResultadoGenerativo.Aceptada(propuestaIa("¡Hola, gracias!", listOf("lsc.hola", "lsc.gracias"))))
+        assertEquals("¡Hola, gracias!", c.estado.propuesta?.texto)
+        assertEquals(OrigenInterpretacion.LOCAL, c.estado.propuesta?.origen)
+        assertEquals(false, c.estado.generando)
+    }
+
+    @Test
+    fun `una respuesta descartada conserva las reglas y guarda el motivo`() {
+        val r = ReconocedorFalso(vocabulario)
+        val c = coordinador(r)
+        secuenciaCerrada(r, c)
+        val solicitud = c.tomarSolicitud()!!
+        val reglas = c.estado.propuesta!!
+
+        c.aplicarRefinamiento(solicitud.id, ResultadoGenerativo.Descartada(listOf("Usa señas que no se reconocieron"), reglas))
+        assertEquals("Hola gracias.", c.estado.propuesta?.texto)
+        assertEquals("Usa señas que no se reconocieron", c.estado.motivoDescarteIa)
+        assertEquals(false, c.estado.generando)
+    }
+
+    @Test
+    fun `un resultado que llega tarde no pisa una secuencia distinta`() {
+        val r = ReconocedorFalso(vocabulario)
+        val c = coordinador(r)
+        secuenciaCerrada(r, c)
+        val solicitud = c.tomarSolicitud()!!
+
+        c.eliminarUltima()                                            // el usuario corrige mientras la IA piensa
+        c.aplicarRefinamiento(solicitud.id, ResultadoGenerativo.Aceptada(propuestaIa("¡Hola, gracias!", listOf("lsc.hola", "lsc.gracias"))))
+        assertNull(c.estado.propuesta)
+        assertEquals(false, c.estado.generando)
+    }
+
+    @Test
+    fun `una sola sena no pide ayuda a la ia`() {
+        val r = ReconocedorFalso(vocabulario).apply { actual = "lsc.hola" }
+        val c = coordinador(r).apply { refinamientoDisponible = true }
+        simular(c, 0, 2_500)
+        ejecutar { c.interpretar() }
+        assertNull(c.tomarSolicitud())
+        assertEquals(false, c.estado.generando)
+    }
+
+    @Test
+    fun `sin la ia disponible no hay solicitudes`() {
+        val r = ReconocedorFalso(vocabulario)
+        val c = coordinador(r)
+        secuenciaCerrada(r, c)
+        c.refinamientoDisponible = false
+        c.limpiar()
+        r.actual = "lsc.hola"
+        val t = simular(c, 20_000, 2_500)
+        r.actual = "lsc.gracias"
+        simular(c, t, 2_500)
+        ejecutar { c.interpretar() }
+        assertNull(c.tomarSolicitud())
     }
 }
