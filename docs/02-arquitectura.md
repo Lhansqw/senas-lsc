@@ -32,16 +32,17 @@ de señas confirmadas**. Se puede reentrenar o sustituir uno sin tocar el otro.
 | `:core:model` ✅ | Kotlin puro | Tipos de dominio (`LandmarkFrame`, `Vocabulario`, `PrediccionSena`, `SenaConfirmada`, `PropuestaFrase`) y lector JSON | — |
 | `:recognizer:api` ✅ | Kotlin puro | `ReconocedorSenas`, `Caracteristicas`, `ContratoModelo`, `LectorContrato`, `PostProcesador` | `:core:model` |
 | `:sequence` ✅ | Kotlin puro | `VentanaTemporal`, `Remuestreo`, `FiltroTemporal`, `ConstructorSecuencia`, `MotorSenas` | `:core:model` |
-| `:interpreter:api` ✅ | Kotlin puro | Interfaz `Interprete`, `PlantillaPrompt` y `ValidadorRespuesta` | `:core:model` |
+| `:interpreter:api` ✅ | Kotlin puro | `Interprete`, `PlantillaPrompt`, `ValidadorRespuesta`, `LectorRespuestaModelo`, `InterpreteGenerativo` | `:core:model` |
 | `:interpreter:rules` ✅ | Kotlin puro | `InterpreteReglas`: une significados sin inventar | `:interpreter:api` |
 | `:camera` ✅ | Android lib | `ControladorCamara` (CameraX), `MedidorRendimiento` (fase 4) | — |
 | `:vision:landmarks` ✅ | Android lib | `ExtractorLandmarks` (MediaPipe Holistic → `LandmarkFrame`), `Subconjuntos` (fase 5) | `:core:model` |
 | `:recognizer:litert` ✅ | Android lib | `ReconocedorLiteRT` (CompiledModel), `CargadorReconocedor` (fase 7) | `:recognizer:api` |
-| `:interpreter:litertlm` | Android lib | Modelo de lenguaje local con LiteRT-LM (fase 8) | `:interpreter:api` |
+| `:interpreter:litertlm` ✅ | Android lib | `MotorLiteRtLm`, `GestorModeloLenguaje` (fase 8) | `:interpreter:api`, `:core:descargas` |
+| `:core:descargas` ✅ | Kotlin puro | Descarga reanudable, copia, progreso y espacio (fase 8) | — |
 | `:data:history` | Android lib | Room, historial cifrado, borrado (fase 9) | `:core:model` |
 | `:interpreter:remote` | Android lib | Proveedor remoto, desactivado por defecto (fase 10) | `:interpreter:api` |
 
-✅ = ya creado (fases 3 a 7). Los módulos Android se crean en la fase que los necesita, para no
+✅ = ya creado (fases 3 a 8). Los módulos Android se crean en la fase que los necesita, para no
 mantener módulos vacíos. El antiguo `:core:common` no hizo falta: el vocabulario vive en
 `:core:model` y no se necesitan utilidades compartidas todavía.
 
