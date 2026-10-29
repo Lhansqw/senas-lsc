@@ -3,10 +3,12 @@
     <string name="app_name">Señas LSC</string>
 
     <string name="accion_volver">Volver</string>
+    <string name="accion_cancelar">Cancelar</string>
 
     <string name="inicio_titulo">Reconocimiento de Lengua de Señas Colombiana</string>
     <string name="inicio_descripcion">La cámara ya detecta tus manos, tu cuerpo y tu rostro. El reconocimiento de señas llegará en las siguientes fases.</string>
     <string name="inicio_abrir_camara">Abrir cámara</string>
+    <string name="inicio_abrir_ia">IA para proponer frases</string>
     <string name="inicio_version">Versión %1$s</string>
 
     <string name="dispositivo_titulo">Tu dispositivo</string>
@@ -76,4 +78,31 @@
     <string name="propuesta_incierta">Interpretación incierta: %1$s</string>
     <string name="propuesta_generando">La IA del teléfono está preparando una frase…</string>
     <string name="propuesta_ia_descartada">La respuesta de la IA no superó la validación y se muestra la de reglas (%1$s).</string>
+
+    <!-- IA local (modelo de lenguaje) -->
+    <string name="ia_titulo">IA para proponer frases</string>
+    <string name="ia_explicacion">Un modelo de lenguaje en el teléfono ordena las señas reconocidas en una frase más natural en español. Es opcional: sin él, la app une los significados con reglas.</string>
+    <string name="ia_privacidad">Funciona sin Internet una vez instalado. Solo recibe las señas reconocidas (texto), nunca imágenes. Sus propuestas se validan: si añade señas que no hiciste, se descartan.</string>
+    <string name="ia_no_compatible_titulo">Este teléfono no puede ejecutar el modelo de lenguaje</string>
+    <string name="ia_ficha">Licencia %1$s · unos %2$s</string>
+    <string name="ia_estado_no_instalado">No instalado.</string>
+    <string name="ia_estado_parcial">Descarga interrumpida: %1$s de %2$s. Puedes continuarla.</string>
+    <string name="ia_estado_descargando">Descargando…</string>
+    <string name="ia_estado_importando">Copiando el archivo…</string>
+    <string name="ia_estado_instalado">Instalado (%1$s).</string>
+    <string name="ia_estado_espacio">No hay espacio suficiente: hacen falta %1$s libres y hay %2$s.</string>
+    <string name="ia_descargar">Descargar</string>
+    <string name="ia_continuar_descarga">Continuar descarga</string>
+    <string name="ia_reintentar">Reintentar</string>
+    <string name="ia_importar">Importar archivo</string>
+    <string name="ia_importar_ayuda">También puedes descargar el archivo .litertlm en otro equipo, pasarlo al teléfono e importarlo.</string>
+    <string name="ia_restante">quedan %1$s</string>
+    <string name="ia_no_cerrar">Mantén la app abierta hasta que termine. Si se corta, podrás continuar donde quedó.</string>
+    <string name="ia_usar">Usar para proponer frases</string>
+    <string name="ia_eliminar">Eliminar modelo</string>
+    <string name="ia_eliminar_titulo">¿Eliminar el modelo?</string>
+    <string name="ia_eliminar_texto">Se libera el espacio y las frases se propondrán solo con reglas. Podrás volver a instalarlo.</string>
+    <string name="ia_descarga_titulo">Descargar el modelo de lenguaje</string>
+    <string name="ia_descarga_texto">Se descargará %1$s (unos %2$s) desde Hugging Face. Usa una red Wi-Fi: con datos móviles puede tener coste. Licencia: %3$s.</string>
+    <string name="ia_ver_licencia">Ver ficha</string>
 </resources>
