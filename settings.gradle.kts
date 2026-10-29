@@ -32,6 +32,7 @@ include(":recognizer:api")
 include(":sequence")
 include(":interpreter:api")
 include(":interpreter:rules")
+include(":data:history")
 
 // Módulos Android.
 include(":camera")
@@ -40,4 +41,4 @@ include(":recognizer:litert")
 include(":interpreter:litertlm")
 
 // Módulos Android que se añadirán en sus fases:
-// :data:history (9), :interpreter:remote (10).
+// :interpreter:remote (10).
