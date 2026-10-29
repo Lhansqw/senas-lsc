@@ -21,9 +21,15 @@ data class LandmarkFrame(
     val cuerpo: List<Punto3D>?,
     /** Subconjunto del rostro relevante para expresiones no manuales, o `null`. */
     val rostro: List<Punto3D>?,
+    /**
+     * Ancho / alto de la imagen analizada. Las coordenadas x e y se normalizan por separado, así
+     * que hace falta para medir distancias reales (en una imagen vertical 480×640 vale 0,75).
+     */
+    val relacionAspecto: Float = 1f,
 ) {
     init {
         require(timestampMs >= 0) { "timestampMs no puede ser negativo: $timestampMs" }
+        require(relacionAspecto > 0f) { "La relación de aspecto debe ser positiva: $relacionAspecto" }
         manoIzquierda?.let { require(it.size == PUNTOS_POR_MANO) { "La mano izquierda debe tener $PUNTOS_POR_MANO puntos (tiene ${it.size})" } }
         manoDerecha?.let { require(it.size == PUNTOS_POR_MANO) { "La mano derecha debe tener $PUNTOS_POR_MANO puntos (tiene ${it.size})" } }
     }
