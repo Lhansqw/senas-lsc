@@ -40,6 +40,7 @@ import com.lhansqw.senaslsc.BuildConfig
 import com.lhansqw.senaslsc.R
 import com.lhansqw.senaslsc.camera.EstadoCamara
 import com.lhansqw.senaslsc.camera.Rendimiento
+import com.lhansqw.senaslsc.core.rendimiento.ResumenLatencia
 import com.lhansqw.senaslsc.permisos.ConPermisoCamara
 import com.lhansqw.senaslsc.reconocimiento.PanelReconocimiento
 import com.lhansqw.senaslsc.ui.AccionesTexto
@@ -111,7 +112,7 @@ private fun VistaCamara(onVolver: () -> Unit, viewModel: CamaraViewModel = viewM
                 .padding(12.dp),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
-            PanelMetricas(estado, rendimiento, analisisActivo, estadoModelo, landmarks)
+            PanelMetricas(estado, rendimiento, analisisActivo, estadoModelo, landmarks, reconocimiento.latenciaModelo)
 
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 if (BuildConfig.DEBUG) {
@@ -162,6 +163,7 @@ private fun PanelMetricas(
     analisisActivo: Boolean,
     estadoModelo: EstadoModelo,
     landmarks: ResultadoLandmarks?,
+    latenciaModelo: ResumenLatencia?,
 ) {
     val activa = estado as? EstadoCamara.Activa
     val es = Locale.forLanguageTag("es-CO")
@@ -177,10 +179,19 @@ private fun PanelMetricas(
             add(
                 stringResource(
                     R.string.camara_latencia,
-                    String.format(es, "%.1f", rendimiento.latenciaMediaMs),
-                    String.format(es, "%.1f", rendimiento.latenciaMaximaMs),
+                    String.format(es, "%.1f", rendimiento.latenciaP50Ms),
+                    String.format(es, "%.1f", rendimiento.latenciaP95Ms),
                 ),
             )
+            latenciaModelo?.let {
+                add(
+                    stringResource(
+                        R.string.modelo_senas_latencia,
+                        String.format(es, "%.1f", it.p50Ms),
+                        String.format(es, "%.1f", it.p95Ms),
+                    ),
+                )
+            }
         }
         if (analisisActivo) {
             when (estadoModelo) {
