@@ -159,6 +159,7 @@ private fun Propuesta(propuesta: PropuestaFrase) {
             OrigenInterpretacion.REGLAS -> R.string.propuesta_origen_reglas
             OrigenInterpretacion.LOCAL -> R.string.propuesta_origen_local
             OrigenInterpretacion.REMOTO -> R.string.propuesta_origen_remoto
+            OrigenInterpretacion.USUARIO -> R.string.propuesta_origen_usuario
         },
     )
     Column(
