@@ -4,8 +4,11 @@
     <!--
         Los permisos los declaran los módulos y se fusionan aquí:
         - :camera → CAMERA (ver tus manos; las imágenes no se guardan).
-        - :interpreter:litertlm → INTERNET (solo para descargar el modelo de lenguaje si lo pides).
+        - :interpreter:litertlm → INTERNET (descargar el modelo de lenguaje y, con tu permiso, usar Gemini).
     -->
+
+    <!-- Saber si hay conexión antes de intentar usar Gemini (fase 10). -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".SenasApp"
