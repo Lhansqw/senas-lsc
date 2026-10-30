@@ -91,8 +91,8 @@
     <string name="editar_ayuda">Tu corrección es definitiva: la IA no la volverá a cambiar.</string>
     <string name="editar_etiqueta">Frase</string>
     <string name="propuesta_incierta">Interpretación incierta: %1$s</string>
-    <string name="propuesta_generando">La IA del teléfono está preparando una frase…</string>
-    <string name="propuesta_ia_descartada">La respuesta de la IA no superó la validación y se muestra la de reglas (%1$s).</string>
+    <string name="propuesta_generando">La IA está preparando una frase…</string>
+    <string name="propuesta_ia_descartada">Se muestra la propuesta por reglas: %1$s</string>
 
     <!-- IA local (modelo de lenguaje) -->
     <string name="ia_titulo">IA para proponer frases</string>
@@ -158,9 +158,32 @@
     <string name="acerca_titulo">Acerca de</string>
     <string name="acerca_que_hace">Qué hace y qué no</string>
     <string name="acerca_privacidad">Privacidad</string>
-    <string name="acerca_privacidad_texto">Las imágenes de la cámara se analizan en el teléfono y no se guardan ni se envían a ningún sitio. El reconocimiento de señas y la IA local funcionan sin conexión. La app solo usa internet para descargar el modelo de lenguaje, y solo si lo pides. El historial está desactivado por defecto; si lo activas, se guarda cifrado y solo en este teléfono.</string>
+    <string name="acerca_privacidad_texto">Las imágenes de la cámara se analizan en el teléfono y no se guardan ni se envían a ningún sitio. El reconocimiento de señas y la IA local funcionan sin conexión. La app solo usa internet para descargar el modelo de lenguaje si lo pides y, si activas Gemini, para enviarle el texto de las señas (nunca imágenes). El historial está desactivado por defecto; si lo activas, se guarda cifrado y solo en este teléfono.</string>
     <string name="acerca_modelo">Modelo de señas instalado</string>
     <string name="acerca_metricas">Medido con personas que el modelo no vio al entrenar: %1$s</string>
     <string name="acerca_datos">Datos de entrenamiento</string>
     <string name="acerca_licencias">Software de terceros</string>
+
+    <!-- IA de internet: Gemini (fase 10) -->
+    <string name="remota_titulo">IA en internet (Gemini)</string>
+    <string name="remota_explicacion">Opcional. Gemini, de Google, propone frases cuando la IA del teléfono no está disponible o si lo prefieres. Necesita conexión y una clave de API tuya. Sus propuestas pasan la misma validación que las del teléfono.</string>
+    <string name="remota_activar">Activar…</string>
+    <string name="remota_permitida">Permitir enviar señas a Gemini</string>
+    <string name="remota_clave">Clave de API de Gemini</string>
+    <string name="remota_clave_ayuda">Se crea en aistudio.google.com/apikey. Se guarda cifrada en este teléfono y nunca se muestra.</string>
+    <string name="remota_guardar_clave">Guardar y probar</string>
+    <string name="remota_clave_guardada">Clave guardada (cifrada en el teléfono).</string>
+    <string name="remota_borrar_clave">Borrar clave</string>
+    <string name="remota_modelo">Modelo</string>
+    <string name="remota_usar_modelo">Usar este modelo</string>
+    <string name="remota_cuando">Cuándo usarla</string>
+    <string name="remota_pref_auto">Automático: la IA del teléfono si está lista; si no, Gemini</string>
+    <string name="remota_pref_internet">Preferir Gemini cuando haya conexión</string>
+    <string name="remota_pref_telefono">Nunca usar internet</string>
+    <string name="remota_probar">Probar conexión</string>
+    <string name="remota_probando">Probando…</string>
+    <string name="remota_prueba_ok">Funciona.</string>
+    <string name="remota_consentimiento_titulo">¿Enviar señas a Gemini?</string>
+    <string name="remota_consentimiento_texto">Al cerrar una frase, la app enviará a Google (Gemini) solo el texto de las señas reconocidas: su glosa, su significado y la confianza. Nunca imágenes, vídeo ni la posición de tus manos.\n\nCon el nivel gratuito de Gemini, Google puede usar lo que se envía para mejorar sus productos; con el nivel de pago, no. El uso puede tener coste según tu cuenta.\n\nPuedes desactivarlo cuando quieras; sin esto, la app no envía nada a internet.</string>
+    <string name="remota_acepto">Acepto</string>
 </resources>
