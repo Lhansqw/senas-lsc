@@ -73,6 +73,7 @@ class ProcesadorSenas(context: Context, private val ia: ControladorIaLocal? = nu
     fun interpretar() = orden { coordinador.interpretar() }
     fun eliminarUltima() = orden { coordinador.eliminarUltima() }
     fun limpiar() = orden { coordinador.limpiar() }
+    fun corregir(texto: String) = orden { coordinador.corregir(texto) }
 
     private fun orden(accion: suspend () -> Unit) {
         ambito.launch {
