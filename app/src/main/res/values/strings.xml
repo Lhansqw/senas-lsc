@@ -4,6 +4,12 @@
 
     <string name="accion_volver">Volver</string>
     <string name="accion_cancelar">Cancelar</string>
+    <string name="accion_copiar">Copiar</string>
+    <string name="accion_copiado">Texto copiado</string>
+    <string name="accion_compartir">Compartir</string>
+    <string name="accion_editar">Editar</string>
+    <string name="accion_guardar">Guardar</string>
+    <string name="accion_guardado">Guardado en el historial</string>
 
     <string name="inicio_titulo">Reconocimiento de Lengua de Señas Colombiana</string>
     <string name="inicio_descripcion">La cámara ya detecta tus manos, tu cuerpo y tu rostro. El reconocimiento de señas llegará en las siguientes fases.</string>
@@ -76,6 +82,9 @@
     <string name="propuesta_origen_local">Propuesta de la IA en el teléfono</string>
     <string name="propuesta_origen_remoto">Propuesta de la IA en la nube</string>
     <string name="propuesta_origen_usuario">Frase corregida por ti</string>
+    <string name="editar_titulo">Corregir la frase</string>
+    <string name="editar_ayuda">Tu corrección es definitiva: la IA no la volverá a cambiar.</string>
+    <string name="editar_etiqueta">Frase</string>
     <string name="propuesta_incierta">Interpretación incierta: %1$s</string>
     <string name="propuesta_generando">La IA del teléfono está preparando una frase…</string>
     <string name="propuesta_ia_descartada">La respuesta de la IA no superó la validación y se muestra la de reglas (%1$s).</string>
