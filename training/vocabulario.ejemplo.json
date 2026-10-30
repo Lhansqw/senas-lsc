@@ -1,0 +1,11 @@
+{
+  "_nota": "EJEMPLO. Copia este archivo como vocabulario.json, pon en 'carpetas' los nombres reales de las carpetas del conjunto de datos y valida cada seña con una persona competente en LSC.",
+  "lengua": "lsc",
+  "senas": [
+    { "id": "lsc.hola", "glosa": "HOLA", "significado": "hola", "tipo": "palabra", "carpetas": ["Hola"] },
+    { "id": "lsc.gracias", "glosa": "GRACIAS", "significado": "gracias", "tipo": "palabra", "carpetas": ["Gracias"] },
+    { "id": "lsc.como", "glosa": "CÓMO", "significado": "cómo", "tipo": "palabra", "carpetas": ["Como"], "interrogativa": true },
+    { "id": "lsc.n1", "glosa": "1", "significado": "1", "tipo": "numero", "carpetas": ["1"] },
+    { "id": "lsc.a", "glosa": "A", "significado": "a", "tipo": "letra", "carpetas": ["A"] }
+  ]
+}
