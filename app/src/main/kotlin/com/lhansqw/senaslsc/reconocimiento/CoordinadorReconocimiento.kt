@@ -1,6 +1,7 @@
 package com.lhansqw.senaslsc.reconocimiento
 
 import com.lhansqw.senaslsc.core.model.LandmarkFrame
+import com.lhansqw.senaslsc.core.model.OrigenInterpretacion
 import com.lhansqw.senaslsc.core.model.PropuestaFrase
 import com.lhansqw.senaslsc.core.model.SenaConfirmada
 import com.lhansqw.senaslsc.interpreter.ReglasInterpretacion
@@ -93,6 +94,31 @@ class CoordinadorReconocimiento(
             sincronizar()
             generarPropuesta()
         }
+    }
+
+    /**
+     * El usuario corrige el texto de la propuesta. La corrección es definitiva: se cancela cualquier
+     * mejora pendiente de la IA. Devuelve `false` si no hay propuesta o el texto está vacío.
+     */
+    fun corregir(texto: String): Boolean {
+        val actual = estado.propuesta ?: return false
+        val limpio = texto.trim()
+        if (limpio.isEmpty()) return false
+        pendiente = null
+        ultimaSolicitud = null
+        estado = estado.copy(
+            propuesta = PropuestaFrase(
+                texto = limpio,
+                senasUsadas = actual.senasUsadas,
+                incierta = false,
+                motivo = null,
+                preguntaAclaracion = null,
+                origen = OrigenInterpretacion.USUARIO,
+            ),
+            generando = false,
+            motivoDescarteIa = null,
+        )
+        return true
     }
 
     fun eliminarUltima() {
