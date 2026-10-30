@@ -63,3 +63,15 @@ def test_una_muestra_a_30_fps_no_se_toca():
     fotos = [Fotograma(t, None, MANO, CUERPO, None, 0.75) for t in range(0, 1001, 33)]
     assert preparar(fotos) is fotos
     assert ventana(preparar(fotos), 32, 1000).shape == (32, C.POR_FOTOGRAMA)
+
+
+def test_sin_rostro_el_bloque_queda_a_cero_como_en_kotlin():
+    rostro = np.tile([0.5, 0.3, 0.0], (39, 1))
+    fotos = [Fotograma(t, None, MANO + [0.4, 0.5, 0], CUERPO, rostro, 0.75) for t in (0, 33)]
+    con = C.de_ventana(fotos)
+    sin = C.de_ventana(fotos, usar_rostro=False)
+    inicio_rostro = 2 * C.POR_MANO + C.POR_CUERPO
+    assert con[0, inicio_rostro] == 1
+    assert not sin[:, inicio_rostro:inicio_rostro + C.POR_ROSTRO].any()
+    sin_deteccion = C.de_ventana([Fotograma(f.timestamp_ms, None, f.mano_derecha, f.cuerpo, None, 0.75) for f in fotos])
+    np.testing.assert_array_equal(sin, sin_deteccion)
