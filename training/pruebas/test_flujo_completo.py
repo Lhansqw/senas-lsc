@@ -31,6 +31,7 @@ def test_flujo_completo(carpeta, monkeypatch):
                           "--fotogramas", "16", "--epocas", "15", "--copias-aumentadas", "1", "--validacion", "0.25", "--prueba", "0.25"]) == 0
     conf = json.loads((salida / "entrenamiento.json").read_text(encoding="utf-8"))
     assert conf["fuentes"] == ["SINTETICO"]
+    assert conf["usa_rostro"] is False   # las muestras sintéticas no tienen cara, como LSC70
     assert not set(conf["particion"]["prueba"]) & set(conf["particion"]["entrenamiento"])
 
     assert evaluar.main(["--entrenamiento", str(salida), "--muestras", str(puntos)]) == 0
@@ -45,6 +46,7 @@ def test_flujo_completo(carpeta, monkeypatch):
     contrato = json.loads((salida / "modelo.json").read_text(encoding="utf-8"))
     assert Co.validar(contrato) == []
     assert contrato["ventana"]["fotogramas"] == 16
+    assert contrato["caracteristicas"]["usa_rostro"] is False
     assert contrato["metricas"]["exactitud"] == pytest.approx(metricas["exactitud"])
     assert contrato["salida"]["temperatura"] == pytest.approx(metricas["temperatura"])
     assert (salida / "reconocedor_lsc.tflite").stat().st_size > 10_000
