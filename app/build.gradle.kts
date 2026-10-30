@@ -52,6 +52,7 @@ dependencies {
     implementation(project(":sequence"))
     implementation(project(":interpreter:api"))
     implementation(project(":interpreter:rules"))
+    implementation(project(":data:history"))
     implementation(project(":camera"))
     implementation(project(":vision:landmarks"))
     implementation(project(":recognizer:litert"))
