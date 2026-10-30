@@ -1,0 +1,68 @@
+{
+  "formato": 1,
+  "nombre": "contrato-compartido",
+  "version": "0.0.0",
+  "lengua": "lsc",
+  "caracteristicas": {
+    "version": 1,
+    "version_subconjuntos": 1,
+    "por_fotograma": 352
+  },
+  "ventana": {
+    "fotogramas": 32,
+    "duracion_ms": 1000
+  },
+  "salida": {
+    "etiquetas": [
+      "sin_sena",
+      "lsc.a",
+      "lsc.como",
+      "lsc.gracias",
+      "lsc.hola",
+      "lsc.n1"
+    ],
+    "etiqueta_sin_sena": "sin_sena",
+    "temperatura": 1.25,
+    "umbral_energia": -2.5
+  },
+  "vocabulario": [
+    {
+      "id": "lsc.a",
+      "glosa": "A",
+      "significado": "a",
+      "tipo": "letra"
+    },
+    {
+      "id": "lsc.como",
+      "glosa": "CÓMO",
+      "significado": "cómo",
+      "tipo": "palabra",
+      "interrogativa": true
+    },
+    {
+      "id": "lsc.gracias",
+      "glosa": "GRACIAS",
+      "significado": "gracias",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.hola",
+      "glosa": "HOLA",
+      "significado": "hola",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.n1",
+      "glosa": "1",
+      "significado": "1",
+      "tipo": "numero"
+    }
+  ],
+  "datos_entrenamiento": [
+    "SOLO_PRUEBA"
+  ],
+  "metricas": {
+    "exactitud": 0.5,
+    "macro_f1": 0.5
+  }
+}
