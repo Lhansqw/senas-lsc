@@ -17,6 +17,11 @@ from .fotograma import Fotograma, a_arrays, desde_arrays
 _SEGURO = re.compile(r"[^A-Za-z0-9_.-]+")
 
 
+def nombre_archivo(fuente: str, persona: str, sena: str, repeticion: str) -> str:
+    """Nombre del `.npz` de una muestra (sirve para saber si ya se extrajo antes de procesarla)."""
+    return "__".join(_SEGURO.sub("-", p) for p in (fuente, persona, sena, repeticion)) + ".npz"
+
+
 @dataclass(frozen=True)
 class Muestra:
     persona: str
@@ -34,8 +39,7 @@ class Muestra:
 
     @property
     def nombre_archivo(self) -> str:
-        partes = [self.fuente, self.persona, self.sena, self.repeticion]
-        return "__".join(_SEGURO.sub("-", p) for p in partes) + ".npz"
+        return nombre_archivo(self.fuente, self.persona, self.sena, self.repeticion)
 
     @property
     def proporcion_con_manos(self) -> float:
