@@ -54,7 +54,7 @@ o copiando el APK y abriéndolo).
 | 8 | Girar el teléfono | No se pierde la cámara ni la frase |
 | 9 | «Vocabulario compatible» | 42 señas, buscador y filtros |
 | 10 | «Acerca de» | Modelo 0.1.0, cita de LSC70 y licencias |
-| 11 | Historial: activarlo, guardar una frase, cerrar y abrir | La frase sigue; desactivarlo la borra |
+| 11 | Historial: activarlo, guardar una frase, cerrar y abrir la app | La frase sigue; «Borrar todo el historial» la elimina |
 | 12 | IA local (si el teléfono es compatible) | Descarga solo al pedirla; propuestas marcadas como IA |
 | 13 | TalkBack activado en inicio y cámara | Todos los botones se anuncian con su nombre |
 | 14 | Desinstalar | No quedan datos (la app no hace copias de seguridad) |
