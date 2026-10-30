@@ -13,6 +13,22 @@ Las características se calculan **igual que en la app** (`senas/caracteristicas
 fiel de `Caracteristicas.kt`). Lo garantizan los casos compartidos de `pruebas/`: si alguna de las
 dos versiones cambia, las pruebas de Kotlin o de Python fallan.
 
+## Entrenar con LSC70 en Windows (todo de una vez)
+
+Con LSC70 descomprimido en `training\data\LSC70` (ver [DATOS.md](DATOS.md)):
+
+```powershell
+cd C:\dev\senas-lsc\training
+powershell -ExecutionPolicy Bypass -File .\entrenar_lsc70.ps1
+```
+
+El script crea el entorno de Python, extrae los puntos (lo más lento; si lo interrumpes, al
+volver a ejecutarlo continúa), entrena, evalúa, exporta y copia el modelo a la app. Al terminar,
+revisa `outputs\lsc70-v0.1.0\informe.md` y ejecuta `.\gradlew.bat installDebug` desde
+`C:\dev\senas-lsc`. Opciones: `-SoloExtraer`, `-SinInstalar`, `-Version 0.2.0`, `-Epocas 120`.
+
+Los pasos de abajo son los mismos, uno a uno.
+
 ## Preparación (una vez)
 
 Necesitas Python 3.11–3.13.
@@ -66,7 +82,9 @@ python -m pytest pruebas        # todo debe salir en verde
 | `senas/extraccion.py`, `extraer.py` | De imágenes o vídeos a muestras `.npz` |
 | `senas/muestras.py`, `vocabulario.py` | Formato de las muestras y del vocabulario |
 | `senas/particion.py`, `aumento.py`, `conjunto.py` | Partición por persona, aumento de datos y tensores |
+| `senas/interpolacion.py` | Interpola las 6 fotos de LSC70 a 30 fps, como la cámara de la app |
 | `senas/modelo.py` | Arquitectura Conv1D + GRU bidireccional y conversión a LiteRT |
 | `senas/metricas.py`, `calibracion.py` | Métricas, temperatura y umbral de energía |
 | `senas/contrato.py` | Escritura y validación de `modelo.json` |
 | `entrenar.py`, `evaluar.py`, `exportar.py` | Los tres pasos del entrenamiento |
+| `entrenar_lsc70.ps1`, `vocabulario.lsc70.json` | Todo el proceso con LSC70 en Windows |
