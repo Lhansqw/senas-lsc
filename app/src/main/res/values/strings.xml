@@ -134,4 +134,20 @@
     <string name="historial_origen_ia_local">IA del teléfono</string>
     <string name="historial_origen_ia_remota">IA en la nube</string>
     <string name="historial_origen_usuario">Corregida por ti</string>
+
+    <!-- Vocabulario -->
+    <string name="vocabulario_titulo">Vocabulario compatible</string>
+    <string name="vocabulario_explicacion">Estas son exactamente las señas de LSC que el modelo instalado sabe reconocer. Cualquier otra seña se marca como no reconocida.</string>
+    <string name="vocabulario_cargando">Leyendo el vocabulario…</string>
+    <string name="vocabulario_sin_modelo">Todavía no hay un modelo de señas instalado, así que la app no reconoce ninguna seña. El vocabulario aparecerá aquí cuando se entrene el modelo.</string>
+    <string name="vocabulario_modelo">Modelo %1$s %2$s · %3$d señas</string>
+    <string name="vocabulario_datos">Datos de entrenamiento: %1$s</string>
+    <string name="vocabulario_buscar">Buscar seña</string>
+    <string name="vocabulario_sin_resultados">Ninguna seña coincide con la búsqueda.</string>
+    <string name="vocabulario_todas">Todas</string>
+    <string name="vocabulario_palabras">Palabras</string>
+    <string name="vocabulario_numeros">Números</string>
+    <string name="vocabulario_letras">Letras</string>
+    <string name="vocabulario_interrogativa">Pregunta</string>
+    <string name="vocabulario_variante">Variante: %1$s</string>
 </resources>
