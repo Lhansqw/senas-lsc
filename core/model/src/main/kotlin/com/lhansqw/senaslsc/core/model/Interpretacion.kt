@@ -10,6 +10,9 @@ enum class OrigenInterpretacion {
 
     /** Proveedor remoto, solo con consentimiento y solo con texto. */
     REMOTO,
+
+    /** El usuario escribió o corrigió la frase. Es definitiva: ninguna IA la vuelve a cambiar. */
+    USUARIO,
 }
 
 /**

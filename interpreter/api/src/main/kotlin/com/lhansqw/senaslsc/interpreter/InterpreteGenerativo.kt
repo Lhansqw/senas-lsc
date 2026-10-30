@@ -44,7 +44,9 @@ class InterpreteGenerativo(
 ) : Interprete {
 
     init {
-        require(origen != OrigenInterpretacion.REGLAS) { "Un intérprete generativo es local o remoto" }
+        require(origen == OrigenInterpretacion.LOCAL || origen == OrigenInterpretacion.REMOTO) {
+            "Un intérprete generativo es local o remoto"
+        }
     }
 
     override suspend fun proponer(secuencia: List<SenaConfirmada>, contexto: String?): PropuestaFrase =
