@@ -22,6 +22,8 @@ venv/
 # Datos y modelos grandes (se descargan con scripts)
 training/data/
 training/outputs/
+training/modelos/
+.pytest_cache/
 *.litertlm
 # Modelo de MediaPipe: lo descarga Gradle (tarea descargarModeloHolistic)
 vision/landmarks/src/main/assets/holistic_landmarker.task
