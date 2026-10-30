@@ -1,7 +1,7 @@
 # Fase 6 · Datos y entrenamiento
 
 > **Estado:** parte 1 ✅ (sistema de entrenamiento completo y probado sin datos reales).
-> Parte 2 pendiente: descargar LSC70, entrenar y medir el modelo real.
+> Parte 2 en curso: LSC70 descargado y comprobado; falta ejecutar el entrenamiento en el PC.
 
 ## Qué hay
 
@@ -41,9 +41,26 @@ python -m pytest pruebas
 ```
 y en la raíz, `gradlew.bat test` (incluye `CasosCompartidosTest` y `ContratoGeneradoTest`).
 
-## Parte 2 (pendiente)
+## Parte 2
 
-1. Descargar LSC70 en `training/data/LSC70/` ([DATOS.md](../training/DATOS.md)).
-2. Elegir las señas del vocabulario inicial y validarlas con una persona competente en LSC.
-3. Ejecutar los cuatro pasos y revisar `informe.md`.
-4. `exportar.py --instalar` y probar en el teléfono.
+Hecho:
+
+1. ✅ LSC70 descargado en `training/data/LSC70/` y revisada su estructura ([DATOS.md](../training/DATOS.md)).
+2. ✅ Vocabulario inicial: 42 señas (`vocabulario.lsc70.json`, hoja `vocabulario_lsc_inicial.xlsx`).
+3. ✅ MediaPipe probado con fotos reales de LSC70 y el mismo modelo que la app: detecta el cuerpo y
+   la mano en todas; el rostro nunca (caras difuminadas).
+
+Dos ajustes que salieron de esa prueba:
+
+- **Velocidades.** 6 fotos por seña frente a ~30 fotogramas por segundo en la app: sin interpolar,
+  la velocidad salía 0 en casi todos los instantes y con picos en el resto. Ahora se interpola a
+  30 fps antes de calcular la ventana (`senas/interpolacion.py`).
+- **Rostro.** Un modelo entrenado sin caras recibiría caras en la app. `modelo.json` tiene ahora
+  `caracteristicas.usa_rostro` y, si es `false`, la app pone a cero esos puntos (Kotlin y Python
+  comprueban que da lo mismo que no detectar la cara).
+
+Falta:
+
+4. Ejecutar `training\entrenar_lsc70.ps1` en el PC y revisar `informe.md`.
+5. Validar las señas con una persona competente en LSC y decidir Ñ, MIL, MILLÓN, GUSTAR y LICOR.
+6. Probar el modelo en el teléfono.
