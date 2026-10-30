@@ -5,6 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import com.lhansqw.senaslsc.camera.AnalizadorFotogramas
 import com.lhansqw.senaslsc.SenasApp
 import com.lhansqw.senaslsc.camera.ControladorCamara
+import com.lhansqw.senaslsc.historial.aOrigenTexto
+import com.lhansqw.senaslsc.historial.glosasDe
 import com.lhansqw.senaslsc.ia.ControladorIaLocal
 import com.lhansqw.senaslsc.reconocimiento.ProcesadorSenas
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,6 +36,9 @@ class CamaraViewModel(application: Application) : AndroidViewModel(application) 
     )
     val senas = ProcesadorSenas(application, ia)
 
+    /** Si el usuario activó el historial (desactivado por defecto). */
+    val historialActivo: StateFlow<Boolean> = app.preferenciasHistorial.guardar
+
     private val _cargaSimuladaMs = MutableStateFlow(0L)
 
     /** Retardo artificial por fotograma para comprobar el descarte de fotogramas (solo pruebas). */
@@ -46,6 +51,18 @@ class CamaraViewModel(application: Application) : AndroidViewModel(application) 
             val retardo = _cargaSimuladaMs.value
             if (retardo > 0) Thread.sleep(retardo)
         }
+    }
+
+    /**
+     * Guarda la propuesta actual en el historial (solo si está activado). Devuelve `false` si no
+     * había nada que guardar.
+     */
+    fun guardarEnHistorial(): Boolean {
+        if (!historialActivo.value) return false
+        val estado = senas.estado.value
+        val propuesta = estado.propuesta ?: return false
+        app.historial.guardar(propuesta.texto, glosasDe(propuesta, estado.senas), propuesta.origen.aOrigenTexto())
+        return true
     }
 
     fun establecerCargaSimulada(ms: Long) {
