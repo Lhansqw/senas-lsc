@@ -3,10 +3,10 @@
 Aplicación Android que reconoce señas de la **Lengua de Señas Colombiana (LSC)** con la cámara
 del teléfono y las convierte en texto en español mediante inteligencia artificial.
 
-> **Estado:** fase 9 — interfaz de resultados completa: editar, copiar, compartir, historial
-> opcional cifrado y vocabulario compatible; reconocimiento con LiteRT listo para el modelo de la
-> fase 6 y modelo de lenguaje opcional en el teléfono. El reconocedor funcionará con un
-> **vocabulario limitado y verificado**; no traduce toda la LSC.
+> **Estado:** versión 1.0.0 en preparación (fase 12). Reconoce 42 señas de LSC entrenadas con
+> LSC70 (exactitud 90,7 % con personas no vistas, ver la [ficha del modelo](docs/ficha-modelo.md)),
+> propone frases con reglas o con un modelo de lenguaje en el teléfono y funciona sin conexión.
+> Trabaja con un **vocabulario limitado**; no traduce toda la LSC.
 
 ## Cómo funciona (resumen)
 
@@ -43,6 +43,8 @@ Dos componentes de IA, independientes entre sí:
 | [Fase 8 · Modelo de lenguaje](docs/fase-08-modelo-lenguaje.md) | IA local con LiteRT-LM, instalación del modelo, validación y respaldo |
 | [Fase 9 · Interfaz de resultados](docs/fase-09-interfaz-resultados.md) | Edición, historial cifrado, vocabulario compatible |
 | [Fase 11 · Optimización](docs/fase-11-optimizacion.md) | Arquitecturas, cuantización, latencia p50/p95 y modo reposo |
+| [Fase 12 · Versión instalable](docs/fase-12-version-instalable.md) | Firma, R8, APK/AAB, Acerca de y lista de comprobación |
+| [Ficha del modelo](docs/ficha-modelo.md) | Datos, resultados y limitaciones del modelo de señas instalado |
 
 ## Compilar y probar
 
