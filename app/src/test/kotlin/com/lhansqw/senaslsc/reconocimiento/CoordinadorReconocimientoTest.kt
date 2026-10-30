@@ -301,4 +301,21 @@ class CoordinadorReconocimientoTest {
         assertEquals(false, c.corregir("   "))
         assertEquals("Hola gracias.", c.estado.propuesta?.texto)
     }
+
+    @Test
+    fun `mide cuanto tarda el modelo de senas`() {
+        var ahora = 0L
+        val r = ReconocedorFalso(vocabulario)
+        // Cada llamada al reloj avanza 4 ms: una predicción (inicio y fin) mide 4 ms.
+        val c = CoordinadorReconocimiento(
+            r, MotorSenas(vocabulario, fotogramasModelo = 8, duracionVentanaMs = 1_000), listo,
+            reloj = { ahora.also { ahora += 4_000_000L } },
+        )
+        assertNull(c.estado.latenciaModelo)
+        simular(c, 0, 2_000)
+        val latencia = c.estado.latenciaModelo!!
+        assertEquals(r.llamadas, latencia.muestras)
+        assertEquals(4f, latencia.p50Ms, 1e-4f)
+        assertEquals(4f, latencia.p95Ms, 1e-4f)
+    }
 }
