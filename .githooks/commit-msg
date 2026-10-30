@@ -1,0 +1,7 @@
+#!/bin/sh
+# Elimina del mensaje de commit cualquier atribución automática a asistentes de IA,
+# para que el historial muestre solo al autor (Lhansqw).
+# Se activa una vez con:  git config core.hooksPath .githooks
+archivo="$1"
+grep -viE '^[[:space:]]*(co-authored-by:.*(claude|anthropic|noreply@anthropic)|claude-session:)|generated with \[?claude' "$archivo" > "$archivo.tmp"
+mv "$archivo.tmp" "$archivo"
