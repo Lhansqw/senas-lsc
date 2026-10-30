@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.camera.core.ImageProxy
 import com.lhansqw.senaslsc.camera.AnalizadorFotogramas
+import com.lhansqw.senaslsc.camera.ReguladorAnalisis
 import com.lhansqw.senaslsc.core.model.LandmarkFrame
 import com.lhansqw.senaslsc.vision.ExtractorLandmarks
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,6 +32,9 @@ sealed interface EstadoModelo {
  * Todo el acceso a MediaPipe pasa por el mismo cerrojo, así que nunca se usa desde dos hilos a la
  * vez (al girar el teléfono el hilo de análisis cambia, pero el modelo se reutiliza). [close]
  * espera a que termine el fotograma en curso antes de liberar el modelo.
+ *
+ * Con [ReguladorAnalisis], si no se ven manos durante 2 s se analizan solo unos 5 fotogramas por
+ * segundo hasta que vuelve a aparecer una mano (fase 11: ahorro de batería).
  */
 class AnalizadorLandmarks(context: Context) : AnalizadorFotogramas, AutoCloseable {
 
@@ -39,6 +43,12 @@ class AnalizadorLandmarks(context: Context) : AnalizadorFotogramas, AutoCloseabl
     private val preparador = PreparadorImagen()
     private var extractor: ExtractorLandmarks? = null
     private var cerrado = false
+    private val regulador = ReguladorAnalisis()
+
+    private val _reposo = MutableStateFlow(false)
+
+    /** Sin manos desde hace rato: se analizan menos fotogramas. */
+    val reposo: StateFlow<Boolean> = _reposo.asStateFlow()
 
     private val _resultado = MutableStateFlow<ResultadoLandmarks?>(null)
     val resultado: StateFlow<ResultadoLandmarks?> = _resultado.asStateFlow()
@@ -50,14 +60,18 @@ class AnalizadorLandmarks(context: Context) : AnalizadorFotogramas, AutoCloseabl
     @Volatile
     var alExtraer: ((LandmarkFrame) -> Unit)? = null
 
-    override fun analizar(imagen: ImageProxy) {
+    override fun analizar(imagen: ImageProxy): Boolean {
         synchronized(bloqueo) {
-            if (cerrado || _estadoModelo.value is EstadoModelo.Error) return
-            val ext = extractor ?: cargarModelo() ?: return
+            if (cerrado || _estadoModelo.value is EstadoModelo.Error) return false
+            val marcaNs = imagen.imageInfo.timestamp
+            if (!regulador.debeAnalizar(marcaNs)) return false
+            val ext = extractor ?: cargarModelo() ?: return false
 
             val bitmap = preparador.preparar(imagen)
-            val timestampMs = imagen.imageInfo.timestamp / 1_000_000
-            val extraccion = ext.extraer(bitmap, timestampMs) ?: return
+            val extraccion = ext.extraer(bitmap, marcaNs / 1_000_000)
+            regulador.registrarResultado(marcaNs, extraccion?.frame?.hayManos == true)
+            _reposo.value = regulador.enReposo
+            if (extraccion == null) return true
             _resultado.value = ResultadoLandmarks(
                 frame = extraccion.frame,
                 anchoImagen = bitmap.width,
@@ -65,12 +79,17 @@ class AnalizadorLandmarks(context: Context) : AnalizadorFotogramas, AutoCloseabl
                 inferenciaMs = extraccion.inferenciaMs,
             )
             alExtraer?.invoke(extraccion.frame)
+            return true
         }
     }
 
     /** Borra el último resultado (al pausar, para no dejar puntos congelados en pantalla). */
     fun limpiar() {
         _resultado.value = null
+        synchronized(bloqueo) {
+            regulador.reiniciar()
+            _reposo.value = false
+        }
     }
 
     override fun close() {

@@ -47,9 +47,10 @@ class CamaraViewModel(application: Application) : AndroidViewModel(application) 
     init {
         landmarks.alExtraer = senas::enviarFotograma
         controlador.analizador = AnalizadorFotogramas { imagen ->
-            landmarks.analizar(imagen)
+            val analizado = landmarks.analizar(imagen)
             val retardo = _cargaSimuladaMs.value
-            if (retardo > 0) Thread.sleep(retardo)
+            if (analizado && retardo > 0) Thread.sleep(retardo)
+            analizado
         }
     }
 
