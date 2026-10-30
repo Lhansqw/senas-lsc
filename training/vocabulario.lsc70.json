@@ -1,0 +1,384 @@
+{
+  "_nota": "Vocabulario para entrenar con LSC70 (LSC70AN: alfabeto y números; LSC70W: palabras). Son las señas marcadas «Sí» en la hoja vocabulario_lsc_inicial.xlsx. Pendientes de decidir: Ñ (carpeta NN), MIL, MILLON, GUSTAR y LICOR. Cada seña debe validarla una persona competente en LSC antes de publicar el modelo: las personas de LSC70 no son expertas.",
+  "lengua": "lsc",
+  "senas": [
+    {
+      "id": "lsc.hola",
+      "glosa": "HOLA",
+      "significado": "hola",
+      "tipo": "palabra",
+      "carpetas": [
+        "HOLA"
+      ]
+    },
+    {
+      "id": "lsc.nombre",
+      "glosa": "NOMBRE",
+      "significado": "nombre",
+      "tipo": "palabra",
+      "carpetas": [
+        "NOMBRE"
+      ]
+    },
+    {
+      "id": "lsc.yo",
+      "glosa": "YO",
+      "significado": "yo",
+      "tipo": "palabra",
+      "carpetas": [
+        "YO"
+      ]
+    },
+    {
+      "id": "lsc.buenas",
+      "glosa": "BUENAS",
+      "significado": "buenas",
+      "tipo": "palabra",
+      "carpetas": [
+        "BUENAS"
+      ]
+    },
+    {
+      "id": "lsc.tardes",
+      "glosa": "TARDES",
+      "significado": "tardes",
+      "tipo": "palabra",
+      "carpetas": [
+        "TARDES"
+      ]
+    },
+    {
+      "id": "lsc.noches",
+      "glosa": "NOCHES",
+      "significado": "noches",
+      "tipo": "palabra",
+      "carpetas": [
+        "NOCHES"
+      ]
+    },
+    {
+      "id": "lsc.dias",
+      "glosa": "DÍAS",
+      "significado": "días",
+      "tipo": "palabra",
+      "carpetas": [
+        "DIAS"
+      ]
+    },
+    {
+      "id": "lsc.anos",
+      "glosa": "AÑOS",
+      "significado": "años",
+      "tipo": "palabra",
+      "carpetas": [
+        "ANNOS"
+      ]
+    },
+    {
+      "id": "lsc.a",
+      "glosa": "A",
+      "significado": "a",
+      "tipo": "letra",
+      "carpetas": [
+        "A"
+      ]
+    },
+    {
+      "id": "lsc.b",
+      "glosa": "B",
+      "significado": "b",
+      "tipo": "letra",
+      "carpetas": [
+        "B"
+      ]
+    },
+    {
+      "id": "lsc.c",
+      "glosa": "C",
+      "significado": "c",
+      "tipo": "letra",
+      "carpetas": [
+        "C"
+      ]
+    },
+    {
+      "id": "lsc.d",
+      "glosa": "D",
+      "significado": "d",
+      "tipo": "letra",
+      "carpetas": [
+        "D"
+      ]
+    },
+    {
+      "id": "lsc.e",
+      "glosa": "E",
+      "significado": "e",
+      "tipo": "letra",
+      "carpetas": [
+        "E"
+      ]
+    },
+    {
+      "id": "lsc.f",
+      "glosa": "F",
+      "significado": "f",
+      "tipo": "letra",
+      "carpetas": [
+        "F"
+      ]
+    },
+    {
+      "id": "lsc.g",
+      "glosa": "G",
+      "significado": "g",
+      "tipo": "letra",
+      "carpetas": [
+        "G"
+      ]
+    },
+    {
+      "id": "lsc.h",
+      "glosa": "H",
+      "significado": "h",
+      "tipo": "letra",
+      "carpetas": [
+        "H"
+      ]
+    },
+    {
+      "id": "lsc.i",
+      "glosa": "I",
+      "significado": "i",
+      "tipo": "letra",
+      "carpetas": [
+        "I"
+      ]
+    },
+    {
+      "id": "lsc.j",
+      "glosa": "J",
+      "significado": "j",
+      "tipo": "letra",
+      "carpetas": [
+        "J"
+      ]
+    },
+    {
+      "id": "lsc.k",
+      "glosa": "K",
+      "significado": "k",
+      "tipo": "letra",
+      "carpetas": [
+        "K"
+      ]
+    },
+    {
+      "id": "lsc.l",
+      "glosa": "L",
+      "significado": "l",
+      "tipo": "letra",
+      "carpetas": [
+        "L"
+      ]
+    },
+    {
+      "id": "lsc.m",
+      "glosa": "M",
+      "significado": "m",
+      "tipo": "letra",
+      "carpetas": [
+        "M"
+      ]
+    },
+    {
+      "id": "lsc.n",
+      "glosa": "N",
+      "significado": "n",
+      "tipo": "letra",
+      "carpetas": [
+        "N"
+      ]
+    },
+    {
+      "id": "lsc.o",
+      "glosa": "O",
+      "significado": "o",
+      "tipo": "letra",
+      "carpetas": [
+        "O"
+      ]
+    },
+    {
+      "id": "lsc.p",
+      "glosa": "P",
+      "significado": "p",
+      "tipo": "letra",
+      "carpetas": [
+        "P"
+      ]
+    },
+    {
+      "id": "lsc.q",
+      "glosa": "Q",
+      "significado": "q",
+      "tipo": "letra",
+      "carpetas": [
+        "Q"
+      ]
+    },
+    {
+      "id": "lsc.r",
+      "glosa": "R",
+      "significado": "r",
+      "tipo": "letra",
+      "carpetas": [
+        "R"
+      ]
+    },
+    {
+      "id": "lsc.s",
+      "glosa": "S",
+      "significado": "s",
+      "tipo": "letra",
+      "carpetas": [
+        "S"
+      ]
+    },
+    {
+      "id": "lsc.t",
+      "glosa": "T",
+      "significado": "t",
+      "tipo": "letra",
+      "carpetas": [
+        "T"
+      ]
+    },
+    {
+      "id": "lsc.u",
+      "glosa": "U",
+      "significado": "u",
+      "tipo": "letra",
+      "carpetas": [
+        "U"
+      ]
+    },
+    {
+      "id": "lsc.v",
+      "glosa": "V",
+      "significado": "v",
+      "tipo": "letra",
+      "carpetas": [
+        "V"
+      ]
+    },
+    {
+      "id": "lsc.w",
+      "glosa": "W",
+      "significado": "w",
+      "tipo": "letra",
+      "carpetas": [
+        "W"
+      ]
+    },
+    {
+      "id": "lsc.x",
+      "glosa": "X",
+      "significado": "x",
+      "tipo": "letra",
+      "carpetas": [
+        "X"
+      ]
+    },
+    {
+      "id": "lsc.y",
+      "glosa": "Y",
+      "significado": "y",
+      "tipo": "letra",
+      "carpetas": [
+        "Y"
+      ]
+    },
+    {
+      "id": "lsc.z",
+      "glosa": "Z",
+      "significado": "z",
+      "tipo": "letra",
+      "carpetas": [
+        "Z"
+      ]
+    },
+    {
+      "id": "lsc.n1",
+      "glosa": "1",
+      "significado": "1",
+      "tipo": "numero",
+      "carpetas": [
+        "1"
+      ]
+    },
+    {
+      "id": "lsc.n4",
+      "glosa": "4",
+      "significado": "4",
+      "tipo": "numero",
+      "carpetas": [
+        "4"
+      ]
+    },
+    {
+      "id": "lsc.n5",
+      "glosa": "5",
+      "significado": "5",
+      "tipo": "numero",
+      "carpetas": [
+        "5"
+      ]
+    },
+    {
+      "id": "lsc.n6",
+      "glosa": "6",
+      "significado": "6",
+      "tipo": "numero",
+      "carpetas": [
+        "6"
+      ]
+    },
+    {
+      "id": "lsc.n7",
+      "glosa": "7",
+      "significado": "7",
+      "tipo": "numero",
+      "carpetas": [
+        "7"
+      ]
+    },
+    {
+      "id": "lsc.n8",
+      "glosa": "8",
+      "significado": "8",
+      "tipo": "numero",
+      "carpetas": [
+        "8"
+      ]
+    },
+    {
+      "id": "lsc.n9",
+      "glosa": "9",
+      "significado": "9",
+      "tipo": "numero",
+      "carpetas": [
+        "9"
+      ]
+    },
+    {
+      "id": "lsc.n10",
+      "glosa": "10",
+      "significado": "10",
+      "tipo": "numero",
+      "carpetas": [
+        "10"
+      ]
+    }
+  ]
+}
