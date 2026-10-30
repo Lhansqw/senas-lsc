@@ -35,3 +35,7 @@ Thumbs.db
 # Secretos
 .env
 secrets.properties
+keystore.properties
+
+# Versiones instalables generadas (scripts/version_instalable.ps1)
+dist/
