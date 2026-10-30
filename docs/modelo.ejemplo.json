@@ -6,7 +6,8 @@
   "caracteristicas": {
     "version": 1,
     "version_subconjuntos": 1,
-    "por_fotograma": 352
+    "por_fotograma": 352,
+    "usa_rostro": false
   },
   "ventana": {
     "fotogramas": 32,

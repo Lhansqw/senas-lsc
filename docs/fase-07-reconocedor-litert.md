@@ -78,6 +78,7 @@ Ejemplo completo en [`docs/modelo.ejemplo.json`](modelo.ejemplo.json).
 | `formato` | Versión del formato del archivo: 1 |
 | `nombre`, `version`, `lengua` | Identificación del modelo (`lengua`: prefijo de los ids, p. ej. `lsc`) |
 | `caracteristicas.version` / `.version_subconjuntos` / `.por_fotograma` | Deben valer 1 / 1 / 352 |
+| `caracteristicas.usa_rostro` (opcional) | `false` si el modelo se entrenó sin caras (LSC70 las difumina): la app pone a cero los puntos del rostro. Si falta, `true` |
 | `ventana.fotogramas` / `.duracion_ms` | Instantes por ventana y duración que cubren |
 | `salida.etiquetas` | Id de cada salida del modelo, en orden |
 | `salida.etiqueta_sin_sena` | Etiqueta de la clase «sin seña», o `null` |
