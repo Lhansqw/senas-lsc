@@ -58,4 +58,28 @@ class MedidorRendimientoTest {
         assertEquals(0f, r.fps, 0f)
         assertEquals(1L, r.analizados)
     }
+
+    @Test
+    fun `p50 y p95 de las ultimas mediciones`() {
+        val medidor = MedidorRendimiento()
+        // 95 fotogramas de 10 ms y 5 de 60 ms (tirones): la media apenas sube, el p95 sí.
+        repeat(100) { i -> medidor.registrar(timestampNs = i * 33_333_333L, duracionNs = (if (i % 20 == 19) 60 else 10) * ms) }
+        val r = medidor.instantanea()
+        assertEquals(10f, r.latenciaP50Ms, 0.001f)
+        assertEquals(10f, r.latenciaP95Ms, 0.001f)
+        medidor.registrar(timestampNs = 100 * 33_333_333L, duracionNs = 60 * ms)
+        assertEquals(60f, medidor.instantanea().latenciaP95Ms, 0.001f)  // 6 de 101 superan el 5 %
+    }
+
+    @Test
+    fun `los percentiles usan mas que el ultimo segundo y se borran al reiniciar`() {
+        val medidor = MedidorRendimiento(muestrasPercentil = 50)
+        repeat(40) { i -> medidor.registrar(timestampNs = i * 100_000_000L, duracionNs = 80 * ms) }   // 4 s lentos
+        repeat(12) { i -> medidor.registrar(timestampNs = (40 + i) * 100_000_000L, duracionNs = 5 * ms) } // 1,2 s rápido
+        val r = medidor.instantanea()
+        assertEquals(5f, r.latenciaMaximaMs, 0.001f)   // la ventana de 1 s ya solo ve los rápidos
+        assertEquals(80f, r.latenciaP50Ms, 0.001f)     // los percentiles recuerdan los 5 s
+        medidor.reiniciar()
+        assertEquals(Rendimiento.VACIO, medidor.instantanea())
+    }
 }
