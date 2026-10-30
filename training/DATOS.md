@@ -43,8 +43,32 @@ Para que la app rechace movimientos que no son señas, graba muestras de manos q
 acomodarse el pelo, etc., y guárdalas con la etiqueta `sin_sena`. Sin ellas, el rechazo depende
 solo del umbral de energía.
 
-## Grabaciones propias
+## Grabaciones con la app (recomendado)
 
-Si grabas vídeos propios: varias personas distintas (mínimo 5 por seña para poder separar la
-prueba), cámara frontal, buena luz y el cuerpo visible hasta la cintura. Pide consentimiento por
-escrito para usar los vídeos y no los subas al repositorio.
+La app tiene una herramienta de grabación (inicio → «Grabar muestras para entrenar»). Graba
+**solo los puntos** de manos y cuerpo, igual que los ve el reconocedor, nunca imágenes:
+
+1. Escribe un alias (por ejemplo `nik`, `p02`; no el nombre real) y elige la seña.
+2. Pulsa «Grabar»: 3 s para prepararse y 1,2 s de grabación. Repite 10–20 veces por seña.
+3. Copia la carpeta del teléfono al PC, en `training\data\grabaciones\`:
+   - por USB: `Este equipo\<teléfono>\Almacenamiento interno\Android\data\com.lhansqw.senaslsc\files\grabaciones`
+     (si Windows no muestra `Android\data`, usa la opción siguiente);
+   - con adb: `adb pull /sdcard/Android/data/com.lhansqw.senaslsc/files/grabaciones training/data/`
+4. Vuelve a ejecutar `entrenar_lsc70.ps1`: importa las grabaciones automáticamente.
+
+Qué grabar primero:
+
+- **«SIN SEÑA»**: manos quietas, rascarse, tocarse el pelo, gesticular al hablar, coger el
+  teléfono… Es lo que permite al modelo decir «esto no es una seña» (ahora no tiene esa clase).
+- Las señas con peor resultado en la [ficha del modelo](../docs/ficha-modelo.md): S, 1, 6, H, G.
+- Varias personas distintas: el modelo se evalúa con personas que no vio, y cada alias cuenta
+  como una persona.
+
+Las grabaciones se borran al desinstalar la app. Pide permiso a cada persona que grabes, aunque
+solo se guarden puntos.
+
+## Vídeos propios
+
+Si grabas vídeos: varias personas distintas (mínimo 5 por seña para poder separar la prueba),
+cámara frontal, buena luz y el cuerpo visible hasta la cintura. `extraer.py` acepta vídeos. Pide
+consentimiento por escrito y no los subas al repositorio.
