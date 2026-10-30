@@ -29,12 +29,18 @@ def preparar(muestra_fotogramas):
     return muestra_fotogramas
 
 
-def ventana(muestra_fotogramas, fotogramas: int, duracion_ms: int) -> np.ndarray:
-    return C.de_ventana(a_tiempo_uniforme(muestra_fotogramas, fotogramas, duracion_ms))
+def ventana(muestra_fotogramas, fotogramas: int, duracion_ms: int, usar_rostro: bool = True) -> np.ndarray:
+    return C.de_ventana(a_tiempo_uniforme(muestra_fotogramas, fotogramas, duracion_ms), usar_rostro)
+
+
+def proporcion_con_rostro(muestras: list[Muestra]) -> float:
+    """Fracción de fotogramas con la cara detectada (en LSC70 es 0: las caras están difuminadas)."""
+    total = sum(len(m.fotogramas) for m in muestras)
+    return sum(f.rostro is not None for m in muestras for f in m.fotogramas) / total if total else 0.0
 
 
 def construir(muestras: list[Muestra], etiquetas: list[str], fotogramas: int, duracion_ms: int,
-              copias_aumentadas: int = 0, semilla: int = 0) -> tuple[np.ndarray, np.ndarray]:
+              copias_aumentadas: int = 0, semilla: int = 0, usar_rostro: bool = True) -> tuple[np.ndarray, np.ndarray]:
     """Devuelve `X` de forma `(N, fotogramas, 352)` en float32 y `y` con el índice de cada etiqueta.
 
     Con `copias_aumentadas > 0` añade esa cantidad de variaciones aleatorias por muestra (solo
@@ -47,9 +53,9 @@ def construir(muestras: list[Muestra], etiquetas: list[str], fotogramas: int, du
         if m.sena not in indice:
             raise ValueError(f"La seña {m.sena} no está entre las etiquetas del modelo")
         base = preparar(m.fotogramas)
-        xs.append(ventana(base, fotogramas, duracion_ms))
+        xs.append(ventana(base, fotogramas, duracion_ms, usar_rostro))
         ys.append(indice[m.sena])
         for _ in range(copias_aumentadas):
-            xs.append(ventana(aumentar(base, rnd), fotogramas, duracion_ms))
+            xs.append(ventana(aumentar(base, rnd), fotogramas, duracion_ms, usar_rostro))
             ys.append(indice[m.sena])
     return np.stack(xs).astype(np.float32), np.array(ys, dtype=np.int64)
