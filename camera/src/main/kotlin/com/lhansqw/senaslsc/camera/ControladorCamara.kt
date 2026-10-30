@@ -28,9 +28,12 @@ import java.util.concurrent.Executors
  * El controlador cierra la imagen al volver de [analizar]: quien implemente esta interfaz no debe
  * guardar la [ImageProxy] ni usarla en otro hilo. Si necesita los píxeles más tarde (MediaPipe en
  * modo asíncrono, fase 5), debe copiarlos antes de volver.
+ *
+ * Devuelve `false` si decidió no analizar el fotograma (modo reposo, [ReguladorAnalisis]): así no
+ * cuenta en los FPS ni en la latencia.
  */
 fun interface AnalizadorFotogramas {
-    fun analizar(imagen: ImageProxy)
+    fun analizar(imagen: ImageProxy): Boolean
 }
 
 sealed interface EstadoCamara {
@@ -188,12 +191,14 @@ class ControladorCamara(private val configuracion: ConfiguracionCamara = Configu
                 return
             }
             val inicio = System.nanoTime()
-            try {
-                analizador?.analizar(it)
+            val analizado = try {
+                analizador?.analizar(it) ?: true
             } catch (e: RuntimeException) {
                 // Un fallo del analizador no debe tumbar la cámara; se registra y se sigue.
                 Log.e(TAG, "Error en el analizador de fotogramas", e)
+                true
             }
+            if (!analizado) return
             val marca: Long = it.imageInfo.timestamp
             medidor.registrar(marca, System.nanoTime() - inicio)
 
