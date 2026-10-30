@@ -25,6 +25,25 @@ object CargadorReconocedor {
 
     private const val TAG = "CargadorReconocedor"
 
+    /**
+     * Lee solo la descripción del modelo (sin cargarlo en LiteRT), para mostrar su vocabulario.
+     * Devuelve `null` si no hay ningún modelo instalado. Hace E/S: llamar fuera del hilo principal.
+     */
+    fun leerContrato(context: Context): ResultadoContrato? {
+        val assets = context.applicationContext.assets
+        val disponibles = try {
+            assets.list("")?.toSet().orEmpty()
+        } catch (e: IOException) {
+            return ResultadoContrato.Invalido(listOf("No se pudieron listar los assets: ${e.message}"))
+        }
+        if (ReconocedorLiteRT.ARCHIVO_CONTRATO !in disponibles) return null
+        return try {
+            LectorContrato.leer(assets.open(ReconocedorLiteRT.ARCHIVO_CONTRATO).bufferedReader(Charsets.UTF_8).use { it.readText() })
+        } catch (e: IOException) {
+            ResultadoContrato.Invalido(listOf("No se pudo leer ${ReconocedorLiteRT.ARCHIVO_CONTRATO}: ${e.message}"))
+        }
+    }
+
     /** Debe llamarse desde el hilo de fondo donde se usará el reconocedor. */
     fun cargar(context: Context): ResultadoCarga {
         val assets = context.applicationContext.assets
