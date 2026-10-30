@@ -56,6 +56,11 @@ fun PantallaIa(onVolver: () -> Unit, viewModel: IaViewModel = viewModel()) {
     BackHandler(onBack = onVolver)
     val estado by viewModel.estadoModelo.collectAsStateWithLifecycle()
     val usar by viewModel.usarIaLocal.collectAsStateWithLifecycle()
+    val consentimiento by viewModel.consentimiento.collectAsStateWithLifecycle()
+    val hayClave by viewModel.hayClave.collectAsStateWithLifecycle()
+    val modeloGemini by viewModel.modeloGemini.collectAsStateWithLifecycle()
+    val preferencia by viewModel.preferencia.collectAsStateWithLifecycle()
+    val prueba by viewModel.prueba.collectAsStateWithLifecycle()
     var confirmarDescarga by rememberSaveable { mutableStateOf(false) }
     var confirmarEliminar by rememberSaveable { mutableStateOf(false) }
 
@@ -107,6 +112,20 @@ fun PantallaIa(onVolver: () -> Unit, viewModel: IaViewModel = viewModel()) {
                 onCancelar = viewModel::cancelar,
                 onEliminar = { confirmarEliminar = true },
                 onUsar = viewModel::establecerUsarIaLocal,
+            )
+
+            TarjetaInternet(
+                consentimiento = consentimiento,
+                hayClave = hayClave,
+                modelo = modeloGemini,
+                preferencia = preferencia,
+                prueba = prueba,
+                onConsentimiento = viewModel::establecerConsentimiento,
+                onGuardarClave = viewModel::guardarClave,
+                onBorrarClave = viewModel::borrarClave,
+                onModelo = viewModel::establecerModelo,
+                onPreferencia = viewModel::establecerPreferencia,
+                onProbar = viewModel::probar,
             )
         }
     }
