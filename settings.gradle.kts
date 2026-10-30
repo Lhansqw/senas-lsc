@@ -32,6 +32,7 @@ include(":recognizer:api")
 include(":sequence")
 include(":interpreter:api")
 include(":interpreter:rules")
+include(":interpreter:remoto")
 include(":data:history")
 
 // Módulos Android.
