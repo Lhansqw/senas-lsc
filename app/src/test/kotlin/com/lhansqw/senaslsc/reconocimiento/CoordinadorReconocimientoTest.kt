@@ -264,4 +264,41 @@ class CoordinadorReconocimientoTest {
         ejecutar { c.interpretar() }
         assertNull(c.tomarSolicitud())
     }
+
+    // --- Corrección del usuario ---------------------------------------------------------------
+
+    @Test
+    fun `corregir sustituye la propuesta y la marca como del usuario`() {
+        val r = ReconocedorFalso(vocabulario)
+        val c = coordinador(r)
+        secuenciaCerrada(r, c)
+
+        assertTrue(c.corregir("  Hola, muchas gracias.  "))
+        assertEquals("Hola, muchas gracias.", c.estado.propuesta?.texto)
+        assertEquals(OrigenInterpretacion.USUARIO, c.estado.propuesta?.origen)
+        assertEquals(listOf("lsc.hola", "lsc.gracias"), c.estado.propuesta?.senasUsadas)
+    }
+
+    @Test
+    fun `una correccion es definitiva aunque luego llegue la ia`() {
+        val r = ReconocedorFalso(vocabulario)
+        val c = coordinador(r)
+        secuenciaCerrada(r, c)
+        val solicitud = c.tomarSolicitud()!!
+
+        c.corregir("Hola, gracias de verdad.")
+        assertEquals(false, c.estado.generando)
+        c.aplicarRefinamiento(solicitud.id, ResultadoGenerativo.Aceptada(propuestaIa("¡Hola, gracias!", listOf("lsc.hola", "lsc.gracias"))))
+        assertEquals("Hola, gracias de verdad.", c.estado.propuesta?.texto)
+    }
+
+    @Test
+    fun `no se corrige sin propuesta ni con texto vacio`() {
+        val r = ReconocedorFalso(vocabulario)
+        val c = coordinador(r)
+        assertEquals(false, c.corregir("Algo"))
+        secuenciaCerrada(r, c)
+        assertEquals(false, c.corregir("   "))
+        assertEquals("Hola gracias.", c.estado.propuesta?.texto)
+    }
 }
