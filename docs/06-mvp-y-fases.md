@@ -63,5 +63,5 @@ concreta de comprobar que funciona.
 | **8. Modelo de lenguaje** ✅ | `:interpreter:litertlm` con Gemma, contrato JSON y validador | Pruebas de que nunca usa señas no detectadas |
 | **9. Interfaz de resultados** ✅ | Paneles de señas y propuesta, confianza, edición, copiar, historial, vocabulario | Pruebas de interfaz y revisión de accesibilidad (TalkBack, contraste, tamaños) |
 | **10. Local frente a nube** | Selección de intérprete según dispositivo; evaluación del remoto con consentimiento | Comparativa de calidad, latencia y coste |
-| **11. Optimización** | Cuantización, GPU, frecuencia de inferencia, comparación GRU frente a Transformer | Latencia p95 y batería medidas antes y después |
+| **11. Optimización** 🔶 | Cuantización, GPU, frecuencia de inferencia, comparación GRU frente a Transformer | Latencia p95 y batería medidas antes y después |
 | **12. Versión instalable** | APK/AAB firmado, pruebas finales, ficha del modelo | Instalación limpia en un teléfono distinto al de desarrollo |
