@@ -22,6 +22,7 @@ def construir() -> dict:
         etiquetas=["sin_sena", "lsc.a", "lsc.como", "lsc.gracias", "lsc.hola", "lsc.n1"],
         fotogramas=32, duracion_ms=1000, temperatura=1.25, umbral_energia=-2.5,
         datos_entrenamiento=["SOLO_PRUEBA"], metricas={"exactitud": 0.5, "macro_f1": 0.5},
+        usa_rostro=False,
     )
 
 
