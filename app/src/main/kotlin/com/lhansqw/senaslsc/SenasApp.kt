@@ -4,6 +4,8 @@ import android.app.Application
 import com.lhansqw.senaslsc.dispositivo.CapacidadDispositivo
 import com.lhansqw.senaslsc.dispositivo.EvaluadorCapacidad
 import com.lhansqw.senaslsc.dispositivo.LectorPerfilDispositivo
+import com.lhansqw.senaslsc.historial.PreferenciasHistorial
+import com.lhansqw.senaslsc.historial.ServicioHistorial
 import com.lhansqw.senaslsc.ia.PreferenciasIa
 import com.lhansqw.senaslsc.interpreter.litertlm.GestorModeloLenguaje
 import kotlinx.coroutines.CoroutineScope
@@ -22,4 +24,6 @@ class SenasApp : Application() {
     val capacidad: CapacidadDispositivo by lazy { EvaluadorCapacidad.evaluar(LectorPerfilDispositivo.leer(this)) }
     val preferenciasIa: PreferenciasIa by lazy { PreferenciasIa(this) }
     val gestorModelo: GestorModeloLenguaje by lazy { GestorModeloLenguaje(this, ambito) }
+    val preferenciasHistorial: PreferenciasHistorial by lazy { PreferenciasHistorial(this) }
+    val historial: ServicioHistorial by lazy { ServicioHistorial(this, ambito).also { it.cargar() } }
 }
