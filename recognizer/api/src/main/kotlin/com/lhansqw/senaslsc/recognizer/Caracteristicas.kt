@@ -73,11 +73,17 @@ object Caracteristicas {
         return Referencia(0.5f * ar, 0.5f, ESCALA_SIN_CUERPO)
     }
 
-    /** Vector de una ventana completa: `ventana.size × POR_FOTOGRAMA` valores, fotograma a fotograma. */
-    fun deVentana(ventana: List<LandmarkFrame>): FloatArray {
-        val salida = FloatArray(ventana.size * POR_FOTOGRAMA)
-        ventana.forEachIndexed { i, frame ->
-            deFotograma(frame, ventana.getOrNull(i - 1), salida, i * POR_FOTOGRAMA)
+    /**
+     * Vector de una ventana completa: `ventana.size × POR_FOTOGRAMA` valores, fotograma a fotograma.
+     *
+     * Con [usarRostro] en `false` el bloque del rostro queda a cero, como si no se hubiera detectado:
+     * es lo que vio en el entrenamiento un modelo entrenado con caras difuminadas (LSC70).
+     */
+    fun deVentana(ventana: List<LandmarkFrame>, usarRostro: Boolean = true): FloatArray {
+        val frames = if (usarRostro) ventana else ventana.map { if (it.rostro == null) it else it.copy(rostro = null) }
+        val salida = FloatArray(frames.size * POR_FOTOGRAMA)
+        frames.forEachIndexed { i, frame ->
+            deFotograma(frame, frames.getOrNull(i - 1), salida, i * POR_FOTOGRAMA)
         }
         return salida
     }
