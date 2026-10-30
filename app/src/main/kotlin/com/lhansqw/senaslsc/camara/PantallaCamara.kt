@@ -79,6 +79,7 @@ private fun VistaCamara(onVolver: () -> Unit, viewModel: CamaraViewModel = viewM
     val cargaSimulada by viewModel.cargaSimuladaMs.collectAsStateWithLifecycle()
     val landmarks by viewModel.landmarks.resultado.collectAsStateWithLifecycle()
     val estadoModelo by viewModel.landmarks.estadoModelo.collectAsStateWithLifecycle()
+    val reposo by viewModel.landmarks.reposo.collectAsStateWithLifecycle()
     val reconocimiento by viewModel.senas.estado.collectAsStateWithLifecycle()
     val historialActivo by viewModel.historialActivo.collectAsStateWithLifecycle()
     val descripcionVista = stringResource(R.string.camara_vista_previa)
@@ -112,7 +113,7 @@ private fun VistaCamara(onVolver: () -> Unit, viewModel: CamaraViewModel = viewM
                 .padding(12.dp),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
-            PanelMetricas(estado, rendimiento, analisisActivo, estadoModelo, landmarks, reconocimiento.latenciaModelo)
+            PanelMetricas(estado, rendimiento, analisisActivo, estadoModelo, landmarks, reconocimiento.latenciaModelo, reposo)
 
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 if (BuildConfig.DEBUG) {
@@ -164,6 +165,7 @@ private fun PanelMetricas(
     estadoModelo: EstadoModelo,
     landmarks: ResultadoLandmarks?,
     latenciaModelo: ResumenLatencia?,
+    reposo: Boolean,
 ) {
     val activa = estado as? EstadoCamara.Activa
     val es = Locale.forLanguageTag("es-CO")
@@ -183,6 +185,7 @@ private fun PanelMetricas(
                     String.format(es, "%.1f", rendimiento.latenciaP95Ms),
                 ),
             )
+            if (reposo) add(stringResource(R.string.camara_reposo))
             latenciaModelo?.let {
                 add(
                     stringResource(

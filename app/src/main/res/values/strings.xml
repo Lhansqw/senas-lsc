@@ -48,6 +48,7 @@
     <string name="camara_sin_camara">Este dispositivo no tiene una cámara disponible.</string>
     <string name="camara_fps">Análisis: %1$s FPS</string>
     <string name="camara_latencia">Análisis: p50 %1$s · p95 %2$s ms</string>
+    <string name="camara_reposo">Reposo: sin manos, analizando menos para ahorrar batería</string>
     <string name="modelo_senas_latencia">Modelo de señas: p50 %1$s · p95 %2$s ms</string>
     <string name="camara_resolucion">Resolución de análisis: %1$d×%2$d</string>
     <string name="camara_frontal">Cámara frontal</string>
