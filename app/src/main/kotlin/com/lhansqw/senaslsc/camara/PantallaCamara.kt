@@ -1,5 +1,6 @@
 package com.lhansqw.senaslsc.camara
 
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.camera.compose.CameraXViewfinder
 import androidx.compose.foundation.background
@@ -41,6 +42,7 @@ import com.lhansqw.senaslsc.camera.EstadoCamara
 import com.lhansqw.senaslsc.camera.Rendimiento
 import com.lhansqw.senaslsc.permisos.ConPermisoCamara
 import com.lhansqw.senaslsc.reconocimiento.PanelReconocimiento
+import com.lhansqw.senaslsc.ui.AccionesTexto
 import com.lhansqw.senaslsc.ui.theme.TemaSenasLSC
 import java.util.Locale
 
@@ -77,6 +79,7 @@ private fun VistaCamara(onVolver: () -> Unit, viewModel: CamaraViewModel = viewM
     val landmarks by viewModel.landmarks.resultado.collectAsStateWithLifecycle()
     val estadoModelo by viewModel.landmarks.estadoModelo.collectAsStateWithLifecycle()
     val reconocimiento by viewModel.senas.estado.collectAsStateWithLifecycle()
+    val historialActivo by viewModel.historialActivo.collectAsStateWithLifecycle()
     val descripcionVista = stringResource(R.string.camara_vista_previa)
 
     Box(Modifier.fillMaxSize().background(Color.Black)) {
@@ -120,6 +123,18 @@ private fun VistaCamara(onVolver: () -> Unit, viewModel: CamaraViewModel = viewM
                         onInterpretar = viewModel.senas::interpretar,
                         onBorrarUltima = viewModel.senas::eliminarUltima,
                         onLimpiar = viewModel.senas::limpiar,
+                        onCorregir = viewModel.senas::corregir,
+                        onCopiar = { AccionesTexto.copiar(context, it) },
+                        onCompartir = { AccionesTexto.compartir(context, it) },
+                        onGuardar = if (historialActivo) {
+                            {
+                                if (viewModel.guardarEnHistorial()) {
+                                    Toast.makeText(context, R.string.accion_guardado, Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        } else {
+                            null
+                        },
                     )
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
