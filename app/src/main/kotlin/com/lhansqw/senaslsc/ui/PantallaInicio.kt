@@ -16,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -41,6 +42,7 @@ fun PantallaInicio(
     onAbrirIa: () -> Unit,
     onAbrirHistorial: () -> Unit,
     onAbrirVocabulario: () -> Unit,
+    onAbrirAcerca: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -80,6 +82,10 @@ fun PantallaInicio(
                 OutlinedButton(onClick = onAbrirHistorial, modifier = Modifier.weight(1f)) {
                     Text(stringResource(R.string.inicio_abrir_historial))
                 }
+            }
+
+            TextButton(onClick = onAbrirAcerca, modifier = Modifier.fillMaxWidth()) {
+                Text(stringResource(R.string.inicio_abrir_acerca))
             }
 
             TarjetaDispositivo(perfil, capacidad)
@@ -168,6 +174,6 @@ private fun estado(disponible: Boolean): String =
 private fun VistaPreviaInicio() {
     val perfil = PerfilDispositivo(nivelApi = 34, ramTotalMb = 3_800, esDispositivoBajaMemoria = false, nucleos = 8)
     TemaSenasLSC(colorDinamico = false) {
-        PantallaInicio(perfil, EvaluadorCapacidad.evaluar(perfil), onAbrirCamara = {}, onAbrirIa = {}, onAbrirHistorial = {}, onAbrirVocabulario = {})
+        PantallaInicio(perfil, EvaluadorCapacidad.evaluar(perfil), onAbrirCamara = {}, onAbrirIa = {}, onAbrirHistorial = {}, onAbrirVocabulario = {}, onAbrirAcerca = {})
     }
 }

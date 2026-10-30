@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import com.lhansqw.senaslsc.acerca.PantallaAcerca
 import com.lhansqw.senaslsc.camara.PantallaCamara
 import com.lhansqw.senaslsc.dispositivo.EvaluadorCapacidad
 import com.lhansqw.senaslsc.dispositivo.LectorPerfilDispositivo
@@ -18,7 +19,7 @@ import com.lhansqw.senaslsc.ui.theme.TemaSenasLSC
 import com.lhansqw.senaslsc.vocabulario.PantallaVocabulario
 
 /** Pantallas de la app. La navegación es simple todavía: no hace falta una librería. */
-private enum class Pantalla { INICIO, CAMARA, IA, HISTORIAL, VOCABULARIO }
+private enum class Pantalla { INICIO, CAMARA, IA, HISTORIAL, VOCABULARIO, ACERCA }
 
 class MainActivity : ComponentActivity() {
 
@@ -41,11 +42,13 @@ class MainActivity : ComponentActivity() {
                         onAbrirIa = { pantalla = Pantalla.IA },
                         onAbrirHistorial = { pantalla = Pantalla.HISTORIAL },
                         onAbrirVocabulario = { pantalla = Pantalla.VOCABULARIO },
+                        onAbrirAcerca = { pantalla = Pantalla.ACERCA },
                     )
                     Pantalla.CAMARA -> PantallaCamara(onVolver = { pantalla = Pantalla.INICIO })
                     Pantalla.IA -> PantallaIa(onVolver = { pantalla = Pantalla.INICIO })
                     Pantalla.HISTORIAL -> PantallaHistorial(onVolver = { pantalla = Pantalla.INICIO })
                     Pantalla.VOCABULARIO -> PantallaVocabulario(onVolver = { pantalla = Pantalla.INICIO })
+                    Pantalla.ACERCA -> PantallaAcerca(onVolver = { pantalla = Pantalla.INICIO })
                 }
             }
         }
