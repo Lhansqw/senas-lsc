@@ -101,7 +101,7 @@ def main(argv=None) -> int:
 
     def tensores(parte):
         sel = [m for m in muestras if m.persona in particion[parte]]
-        return construir(sel, etiquetas, conf["fotogramas"], conf["duracion_ms"])
+        return construir(sel, etiquetas, conf["fotogramas"], conf["duracion_ms"], usar_rostro=conf.get("usa_rostro", True))
 
     x_val, y_val = tensores("validacion")
     x_pr, y_pr = tensores("prueba")
