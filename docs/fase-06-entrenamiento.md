@@ -1,7 +1,7 @@
 # Fase 6 · Datos y entrenamiento
 
 > **Estado:** parte 1 ✅ (sistema de entrenamiento completo y probado sin datos reales).
-> Parte 2 en curso: LSC70 descargado y comprobado; falta ejecutar el entrenamiento en el PC.
+> Parte 2 ✅ (modelo entrenado con LSC70). Parte 3 ✅ (herramienta de grabación); faltan las grabaciones.
 
 ## Qué hay
 
@@ -59,8 +59,26 @@ Dos ajustes que salieron de esa prueba:
   `caracteristicas.usa_rostro` y, si es `false`, la app pone a cero esos puntos (Kotlin y Python
   comprueban que da lo mismo que no detectar la cara).
 
+5. ✅ Entrenado en el PC: exactitud 90,7 % con 10 personas no vistas ([ficha del modelo](ficha-modelo.md)).
+
+## Parte 3 · Herramienta de grabación
+
+La especificación pedía una herramienta de grabación; es lo que permite añadir la clase
+«sin seña» y reforzar las señas débiles sin depender de otro conjunto de datos.
+
+- **App** (inicio → «Grabar muestras para entrenar»): alias, seña, cuenta atrás de 3 s y 1,2 s de
+  grabación. Guarda un JSON por muestra con los puntos de MediaPipe (`FormatoGrabacion.kt`); comprueba
+  que hubo suficientes fotogramas y, salvo en «sin seña», que se vieron las manos. Mientras graba
+  desactiva el modo reposo.
+- **PC**: `importar_grabaciones.py` las convierte en muestras (persona `app_<alias>`);
+  `entrenar_lsc70.ps1` lo hace solo si existe `training\data\grabaciones`.
+- **Mismo formato a ambos lados**: `training/pruebas/grabacion_ejemplo.json` lo escribe Kotlin,
+  Python lo importa y Kotlin comprueba que lo vuelve a escribir idéntico.
+
+Cómo grabar: [DATOS.md](../training/DATOS.md#grabaciones-con-la-app-recomendado).
+
 Falta:
 
-4. Ejecutar `training\entrenar_lsc70.ps1` en el PC y revisar `informe.md`.
-5. Validar las señas con una persona competente en LSC y decidir Ñ, MIL, MILLÓN, GUSTAR y LICOR.
-6. Probar el modelo en el teléfono.
+1. Grabar «sin seña» y las señas débiles con la app, y volver a entrenar.
+2. Validar las señas con una persona competente en LSC y decidir Ñ, MIL, MILLÓN, GUSTAR y LICOR.
+3. Probar el modelo en el teléfono.
