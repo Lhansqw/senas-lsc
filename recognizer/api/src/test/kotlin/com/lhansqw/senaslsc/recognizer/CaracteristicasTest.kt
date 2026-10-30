@@ -123,6 +123,23 @@ class CaracteristicasTest {
     }
 
     @Test
+    fun `sin usar el rostro su bloque queda a cero y el resto no cambia`() {
+        val rostro = List(39) { Punto3D(0.5f, 0.3f, 0f) }
+        val ventana = listOf(frame(0, izq = mano(0.7f, 0.6f), rostro = rostro), frame(33, izq = mano(0.71f, 0.6f), rostro = rostro))
+        val con = C.deVentana(ventana)
+        val sin = C.deVentana(ventana, usarRostro = false)
+
+        assertEquals(1f, con[ROSTRO], 0f)
+        for (f in 0..1) {
+            val desde = f * C.POR_FOTOGRAMA
+            for (k in ROSTRO until VEL) assertEquals(0f, sin[desde + k], 0f)
+        }
+        // Igual que si MediaPipe no hubiera detectado la cara.
+        val sinDeteccion = C.deVentana(ventana.map { it.copy(rostro = null) })
+        assertTrue(sin.contentEquals(sinDeteccion))
+    }
+
+    @Test
     fun `subconjuntos de otro tamano se tratan como ausentes`() {
         val v = C.deVentana(listOf(frame(cuerpo = cuerpo().take(5), rostro = List(10) { Punto3D(0f, 0f, 0f) })))
         assertEquals(0f, v[CUERPO], 0f)
