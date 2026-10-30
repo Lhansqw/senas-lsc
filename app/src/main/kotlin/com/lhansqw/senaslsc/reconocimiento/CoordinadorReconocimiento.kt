@@ -4,6 +4,7 @@ import com.lhansqw.senaslsc.core.model.LandmarkFrame
 import com.lhansqw.senaslsc.core.model.OrigenInterpretacion
 import com.lhansqw.senaslsc.core.model.PropuestaFrase
 import com.lhansqw.senaslsc.core.model.SenaConfirmada
+import com.lhansqw.senaslsc.core.rendimiento.EstadisticaLatencia
 import com.lhansqw.senaslsc.interpreter.ReglasInterpretacion
 import com.lhansqw.senaslsc.interpreter.ResultadoGenerativo
 import com.lhansqw.senaslsc.interpreter.rules.InterpreteReglas
@@ -18,6 +19,7 @@ import com.lhansqw.senaslsc.sequence.MotorSenas
  *
  * @param proponer convierte una secuencia cerrada en una propuesta inmediata (por defecto, el
  *   intérprete por reglas).
+ * @param reloj nanosegundos monótonos, para medir cuánto tarda el modelo de señas (fase 11).
  *
  * ## Mejora con el modelo de lenguaje
  * Si [refinamientoDisponible] es `true`, al cerrarse una secuencia de 2 o más señas queda una
@@ -31,6 +33,7 @@ class CoordinadorReconocimiento(
     private val motor: MotorSenas?,
     modeloInicial: EstadoModeloSenas,
     private val proponer: suspend (List<SenaConfirmada>) -> PropuestaFrase = { InterpreteReglas().componer(it) },
+    private val reloj: () -> Long = System::nanoTime,
 ) {
     init {
         require((reconocedor == null) == (motor == null)) { "Reconocedor y motor van juntos" }
@@ -45,6 +48,7 @@ class CoordinadorReconocimiento(
     private var pendiente: SolicitudRefinamiento? = null
     private var ultimaSolicitud: SolicitudRefinamiento? = null
     private var contadorSolicitudes = 0L
+    private val latenciaModelo = EstadisticaLatencia(capacidad = 120)
 
     /** Devuelve la solicitud pendiente (si hay) y la marca como tomada. */
     fun tomarSolicitud(): SolicitudRefinamiento? = pendiente.also { pendiente = null }
@@ -71,9 +75,11 @@ class CoordinadorReconocimiento(
         val paso = m.alRecibirFotograma(frame)
         var cerrada = paso.secuenciaCerrada
         paso.ventana?.let { ventana ->
+            val inicio = reloj()
             val prediccion = r.predecir(ventana)
+            latenciaModelo.registrarNanos((reloj() - inicio).coerceAtLeast(0L))
             val resultado = m.alRecibirPrediccion(prediccion)
-            estado = estado.copy(ultimaPrediccion = prediccion)
+            estado = estado.copy(ultimaPrediccion = prediccion, latenciaModelo = latenciaModelo.resumen())
             if (resultado.confirmada != null && estado.secuenciaCerrada) {
                 // Una seña nueva tras cerrar empieza otra frase: la propuesta anterior ya no aplica.
                 descartarPropuesta()

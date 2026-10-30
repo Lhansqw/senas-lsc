@@ -3,6 +3,7 @@ package com.lhansqw.senaslsc.reconocimiento
 import com.lhansqw.senaslsc.core.model.PrediccionSena
 import com.lhansqw.senaslsc.core.model.PropuestaFrase
 import com.lhansqw.senaslsc.core.model.SenaConfirmada
+import com.lhansqw.senaslsc.core.rendimiento.ResumenLatencia
 
 /** Situación del modelo de señas, tal como se muestra al usuario. */
 sealed interface EstadoModeloSenas {
@@ -38,4 +39,6 @@ data class EstadoReconocimiento(
     val generando: Boolean = false,
     /** Por qué se descartó la última respuesta del modelo de lenguaje, si se descartó. */
     val motivoDescarteIa: String? = null,
+    /** Cuánto tarda el modelo de señas por ventana (últimas 120 ejecuciones), o `null` si aún no se ejecutó. */
+    val latenciaModelo: ResumenLatencia? = null,
 )
