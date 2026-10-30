@@ -8,6 +8,7 @@ import com.lhansqw.senaslsc.camera.ControladorCamara
 import com.lhansqw.senaslsc.historial.aOrigenTexto
 import com.lhansqw.senaslsc.historial.glosasDe
 import com.lhansqw.senaslsc.ia.ControladorIaLocal
+import com.lhansqw.senaslsc.ia.ControladorIaRemota
 import com.lhansqw.senaslsc.reconocimiento.ProcesadorSenas
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,7 +35,9 @@ class CamaraViewModel(application: Application) : AndroidViewModel(application) 
         rutaModelo = app.gestorModelo.rutaInstalado,
         activadaPorUsuario = app.preferenciasIa.usarIaLocal.value,
     )
-    val senas = ProcesadorSenas(application, ia)
+    /** IA de internet (Gemini): solo se usa con consentimiento y clave (fase 10). */
+    private val remota = ControladorIaRemota(app.preferenciasIaRemota)
+    val senas = ProcesadorSenas(application, ia, remota) { app.preferenciasIaRemota.preferencia.value }
 
     /** Si el usuario activó el historial (desactivado por defecto). */
     val historialActivo: StateFlow<Boolean> = app.preferenciasHistorial.guardar

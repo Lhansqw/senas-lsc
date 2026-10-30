@@ -2,7 +2,13 @@ package com.lhansqw.senaslsc.reconocimiento
 
 import android.content.Context
 import com.lhansqw.senaslsc.core.model.LandmarkFrame
+import com.lhansqw.senaslsc.ia.Conectividad
 import com.lhansqw.senaslsc.ia.ControladorIaLocal
+import com.lhansqw.senaslsc.ia.ControladorIaRemota
+import com.lhansqw.senaslsc.interpreter.EleccionInterprete
+import com.lhansqw.senaslsc.interpreter.PreferenciaInterprete
+import com.lhansqw.senaslsc.interpreter.SelectorInterprete
+import com.lhansqw.senaslsc.interpreter.SituacionInterprete
 import com.lhansqw.senaslsc.interpreter.ResultadoGenerativo
 import com.lhansqw.senaslsc.recognizer.litert.CargadorReconocedor
 import com.lhansqw.senaslsc.recognizer.litert.ReconocedorLiteRT
@@ -29,10 +35,16 @@ import java.util.concurrent.Executors
  *   (capacidad [CAPACIDAD], DROP_OLDEST): se trabaja siempre con lo reciente y la latencia no crece.
  * - Las órdenes del usuario (interpretar, borrar, limpiar) se ejecutan en el mismo hilo, entre
  *   fotograma y fotograma, así que nunca hay dos accesos simultáneos al coordinador.
- * - Si hay IA local ([ia]), las frases cerradas se le piden en su propio hilo; mientras tanto el
- *   reconocimiento sigue, y el resultado se aplica de vuelta en este hilo.
+ * - Si hay IA local ([ia]) o de internet ([remota], fase 10), las frases cerradas se le piden en
+ *   otro hilo; mientras tanto el reconocimiento sigue, y el resultado se aplica en este hilo.
+ *   Cuál se usa lo decide [SelectorInterprete] con la [preferencia] del usuario en ese momento.
  */
-class ProcesadorSenas(context: Context, private val ia: ControladorIaLocal? = null) : AutoCloseable {
+class ProcesadorSenas(
+    context: Context,
+    private val ia: ControladorIaLocal? = null,
+    private val remota: ControladorIaRemota? = null,
+    private val preferencia: () -> PreferenciaInterprete = { PreferenciaInterprete.AUTOMATICO },
+) : AutoCloseable {
 
     private val contextoApp = context.applicationContext
     private val hilo = Executors.newSingleThreadExecutor { tarea -> Thread(tarea, "senas-reconocedor") }
@@ -59,7 +71,7 @@ class ProcesadorSenas(context: Context, private val ia: ControladorIaLocal? = nu
             ambito.launch {
                 controlador.estado.collect { estadoIa ->
                     iaDisponible = estadoIa.disponible
-                    coordinador.refinamientoDisponible = iaDisponible
+                    coordinador.refinamientoDisponible = refinamientoPosible()
                 }
             }
         }
@@ -83,17 +95,30 @@ class ProcesadorSenas(context: Context, private val ia: ControladorIaLocal? = nu
         }
     }
 
+    /** Hay alguna IA que pueda mejorar la frase (la del teléfono lista, o la de internet permitida). */
+    private fun refinamientoPosible(): Boolean =
+        iaDisponible || (remota?.permitido == true && preferencia() != PreferenciaInterprete.SOLO_TELEFONO)
+
     /** Si el coordinador dejó una frase para la IA, se la pide sin bloquear este hilo. */
     private fun atenderSolicitudes() {
+        coordinador.refinamientoDisponible = refinamientoPosible()
         val solicitud = coordinador.tomarSolicitud() ?: return
-        val controlador = ia ?: return
         val coordinadorDeLaSolicitud = coordinador
+        val situacion = SituacionInterprete(
+            telefonoListo = iaDisponible,
+            internetPermitido = remota?.permitido == true,
+            hayConexion = remota?.permitido == true && Conectividad.hayInternet(contextoApp),
+        )
+        val eleccion = SelectorInterprete.elegir(preferencia(), situacion)
         ambito.launch {
-            val resultado = controlador.interpretar(solicitud.senas)
-                ?: ResultadoGenerativo.Descartada(
-                    listOf("La IA local no está disponible."),
-                    coordinadorDeLaSolicitud.estado.propuesta ?: return@launch,
-                )
+            val resultado = when (eleccion) {
+                EleccionInterprete.TELEFONO -> ia?.interpretar(solicitud.senas)
+                EleccionInterprete.INTERNET -> remota?.interpretar(solicitud.senas)
+                EleccionInterprete.REGLAS -> null
+            } ?: ResultadoGenerativo.Descartada(
+                listOf(if (eleccion == EleccionInterprete.REGLAS) "Sin conexión ni IA en el teléfono." else "La IA no está disponible."),
+                coordinadorDeLaSolicitud.estado.propuesta ?: return@launch,
+            )
             // De vuelta en el hilo del reconocedor: se aplica solo si la frase no ha cambiado.
             coordinadorDeLaSolicitud.aplicarRefinamiento(solicitud.id, resultado)
             publicar()
@@ -113,7 +138,7 @@ class ProcesadorSenas(context: Context, private val ia: ControladorIaLocal? = nu
             is ResultadoCarga.Fallo -> EstadoModeloSenas.Fallo(r.mensaje) to null
         }
         coordinador = CoordinadorReconocimiento(reconocedor, motor, estadoModelo).also {
-            it.refinamientoDisponible = iaDisponible
+            it.refinamientoDisponible = refinamientoPosible()
         }
         publicar()
     }
