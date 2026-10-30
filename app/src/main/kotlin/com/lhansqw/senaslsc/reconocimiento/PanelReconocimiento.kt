@@ -17,6 +17,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -47,6 +51,11 @@ fun PanelReconocimiento(
     onInterpretar: () -> Unit,
     onBorrarUltima: () -> Unit,
     onLimpiar: () -> Unit,
+    onCorregir: (String) -> Unit = {},
+    onCopiar: (String) -> Unit = {},
+    onCompartir: (String) -> Unit = {},
+    /** `null` si el historial está desactivado: entonces no se muestra el botón «Guardar». */
+    onGuardar: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -70,7 +79,10 @@ fun PanelReconocimiento(
                 Titulo(stringResource(R.string.reconocedor_fallo_titulo))
                 Texto(modelo.mensaje, AVISO)
             }
-            is EstadoModeloSenas.Listo -> Contenido(modelo, estado, onInterpretar, onBorrarUltima, onLimpiar)
+            is EstadoModeloSenas.Listo -> Contenido(
+                modelo, estado, onInterpretar, onBorrarUltima, onLimpiar,
+                AccionesPropuesta(onCorregir, onCopiar, onCompartir, onGuardar),
+            )
         }
     }
 }
@@ -82,6 +94,7 @@ private fun Contenido(
     onInterpretar: () -> Unit,
     onBorrarUltima: () -> Unit,
     onLimpiar: () -> Unit,
+    acciones: AccionesPropuesta,
 ) {
     Texto(
         stringResource(R.string.reconocedor_modelo, modelo.nombre, modelo.version, modelo.numeroSenas),
@@ -96,7 +109,7 @@ private fun Contenido(
     )
 
     FilaSenas(estado.senas)
-    estado.propuesta?.let { Propuesta(it) }
+    estado.propuesta?.let { Propuesta(it, acciones) }
     if (estado.generando) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             CircularProgressIndicator(strokeWidth = 2.dp, modifier = Modifier.size(16.dp), color = TEXTO)
@@ -152,8 +165,17 @@ private fun FilaSenas(senas: List<SenaConfirmada>) {
     }
 }
 
+/** Lo que se puede hacer con la frase propuesta. */
+private class AccionesPropuesta(
+    val corregir: (String) -> Unit,
+    val copiar: (String) -> Unit,
+    val compartir: (String) -> Unit,
+    val guardar: (() -> Unit)?,
+)
+
 @Composable
-private fun Propuesta(propuesta: PropuestaFrase) {
+private fun Propuesta(propuesta: PropuestaFrase, acciones: AccionesPropuesta) {
+    var editando by rememberSaveable { mutableStateOf(false) }
     val origen = stringResource(
         when (propuesta.origen) {
             OrigenInterpretacion.REGLAS -> R.string.propuesta_origen_reglas
@@ -177,6 +199,24 @@ private fun Propuesta(propuesta: PropuestaFrase) {
             Texto(stringResource(R.string.propuesta_incierta, propuesta.motivo.orEmpty()), AVISO)
         }
         propuesta.preguntaAclaracion?.let { Texto(it, AVISO) }
+    }
+    Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+        TextButton(onClick = { editando = true }) { Text(stringResource(R.string.accion_editar)) }
+        TextButton(onClick = { acciones.copiar(propuesta.texto) }) { Text(stringResource(R.string.accion_copiar)) }
+        TextButton(onClick = { acciones.compartir(propuesta.texto) }) { Text(stringResource(R.string.accion_compartir)) }
+        acciones.guardar?.let { guardar ->
+            TextButton(onClick = guardar) { Text(stringResource(R.string.accion_guardar)) }
+        }
+    }
+    if (editando) {
+        DialogoEdicion(
+            textoInicial = propuesta.texto,
+            onConfirmar = {
+                acciones.corregir(it)
+                editando = false
+            },
+            onCancelar = { editando = false },
+        )
     }
 }
 
