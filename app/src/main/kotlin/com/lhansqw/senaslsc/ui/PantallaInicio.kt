@@ -39,6 +39,8 @@ fun PantallaInicio(
     capacidad: CapacidadDispositivo,
     onAbrirCamara: () -> Unit,
     onAbrirIa: () -> Unit,
+    onAbrirHistorial: () -> Unit,
+    onAbrirVocabulario: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -71,6 +73,14 @@ fun PantallaInicio(
                 onClick = onAbrirIa,
                 modifier = Modifier.fillMaxWidth(),
             ) { Text(stringResource(R.string.inicio_abrir_ia)) }
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+                OutlinedButton(onClick = onAbrirVocabulario, modifier = Modifier.weight(1f)) {
+                    Text(stringResource(R.string.inicio_abrir_vocabulario))
+                }
+                OutlinedButton(onClick = onAbrirHistorial, modifier = Modifier.weight(1f)) {
+                    Text(stringResource(R.string.inicio_abrir_historial))
+                }
+            }
 
             TarjetaDispositivo(perfil, capacidad)
             TarjetaLimitaciones()
@@ -158,6 +168,6 @@ private fun estado(disponible: Boolean): String =
 private fun VistaPreviaInicio() {
     val perfil = PerfilDispositivo(nivelApi = 34, ramTotalMb = 3_800, esDispositivoBajaMemoria = false, nucleos = 8)
     TemaSenasLSC(colorDinamico = false) {
-        PantallaInicio(perfil, EvaluadorCapacidad.evaluar(perfil), onAbrirCamara = {}, onAbrirIa = {})
+        PantallaInicio(perfil, EvaluadorCapacidad.evaluar(perfil), onAbrirCamara = {}, onAbrirIa = {}, onAbrirHistorial = {}, onAbrirVocabulario = {})
     }
 }
