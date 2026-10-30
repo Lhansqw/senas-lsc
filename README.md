@@ -38,6 +38,7 @@ Dos componentes de IA, independientes entre sí:
 | [Fase 3 · Estructura modular](docs/fase-03-estructura-modular.md) | Módulos, lógica de confirmación de señas, validador y pruebas |
 | [Fase 4 · Cámara](docs/fase-04-camara.md) | CameraX, permiso, descarte de fotogramas y cómo probarlo en el teléfono |
 | [Fase 5 · MediaPipe](docs/fase-05-mediapipe.md) | Holistic Landmarker, puntos que se guardan, regla del espejo y cómo probarlo |
+| [Fase 6 · Entrenamiento](docs/fase-06-entrenamiento.md) | Extracción de puntos, entrenamiento, evaluación por persona y exportación a LiteRT |
 | [Fase 7 · Reconocedor LiteRT](docs/fase-07-reconocedor-litert.md) | Contrato del modelo, características, `modelo.json` y flujo de reconocimiento |
 | [Fase 8 · Modelo de lenguaje](docs/fase-08-modelo-lenguaje.md) | IA local con LiteRT-LM, instalación del modelo, validación y respaldo |
 | [Fase 9 · Interfaz de resultados](docs/fase-09-interfaz-resultados.md) | Edición, historial cifrado, vocabulario compatible |
