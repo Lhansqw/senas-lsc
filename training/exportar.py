@@ -24,7 +24,18 @@ from senas import contrato as Co
 from senas import vocabulario as V
 
 ASSETS_APP = Path(__file__).resolve().parents[1] / "recognizer" / "litert" / "src" / "main" / "assets"
-TOLERANCIA = 1e-3
+TOLERANCIA = 1e-3              # sin cuantizar: los logits deben coincidir
+COINCIDENCIA_MINIMA = 0.95     # cuantizado: fracción mínima de muestras con la misma seña que Keras
+
+
+def comprobar_paridad(logits_keras: np.ndarray, logits_tflite: np.ndarray, cuantizacion: str) -> tuple[bool, str]:
+    """El .tflite debe reproducir a Keras; si está cuantizado, basta con que elija la misma seña."""
+    diferencia = float(np.abs(logits_keras - logits_tflite).max())
+    coincidencia = float(np.mean(logits_keras.argmax(1) == logits_tflite.argmax(1)))
+    detalle = f"diferencia máxima {diferencia:.2e}, misma seña en el {coincidencia * 100:.0f} %"
+    if cuantizacion == "ninguna":
+        return diferencia <= TOLERANCIA, detalle
+    return coincidencia >= COINCIDENCIA_MINIMA, detalle
 
 
 def metricas_para_contrato(m: dict) -> dict[str, float]:
@@ -41,6 +52,8 @@ def main(argv=None) -> int:
     ap.add_argument("--nombre", default="reconocedor-lsc")
     ap.add_argument("--version", required=True)
     ap.add_argument("--instalar", action="store_true", help="Copiar el modelo a los assets de la app")
+    ap.add_argument("--cuantizacion", choices=["ninguna", "float16", "int8"], default="ninguna",
+                    help="Reducir el tamaño de los pesos (medir antes con optimizar.py)")
     ap.add_argument("--datos", nargs="+", default=None,
                     help="Cómo citar los datos de entrenamiento en modelo.json (por defecto, el nombre de cada fuente)")
     args = ap.parse_args(argv)
@@ -60,13 +73,13 @@ def main(argv=None) -> int:
     etiquetas = conf["etiquetas"]
 
     modelo = keras.models.load_model(args.entrenamiento / "modelo.keras")
-    contenido = Mo.a_tflite(modelo, conf["fotogramas"])
+    contenido = Mo.a_tflite(modelo, conf["fotogramas"], args.cuantizacion)
 
     muestras = [m for m in M.cargar_carpeta(args.muestras) if m.sena in etiquetas][:32]
     x, _ = construir(muestras, etiquetas, conf["fotogramas"], conf["duracion_ms"], usar_rostro=conf.get("usa_rostro", True))
-    diferencia = float(np.abs(modelo.predict(x, verbose=0) - Mo.ejecutar_tflite(contenido, x)).max())
-    if diferencia > TOLERANCIA:
-        print(f"El .tflite no reproduce al modelo Keras (diferencia {diferencia:.2e}).")
+    valido, detalle = comprobar_paridad(modelo.predict(x, verbose=0), Mo.ejecutar_tflite(contenido, x), args.cuantizacion)
+    if not valido:
+        print(f"El .tflite no reproduce al modelo Keras ({detalle}).")
         return 1
 
     contrato = Co.construir(
@@ -84,7 +97,7 @@ def main(argv=None) -> int:
     )
     ruta_tflite = Mo.guardar_tflite(contenido, args.entrenamiento / "reconocedor_lsc.tflite")
     ruta_json = Co.guardar(contrato, args.entrenamiento / "modelo.json")
-    print(f"Exportado: {ruta_tflite} ({len(contenido) // 1024} KB) y {ruta_json}. Diferencia con Keras: {diferencia:.2e}")
+    print(f"Exportado: {ruta_tflite} ({len(contenido) // 1024} KB, cuantización {args.cuantizacion}) y {ruta_json}. Frente a Keras: {detalle}")
 
     if args.instalar:
         ASSETS_APP.mkdir(parents=True, exist_ok=True)
