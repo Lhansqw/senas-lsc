@@ -47,7 +47,8 @@
     <string name="camara_vista_previa">Vista previa de la cámara</string>
     <string name="camara_sin_camara">Este dispositivo no tiene una cámara disponible.</string>
     <string name="camara_fps">Análisis: %1$s FPS</string>
-    <string name="camara_latencia">Latencia: %1$s ms (máx. %2$s ms)</string>
+    <string name="camara_latencia">Análisis: p50 %1$s · p95 %2$s ms</string>
+    <string name="modelo_senas_latencia">Modelo de señas: p50 %1$s · p95 %2$s ms</string>
     <string name="camara_resolucion">Resolución de análisis: %1$d×%2$d</string>
     <string name="camara_frontal">Cámara frontal</string>
     <string name="camara_trasera">Cámara trasera (no hay frontal)</string>
