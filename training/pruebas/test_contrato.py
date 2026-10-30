@@ -26,10 +26,15 @@ def test_contrato_valido():
     assert c["formato"] == 1
     assert c["caracteristicas"]["por_fotograma"] == 352
     assert c["salida"]["etiqueta_sin_sena"] == "sin_sena"
+    assert c["caracteristicas"]["usa_rostro"] is True
     # Solo las señas que produce el modelo, sin las carpetas del conjunto de datos.
     assert [v["id"] for v in c["vocabulario"]] == ["lsc.como", "lsc.hola"]
     assert c["vocabulario"][0]["interrogativa"] is True
     assert "carpetas" not in c["vocabulario"][1]
+
+
+def test_modelo_sin_rostro():
+    assert _contrato(usa_rostro=False)["caracteristicas"]["usa_rostro"] is False
 
 
 def test_sin_clase_sin_sena_ni_umbral():

@@ -14,7 +14,8 @@ _ID = re.compile(r"^[a-z]{2,8}\.[a-z0-9_]+$")
 
 
 def construir(nombre: str, version: str, vocabulario: Vocabulario, etiquetas: list[str], fotogramas: int, duracion_ms: int,
-              temperatura: float, umbral_energia: float | None, datos_entrenamiento: list[str], metricas: dict[str, float]) -> dict:
+              temperatura: float, umbral_energia: float | None, datos_entrenamiento: list[str], metricas: dict[str, float],
+              usa_rostro: bool = True) -> dict:
     entradas = [vocabulario.por_id(e) for e in etiquetas if e != ETIQUETA_SIN_SENA]
     if any(e is None for e in entradas):
         faltan = [e for e in etiquetas if e != ETIQUETA_SIN_SENA and vocabulario.por_id(e) is None]
@@ -24,7 +25,8 @@ def construir(nombre: str, version: str, vocabulario: Vocabulario, etiquetas: li
         "nombre": nombre,
         "version": version,
         "lengua": vocabulario.lengua,
-        "caracteristicas": {"version": C.VERSION, "version_subconjuntos": C.VERSION_SUBCONJUNTOS, "por_fotograma": C.POR_FOTOGRAMA},
+        "caracteristicas": {"version": C.VERSION, "version_subconjuntos": C.VERSION_SUBCONJUNTOS, "por_fotograma": C.POR_FOTOGRAMA,
+                            "usa_rostro": bool(usa_rostro)},
         "ventana": {"fotogramas": fotogramas, "duracion_ms": duracion_ms},
         "salida": {
             "etiquetas": etiquetas,
