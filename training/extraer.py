@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+import time
 import urllib.request
 from collections import Counter
 from pathlib import Path
@@ -25,6 +26,18 @@ from senas.extraccion import fotograma_desde_resultado, ordenar_imagenes, tiempo
 URL_MODELO = "https://storage.googleapis.com/mediapipe-models/holistic_landmarker/holistic_landmarker/float16/1/holistic_landmarker.task"
 IMAGENES = {".jpg", ".jpeg", ".png", ".bmp"}
 VIDEOS = {".mp4", ".mov", ".avi", ".mkv", ".webm"}
+# El mismo archivo que descarga la compilación de la app (fase 5): así se usan exactamente los mismos puntos.
+MODELO_APP = Path(__file__).resolve().parents[1] / "vision" / "landmarks" / "src" / "main" / "assets" / "holistic_landmarker.task"
+MODELO_LOCAL = Path(__file__).resolve().parent / "modelos" / "holistic_landmarker.task"
+
+
+def ubicar_modelo(indicado: Path | None) -> Path:
+    """Usa el modelo indicado; si no, el de la app; si tampoco está, lo descarga en `modelos/`."""
+    if indicado is not None:
+        return descargar_modelo(indicado)
+    if MODELO_APP.is_file() and MODELO_APP.stat().st_size > 1_000_000:
+        return MODELO_APP
+    return descargar_modelo(MODELO_LOCAL)
 
 
 def descargar_modelo(destino: Path) -> Path:
@@ -70,13 +83,13 @@ def _mp_image(ruta_o_array, espejo: bool):
     return mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb), rgb.shape[1], rgb.shape[0]
 
 
-def extraer_imagenes(modelo: Path, imagenes: list[Path], duracion_ms: int, espejo: bool):
+def extraer_imagenes(landmarker, imagenes: list[Path], duracion_ms: int, espejo: bool):
+    """Fotos sueltas: cada una se analiza por separado (modo IMAGE), con el mismo landmarker."""
     tiempos = tiempos_uniformes(len(imagenes), duracion_ms)
     fotogramas = []
-    with crear_landmarker(modelo, video=False) as lm:
-        for ruta, t in zip(imagenes, tiempos):
-            imagen, ancho, alto = _mp_image(ruta, espejo)
-            fotogramas.append(fotograma_desde_resultado(lm.detect(imagen), t, ancho, alto))
+    for ruta, t in zip(imagenes, tiempos):
+        imagen, ancho, alto = _mp_image(ruta, espejo)
+        fotogramas.append(fotograma_desde_resultado(landmarker.detect(imagen), t, ancho, alto))
     return fotogramas
 
 
@@ -123,14 +136,17 @@ def main(argv=None) -> int:
     ap.add_argument("--orden", choices=["persona-sena", "sena-persona"], default="persona-sena")
     ap.add_argument("--duracion-ms", type=int, default=1000, help="Duración asignada a una secuencia de imágenes sin tiempos")
     ap.add_argument("--espejo", action="store_true", help="Voltear horizontalmente (si el conjunto está grabado en espejo)")
-    ap.add_argument("--modelo", type=Path, default=Path("modelos/holistic_landmarker.task"))
+    ap.add_argument("--modelo", type=Path, default=None, help="Por defecto, el de la app (vision/landmarks/src/main/assets)")
     ap.add_argument("--min-manos", type=float, default=0.5, help="Descartar muestras con menos fotogramas con manos")
+    ap.add_argument("--rehacer", action="store_true", help="Volver a extraer las muestras que ya existen en --salida")
     args = ap.parse_args(argv)
 
     vocabulario = V.leer(args.vocabulario)
-    modelo = descargar_modelo(args.modelo)
-    guardadas, omitidas, descartadas = Counter(), Counter(), 0
+    modelo = ubicar_modelo(args.modelo)
+    print(f"Modelo de MediaPipe: {modelo}")
+    guardadas, existentes, omitidas, descartadas = Counter(), 0, Counter(), 0
 
+    tareas = []
     for nivel1 in sorted(p for p in args.raiz.iterdir() if p.is_dir()):
         for nivel2 in sorted(p for p in nivel1.iterdir() if p.is_dir()):
             persona, carpeta = (nivel1.name, nivel2.name) if args.orden == "persona-sena" else (nivel2.name, nivel1.name)
@@ -138,9 +154,18 @@ def main(argv=None) -> int:
             if entrada is None:
                 omitidas[carpeta] += 1
                 continue
-            for rep, contenido in repeticiones(nivel2):
+            tareas.append((persona, entrada, nivel2))
+
+    inicio = time.monotonic()
+    with crear_landmarker(modelo, video=False) as landmarker:
+        for n, (persona, entrada, carpeta) in enumerate(tareas, 1):
+            for rep, contenido in repeticiones(carpeta):
+                destino = args.salida / M.nombre_archivo(args.fuente, persona, entrada.id, rep)
+                if destino.is_file() and not args.rehacer:
+                    existentes += 1
+                    continue
                 fotogramas = (extraer_video(modelo, contenido, args.espejo) if isinstance(contenido, Path)
-                              else extraer_imagenes(modelo, contenido, args.duracion_ms, args.espejo))
+                              else extraer_imagenes(landmarker, contenido, args.duracion_ms, args.espejo))
                 if not fotogramas:
                     continue
                 muestra = M.Muestra(persona, entrada.id, rep, args.fuente, fotogramas)
@@ -149,15 +174,21 @@ def main(argv=None) -> int:
                     continue
                 M.guardar(muestra, args.salida)
                 guardadas[entrada.id] += 1
+            if n % 25 == 0 or n == len(tareas):
+                transcurrido = time.monotonic() - inicio
+                restante = transcurrido / n * (len(tareas) - n)
+                print(f"  {n}/{len(tareas)} carpetas · {transcurrido / 60:.1f} min · quedan ~{restante / 60:.0f} min", flush=True)
 
     print(f"\nMuestras guardadas en {args.salida}: {sum(guardadas.values())}")
+    if existentes:
+        print(f"Ya extraídas antes (se dejaron como estaban): {existentes}")
     for ident, n in sorted(guardadas.items()):
         print(f"  {ident}: {n}")
     if descartadas:
         print(f"Descartadas por tener pocas manos detectadas: {descartadas}")
     if omitidas:
         print(f"Carpetas sin entrada en el vocabulario (omitidas): {', '.join(sorted(omitidas))}")
-    return 0 if guardadas else 1
+    return 0 if guardadas or existentes else 1
 
 
 if __name__ == "__main__":
