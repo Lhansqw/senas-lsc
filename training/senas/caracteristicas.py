@@ -13,7 +13,7 @@ Se calcula en float32 para reproducir la aritmética de Kotlin (`Float`).
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 import numpy as np
 
@@ -63,8 +63,13 @@ def referencia(f: Fotograma) -> Referencia:
     return Referencia(f32(f32(0.5) * ar), f32(0.5), ESCALA_SIN_CUERPO)
 
 
-def de_ventana(ventana: list[Fotograma]) -> np.ndarray:
-    """Vector `(len(ventana), 352)` en float32, fotograma a fotograma."""
+def de_ventana(ventana: list[Fotograma], usar_rostro: bool = True) -> np.ndarray:
+    """Vector `(len(ventana), 352)` en float32, fotograma a fotograma.
+
+    Con `usar_rostro=False` el bloque del rostro queda a cero (como `usarRostro` en Kotlin).
+    """
+    if not usar_rostro:
+        ventana = [f if f.rostro is None else replace(f, rostro=None) for f in ventana]
     salida = np.zeros((len(ventana), POR_FOTOGRAMA), dtype=np.float32)
     for i, f in enumerate(ventana):
         salida[i] = de_fotograma(f, ventana[i - 1] if i > 0 else None)
