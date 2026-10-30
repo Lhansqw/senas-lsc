@@ -78,6 +78,7 @@ dependencies {
     implementation(project(":vision:landmarks"))
     implementation(project(":recognizer:litert"))
     implementation(project(":interpreter:litertlm"))
+    implementation(project(":interpreter:remoto"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
