@@ -19,7 +19,7 @@ import com.lhansqw.senaslsc.ui.theme.TemaSenasLSC
 import com.lhansqw.senaslsc.vocabulario.PantallaVocabulario
 
 /** Pantallas de la app. La navegación es simple todavía: no hace falta una librería. */
-private enum class Pantalla { INICIO, CAMARA, IA, HISTORIAL, VOCABULARIO, ACERCA }
+private enum class Pantalla { INICIO, CAMARA, GRABACION, IA, HISTORIAL, VOCABULARIO, ACERCA }
 
 class MainActivity : ComponentActivity() {
 
@@ -43,8 +43,10 @@ class MainActivity : ComponentActivity() {
                         onAbrirHistorial = { pantalla = Pantalla.HISTORIAL },
                         onAbrirVocabulario = { pantalla = Pantalla.VOCABULARIO },
                         onAbrirAcerca = { pantalla = Pantalla.ACERCA },
+                        onAbrirGrabacion = { pantalla = Pantalla.GRABACION },
                     )
                     Pantalla.CAMARA -> PantallaCamara(onVolver = { pantalla = Pantalla.INICIO })
+                    Pantalla.GRABACION -> PantallaCamara(onVolver = { pantalla = Pantalla.INICIO }, modoGrabacion = true)
                     Pantalla.IA -> PantallaIa(onVolver = { pantalla = Pantalla.INICIO })
                     Pantalla.HISTORIAL -> PantallaHistorial(onVolver = { pantalla = Pantalla.INICIO })
                     Pantalla.VOCABULARIO -> PantallaVocabulario(onVolver = { pantalla = Pantalla.INICIO })

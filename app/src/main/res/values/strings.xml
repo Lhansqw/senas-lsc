@@ -17,6 +17,7 @@
     <string name="inicio_abrir_ia">IA para proponer frases</string>
     <string name="inicio_abrir_historial">Historial</string>
     <string name="inicio_abrir_vocabulario">Vocabulario compatible</string>
+    <string name="inicio_abrir_grabacion">Grabar muestras para entrenar</string>
     <string name="inicio_abrir_acerca">Acerca de, privacidad y licencias</string>
     <string name="inicio_version">Versión %1$s</string>
 
@@ -186,4 +187,15 @@
     <string name="remota_consentimiento_titulo">¿Enviar señas a Gemini?</string>
     <string name="remota_consentimiento_texto">Al cerrar una frase, la app enviará a Google (Gemini) solo el texto de las señas reconocidas: su glosa, su significado y la confianza. Nunca imágenes, vídeo ni la posición de tus manos.\n\nCon el nivel gratuito de Gemini, Google puede usar lo que se envía para mejorar sus productos; con el nivel de pago, no. El uso puede tener coste según tu cuenta.\n\nPuedes desactivarlo cuando quieras; sin esto, la app no envía nada a internet.</string>
     <string name="remota_acepto">Acepto</string>
+
+    <!-- Herramienta de grabación (fase 6) -->
+    <string name="grabacion_titulo">Grabar muestras para entrenar</string>
+    <string name="grabacion_alias">Alias de quien seña (no tu nombre)</string>
+    <string name="grabacion_elegir_sena">Elegir seña</string>
+    <string name="grabacion_guardadas">%1$d guardadas</string>
+    <string name="grabacion_preparate">Prepárate… %1$d</string>
+    <string name="grabacion_grabando">● Grabando: haz la seña ahora</string>
+    <string name="grabacion_guardada">Guardada.</string>
+    <string name="grabacion_grabar">Grabar</string>
+    <string name="grabacion_ayuda">Solo se guardan los puntos de manos y cuerpo, nunca imágenes, en %1$s. Se borran al desinstalar la app: cópialos al PC antes.</string>
 </resources>
