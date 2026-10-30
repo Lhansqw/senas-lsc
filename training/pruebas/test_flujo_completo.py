@@ -42,11 +42,12 @@ def test_flujo_completo(carpeta, monkeypatch):
     # Nunca se instala un modelo sintético en la app.
     monkeypatch.setattr(exportar, "ASSETS_APP", carpeta / "no_usar")
     assert exportar.main(["--entrenamiento", str(salida), "--muestras", str(puntos), "--vocabulario", str(voc),
-                          "--nombre", "prueba-sintetica", "--version", "0.0.0"]) == 0
+                          "--nombre", "prueba-sintetica", "--version", "0.0.0", "--datos", "Datos sintéticos (solo pruebas)"]) == 0
     contrato = json.loads((salida / "modelo.json").read_text(encoding="utf-8"))
     assert Co.validar(contrato) == []
     assert contrato["ventana"]["fotogramas"] == 16
     assert contrato["caracteristicas"]["usa_rostro"] is False
+    assert contrato["datos_entrenamiento"] == ["Datos sintéticos (solo pruebas)"]
     assert contrato["metricas"]["exactitud"] == pytest.approx(metricas["exactitud"])
     assert contrato["salida"]["temperatura"] == pytest.approx(metricas["temperatura"])
     assert (salida / "reconocedor_lsc.tflite").stat().st_size > 10_000

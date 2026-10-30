@@ -41,6 +41,8 @@ def main(argv=None) -> int:
     ap.add_argument("--nombre", default="reconocedor-lsc")
     ap.add_argument("--version", required=True)
     ap.add_argument("--instalar", action="store_true", help="Copiar el modelo a los assets de la app")
+    ap.add_argument("--datos", nargs="+", default=None,
+                    help="Cómo citar los datos de entrenamiento en modelo.json (por defecto, el nombre de cada fuente)")
     args = ap.parse_args(argv)
 
     import keras
@@ -76,7 +78,7 @@ def main(argv=None) -> int:
         duracion_ms=conf["duracion_ms"],
         temperatura=metricas["temperatura"],
         umbral_energia=metricas["umbral_energia"],
-        datos_entrenamiento=conf["fuentes"],
+        datos_entrenamiento=args.datos or conf["fuentes"],
         metricas=metricas_para_contrato(metricas),
         usa_rostro=conf.get("usa_rostro", True),
     )
