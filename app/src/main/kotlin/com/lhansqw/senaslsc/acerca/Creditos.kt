@@ -56,6 +56,12 @@ object Creditos {
             "https://ai.google.dev/gemma",
         ),
         Componente(
+            "API de Gemini (Google)",
+            "Proponer frases por internet, solo si lo activas y con tu clave",
+            "Términos de la API de Gemini",
+            "https://ai.google.dev/gemini-api/terms",
+        ),
+        Componente(
             "Android Jetpack (Compose, CameraX, Lifecycle)",
             "Interfaz y cámara",
             "Apache 2.0",
