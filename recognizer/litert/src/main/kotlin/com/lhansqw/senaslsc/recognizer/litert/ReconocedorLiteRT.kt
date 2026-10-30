@@ -40,7 +40,7 @@ class ReconocedorLiteRT private constructor(
     override suspend fun predecir(ventana: List<LandmarkFrame>): PrediccionSena {
         check(!cerrado) { "El reconocedor está cerrado" }
         validarVentana(ventana)
-        val logits = ejecutar(Caracteristicas.deVentana(ventana))
+        val logits = ejecutar(Caracteristicas.deVentana(ventana, contrato.usaRostro))
         return postProcesador.aplicar(logits, ventana.first().timestampMs, ventana.last().timestampMs)
     }
 
