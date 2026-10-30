@@ -12,11 +12,12 @@
     <string name="accion_guardado">Guardado en el historial</string>
 
     <string name="inicio_titulo">Reconocimiento de Lengua de Señas Colombiana</string>
-    <string name="inicio_descripcion">La cámara ya detecta tus manos, tu cuerpo y tu rostro. El reconocimiento de señas llegará en las siguientes fases.</string>
+    <string name="inicio_descripcion">Haz señas delante de la cámara frontal: la app las reconoce, las muestra como texto y te propone una frase en español que puedes corregir.</string>
     <string name="inicio_abrir_camara">Abrir cámara</string>
     <string name="inicio_abrir_ia">IA para proponer frases</string>
     <string name="inicio_abrir_historial">Historial</string>
     <string name="inicio_abrir_vocabulario">Vocabulario compatible</string>
+    <string name="inicio_abrir_acerca">Acerca de, privacidad y licencias</string>
     <string name="inicio_version">Versión %1$s</string>
 
     <string name="dispositivo_titulo">Tu dispositivo</string>
@@ -31,7 +32,7 @@
     <string name="estado_solo_reglas">Solo intérprete por reglas</string>
 
     <string name="limitaciones_titulo">Limitaciones</string>
-    <string name="limitaciones_texto">La aplicación reconocerá un vocabulario limitado de señas verificadas de la LSC. No traduce toda la lengua de señas. Las frases que proponga la IA se mostrarán aparte y siempre podrás corregirlas.</string>
+    <string name="limitaciones_texto">La aplicación reconoce un vocabulario limitado de señas de la LSC (consúltalo en «Vocabulario compatible»). No traduce toda la lengua de señas y puede equivocarse. Las frases que propone la IA se muestran aparte y siempre puedes corregirlas.</string>
 
     <!-- Permiso de cámara -->
     <string name="permiso_titulo">La app necesita la cámara</string>
@@ -152,4 +153,14 @@
     <string name="vocabulario_letras">Letras</string>
     <string name="vocabulario_interrogativa">Pregunta</string>
     <string name="vocabulario_variante">Variante: %1$s</string>
+
+    <!-- Acerca de (fase 12) -->
+    <string name="acerca_titulo">Acerca de</string>
+    <string name="acerca_que_hace">Qué hace y qué no</string>
+    <string name="acerca_privacidad">Privacidad</string>
+    <string name="acerca_privacidad_texto">Las imágenes de la cámara se analizan en el teléfono y no se guardan ni se envían a ningún sitio. El reconocimiento de señas y la IA local funcionan sin conexión. La app solo usa internet para descargar el modelo de lenguaje, y solo si lo pides. El historial está desactivado por defecto; si lo activas, se guarda cifrado y solo en este teléfono.</string>
+    <string name="acerca_modelo">Modelo de señas instalado</string>
+    <string name="acerca_metricas">Medido con personas que el modelo no vio al entrenar: %1$s</string>
+    <string name="acerca_datos">Datos de entrenamiento</string>
+    <string name="acerca_licencias">Software de terceros</string>
 </resources>
