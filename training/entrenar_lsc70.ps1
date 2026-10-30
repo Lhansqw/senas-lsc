@@ -80,6 +80,10 @@ Ejecutar -c "import tensorflow, mediapipe, ai_edge_litert; print('Dependencias l
 Paso "2. Extraer puntos (la primera vez tarda; se puede interrumpir y continuar)"
 Ejecutar extraer.py --raiz "$Datos\LSC70AN" --vocabulario $Vocabulario --salida $Puntos --fuente LSC70AN
 Ejecutar extraer.py --raiz "$Datos\LSC70W" --vocabulario $Vocabulario --salida $Puntos --fuente LSC70W
+# Grabaciones hechas con la app (herramienta de grabación): «sin seña» y repeticiones extra.
+if (Test-Path "data\grabaciones") {
+    Ejecutar importar_grabaciones.py --entrada "data\grabaciones" --salida $Puntos --vocabulario $Vocabulario
+}
 if ($SoloExtraer) { Write-Host "`nPuntos extraídos en $Puntos." -ForegroundColor Green; exit 0 }
 
 Paso "3. Entrenar"
