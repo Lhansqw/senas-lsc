@@ -9,6 +9,7 @@ import pytest
 import entrenar
 import evaluar
 import exportar
+import optimizar
 import sinteticos
 from senas import contrato as Co
 from senas import muestras as M
@@ -39,6 +40,13 @@ def test_flujo_completo(carpeta, monkeypatch):
     assert metricas["exactitud"] > 0.6   # movimientos muy distintos entre sí
     assert (salida / "informe.md").is_file()
 
+    assert optimizar.main(["--entrenamiento", str(salida), "--muestras", str(puntos), "--repeticiones", "20"]) == 0
+    filas = json.loads((salida / "optimizacion.json").read_text(encoding="utf-8"))
+    assert [f["version"] for f in filas] == ["float32", "float16", "int8"]
+    assert filas[0]["exactitud"] == pytest.approx(metricas["exactitud"], abs=0.02)   # el .tflite rinde como Keras
+    assert filas[2]["kb"] < filas[1]["kb"] < filas[0]["kb"]
+    assert (salida / "optimizacion.md").is_file()
+
     # Nunca se instala un modelo sintético en la app.
     monkeypatch.setattr(exportar, "ASSETS_APP", carpeta / "no_usar")
     assert exportar.main(["--entrenamiento", str(salida), "--muestras", str(puntos), "--vocabulario", str(voc),
@@ -52,6 +60,11 @@ def test_flujo_completo(carpeta, monkeypatch):
     assert contrato["salida"]["temperatura"] == pytest.approx(metricas["temperatura"])
     assert (salida / "reconocedor_lsc.tflite").stat().st_size > 10_000
     assert not (carpeta / "no_usar").exists()
+
+    # Exportar cuantizado: archivo más pequeño, mismo contrato.
+    assert exportar.main(["--entrenamiento", str(salida), "--muestras", str(puntos), "--vocabulario", str(voc),
+                          "--version", "0.0.0", "--cuantizacion", "float16"]) == 0
+    assert (salida / "reconocedor_lsc.tflite").stat().st_size < 0.6 * filas[0]["kb"] * 1024
 
 
 def test_exportar_sin_evaluar_falla(tmp_path):
