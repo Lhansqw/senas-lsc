@@ -43,6 +43,7 @@ fun PantallaInicio(
     onAbrirHistorial: () -> Unit,
     onAbrirVocabulario: () -> Unit,
     onAbrirAcerca: () -> Unit,
+    onAbrirGrabacion: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -84,6 +85,9 @@ fun PantallaInicio(
                 }
             }
 
+            TextButton(onClick = onAbrirGrabacion, enabled = capacidad.reconocedorLocal, modifier = Modifier.fillMaxWidth()) {
+                Text(stringResource(R.string.inicio_abrir_grabacion))
+            }
             TextButton(onClick = onAbrirAcerca, modifier = Modifier.fillMaxWidth()) {
                 Text(stringResource(R.string.inicio_abrir_acerca))
             }
@@ -174,6 +178,6 @@ private fun estado(disponible: Boolean): String =
 private fun VistaPreviaInicio() {
     val perfil = PerfilDispositivo(nivelApi = 34, ramTotalMb = 3_800, esDispositivoBajaMemoria = false, nucleos = 8)
     TemaSenasLSC(colorDinamico = false) {
-        PantallaInicio(perfil, EvaluadorCapacidad.evaluar(perfil), onAbrirCamara = {}, onAbrirIa = {}, onAbrirHistorial = {}, onAbrirVocabulario = {}, onAbrirAcerca = {})
+        PantallaInicio(perfil, EvaluadorCapacidad.evaluar(perfil), onAbrirCamara = {}, onAbrirIa = {}, onAbrirHistorial = {}, onAbrirVocabulario = {}, onAbrirAcerca = {}, onAbrirGrabacion = {})
     }
 }
