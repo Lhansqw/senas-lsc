@@ -75,13 +75,15 @@ class DescargadorArchivoTest {
         var bloques = 0
         val cancelada = d.descargar(url, destino, cancelado = { bloques++ >= 10 })
         assertTrue(cancelada is ResultadoTransferencia.Cancelada)
-        val parcial = d.parcialDe(destino)
-        assertEquals(100_000L, parcial.length())
+        // read() puede devolver menos que un bloque: 10 lecturas son como mucho 100 000 bytes.
+        val parcial = d.parcialDe(destino).length()
+        assertTrue("parcial: $parcial", parcial in 1..100_000L)
+        assertArrayEquals(datos.copyOf(parcial.toInt()), d.parcialDe(destino).readBytes())
 
         var primerProgreso: Progreso? = null
         val r = d.descargar(url, destino, { if (primerProgreso == null) primerProgreso = it })
         assertTrue(r is ResultadoTransferencia.Completada)
-        assertEquals(100_000L, primerProgreso!!.bytes)            // continuó, no empezó de cero
+        assertEquals(parcial, primerProgreso!!.bytes)              // continuó, no empezó de cero
         assertArrayEquals(datos, destino.readBytes())
     }
 
