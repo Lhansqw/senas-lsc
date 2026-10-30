@@ -37,6 +37,11 @@ data class ContratoModelo(
     val datosEntrenamiento: List<String>,
     /** Métricas medidas con personas no vistas en el entrenamiento (p. ej. "macro_f1" → 0,83). */
     val metricas: Map<String, Float> = emptyMap(),
+    /**
+     * `false` si el modelo se entrenó sin rostro (p. ej. con caras difuminadas): la app pone a cero
+     * esas características aunque MediaPipe detecte la cara. Si falta en `modelo.json`, `true`.
+     */
+    val usaRostro: Boolean = true,
 ) {
 
     /** Lista de problemas que impiden usar el modelo; vacía si es compatible. */

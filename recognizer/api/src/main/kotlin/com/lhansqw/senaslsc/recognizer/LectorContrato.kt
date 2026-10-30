@@ -62,6 +62,7 @@ object LectorContrato {
             versionCaracteristicas = car.entero("version", "caracteristicas.version").toInt(),
             versionSubconjuntos = car.entero("version_subconjuntos", "caracteristicas.version_subconjuntos").toInt(),
             caracteristicasPorFotograma = car.entero("por_fotograma", "caracteristicas.por_fotograma").toInt(),
+            usaRostro = car.booleanoOpcional("usa_rostro", true, "caracteristicas.usa_rostro"),
             fotogramas = ventana.entero("fotogramas", "ventana.fotogramas").toInt(),
             duracionVentanaMs = ventana.entero("duracion_ms", "ventana.duracion_ms"),
             etiquetas = salida.listaTextos("etiquetas", "salida.etiquetas"),
