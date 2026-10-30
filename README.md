@@ -42,6 +42,7 @@ Dos componentes de IA, independientes entre sí:
 | [Fase 7 · Reconocedor LiteRT](docs/fase-07-reconocedor-litert.md) | Contrato del modelo, características, `modelo.json` y flujo de reconocimiento |
 | [Fase 8 · Modelo de lenguaje](docs/fase-08-modelo-lenguaje.md) | IA local con LiteRT-LM, instalación del modelo, validación y respaldo |
 | [Fase 9 · Interfaz de resultados](docs/fase-09-interfaz-resultados.md) | Edición, historial cifrado, vocabulario compatible |
+| [Fase 10 · IA local y en internet](docs/fase-10-local-y-nube.md) | Gemini con consentimiento, selección automática y comparativa |
 | [Fase 11 · Optimización](docs/fase-11-optimizacion.md) | Arquitecturas, cuantización, latencia p50/p95 y modo reposo |
 | [Fase 12 · Versión instalable](docs/fase-12-version-instalable.md) | Firma, R8, APK/AAB, Acerca de y lista de comprobación |
 | [Ficha del modelo](docs/ficha-modelo.md) | Datos, resultados y limitaciones del modelo de señas instalado |
