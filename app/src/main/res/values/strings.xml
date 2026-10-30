@@ -15,6 +15,8 @@
     <string name="inicio_descripcion">La cámara ya detecta tus manos, tu cuerpo y tu rostro. El reconocimiento de señas llegará en las siguientes fases.</string>
     <string name="inicio_abrir_camara">Abrir cámara</string>
     <string name="inicio_abrir_ia">IA para proponer frases</string>
+    <string name="inicio_abrir_historial">Historial</string>
+    <string name="inicio_abrir_vocabulario">Vocabulario compatible</string>
     <string name="inicio_version">Versión %1$s</string>
 
     <string name="dispositivo_titulo">Tu dispositivo</string>
@@ -115,4 +117,21 @@
     <string name="ia_descarga_titulo">Descargar el modelo de lenguaje</string>
     <string name="ia_descarga_texto">Se descargará %1$s (unos %2$s) desde Hugging Face. Usa una red Wi-Fi: con datos móviles puede tener coste. Licencia: %3$s.</string>
     <string name="ia_ver_licencia">Ver ficha</string>
+
+    <!-- Historial -->
+    <string name="historial_titulo">Historial</string>
+    <string name="historial_guardar">Guardar frases en el historial</string>
+    <string name="historial_guardar_ayuda">Solo texto, cifrado en el teléfono. No se guardan imágenes ni vídeo.</string>
+    <string name="historial_recuperado">No se pudo leer el historial anterior (por ejemplo, tras reinstalar la app) y se empezó uno nuevo.</string>
+    <string name="historial_buscar">Buscar</string>
+    <string name="historial_vacio">Todavía no hay frases guardadas. Actívalo arriba y pulsa «Guardar» bajo una frase.</string>
+    <string name="historial_sin_resultados">Ninguna frase coincide con la búsqueda.</string>
+    <string name="historial_eliminar">Eliminar</string>
+    <string name="historial_vaciar">Borrar todo el historial</string>
+    <string name="historial_vaciar_titulo">¿Borrar todo el historial?</string>
+    <string name="historial_vaciar_texto">Se eliminarán todas las frases guardadas. No se puede deshacer.</string>
+    <string name="historial_origen_reglas">Reglas</string>
+    <string name="historial_origen_ia_local">IA del teléfono</string>
+    <string name="historial_origen_ia_remota">IA en la nube</string>
+    <string name="historial_origen_usuario">Corregida por ti</string>
 </resources>
