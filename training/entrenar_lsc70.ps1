@@ -96,6 +96,10 @@ $exportar = @("exportar.py", "--entrenamiento", $Salida, "--muestras", $Puntos, 
               "--nombre", "reconocedor-lsc70", "--version", $Version, "--datos", $Cita, "--cuantizacion", $Cuantizacion)
 if (-not $SinInstalar) { $exportar += "--instalar" }
 Ejecutar @exportar
+if (-not $SinInstalar) {
+    # La ficha del modelo instalado en la app (fase 12), con las cifras recién medidas.
+    Ejecutar ficha.py --entrenamiento $Salida --salida "..\docs\ficha-modelo.md"
+}
 
 Write-Host "`nListo. Revisa $Salida\informe.md antes de usar el modelo." -ForegroundColor Green
 if (-not $SinInstalar) { Write-Host "Después, en C:\dev\senas-lsc: .\gradlew.bat installDebug" -ForegroundColor Green }
