@@ -42,6 +42,7 @@ Dos componentes de IA, independientes entre sí:
 | [Fase 7 · Reconocedor LiteRT](docs/fase-07-reconocedor-litert.md) | Contrato del modelo, características, `modelo.json` y flujo de reconocimiento |
 | [Fase 8 · Modelo de lenguaje](docs/fase-08-modelo-lenguaje.md) | IA local con LiteRT-LM, instalación del modelo, validación y respaldo |
 | [Fase 9 · Interfaz de resultados](docs/fase-09-interfaz-resultados.md) | Edición, historial cifrado, vocabulario compatible |
+| [Fase 11 · Optimización](docs/fase-11-optimizacion.md) | Arquitecturas, cuantización, latencia p50/p95 y modo reposo |
 
 ## Compilar y probar
 
