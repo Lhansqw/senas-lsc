@@ -19,12 +19,18 @@
     Solo extraer los puntos (lo más lento), sin entrenar.
 .PARAMETER SinInstalar
     No copiar el modelo a la app al terminar.
+.PARAMETER Arquitectura
+    gru (por defecto), conv o transformer. Para compararlas: comparar_lsc70.ps1.
+.PARAMETER Cuantizacion
+    ninguna (por defecto), float16 o int8. Mira antes outputs\...\optimizacion.md.
 #>
 param(
     [string]$Version = "0.1.0",
     [int]$Epocas = 80,
     [switch]$SoloExtraer,
-    [switch]$SinInstalar
+    [switch]$SinInstalar,
+    [ValidateSet("gru", "conv", "transformer")][string]$Arquitectura = "gru",
+    [ValidateSet("ninguna", "float16", "int8")][string]$Cuantizacion = "ninguna"
 )
 
 $ErrorActionPreference = "Stop"
@@ -77,14 +83,17 @@ Ejecutar extraer.py --raiz "$Datos\LSC70W" --vocabulario $Vocabulario --salida $
 if ($SoloExtraer) { Write-Host "`nPuntos extraídos en $Puntos." -ForegroundColor Green; exit 0 }
 
 Paso "3. Entrenar"
-Ejecutar entrenar.py --muestras $Puntos --vocabulario $Vocabulario --salida $Salida --epocas $Epocas
+Ejecutar entrenar.py --muestras $Puntos --vocabulario $Vocabulario --salida $Salida --epocas $Epocas --arquitectura $Arquitectura
 
 Paso "4. Evaluar con personas no vistas"
 Ejecutar evaluar.py --entrenamiento $Salida --muestras $Puntos
 
-Paso "5. Exportar"
+Paso "5. Medir la cuantización"
+Ejecutar optimizar.py --entrenamiento $Salida --muestras $Puntos
+
+Paso "6. Exportar"
 $exportar = @("exportar.py", "--entrenamiento", $Salida, "--muestras", $Puntos, "--vocabulario", $Vocabulario,
-              "--nombre", "reconocedor-lsc70", "--version", $Version, "--datos", $Cita)
+              "--nombre", "reconocedor-lsc70", "--version", $Version, "--datos", $Cita, "--cuantizacion", $Cuantizacion)
 if (-not $SinInstalar) { $exportar += "--instalar" }
 Ejecutar @exportar
 
