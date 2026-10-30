@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     // AGP 9 compila Kotlin de forma integrada: no se aplica org.jetbrains.kotlin.android.
@@ -13,20 +15,39 @@ android {
         // API 26 (Android 8.0): mínimo de LiteRT-LM para el modelo de lenguaje local.
         minSdk = 26
         targetSdk = 37
-        versionCode = 1
-        versionName = "0.1.0"
+        // Se cambian en gradle.properties (senas.versionCode / senas.versionName) para cada versión.
+        versionCode = providers.gradleProperty("senas.versionCode").orNull?.toInt() ?: 1
+        versionName = providers.gradleProperty("senas.versionName").orNull ?: "0.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    // Firma de la versión de producción: keystore.properties en la raíz (no se sube al repositorio;
+    // lo crea scripts/crear_firma.ps1). Sin él, assembleRelease genera un APK sin firmar.
+    val archivoFirma = rootProject.file("keystore.properties")
+    val firma = Properties().apply { if (archivoFirma.isFile) archivoFirma.inputStream().use(::load) }
+    signingConfigs {
+        if (archivoFirma.isFile) {
+            create("produccion") {
+                storeFile = rootProject.file(firma.getProperty("storeFile"))
+                storePassword = firma.getProperty("storePassword")
+                keyAlias = firma.getProperty("keyAlias")
+                keyPassword = firma.getProperty("keyPassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
-            isMinifyEnabled = true
-            isShrinkResources = true
+            // R8 reduce y ofusca el código; -Psenas.r8=false lo desactiva para descartar problemas.
+            val usarR8 = providers.gradleProperty("senas.r8").orNull != "false"
+            isMinifyEnabled = usarR8
+            isShrinkResources = usarR8
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+            signingConfigs.findByName("produccion")?.let { signingConfig = it }
         }
     }
 
