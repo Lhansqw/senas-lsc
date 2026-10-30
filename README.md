@@ -3,10 +3,10 @@
 Aplicación Android que reconoce señas de la **Lengua de Señas Colombiana (LSC)** con la cámara
 del teléfono y las convierte en texto en español mediante inteligencia artificial.
 
-> **Estado:** fase 8 — reconocimiento con LiteRT listo para el modelo de la fase 6 y modelo de
-> lenguaje opcional en el teléfono (Gemma 4 E2B con LiteRT-LM) que mejora las frases, con
-> validación y respaldo por reglas. Sin modelo de señas, la app lo indica y no muestra señas.
-> El reconocedor funcionará con un **vocabulario limitado y verificado**; no traduce toda la LSC.
+> **Estado:** fase 9 — interfaz de resultados completa: editar, copiar, compartir, historial
+> opcional cifrado y vocabulario compatible; reconocimiento con LiteRT listo para el modelo de la
+> fase 6 y modelo de lenguaje opcional en el teléfono. El reconocedor funcionará con un
+> **vocabulario limitado y verificado**; no traduce toda la LSC.
 
 ## Cómo funciona (resumen)
 
@@ -40,6 +40,7 @@ Dos componentes de IA, independientes entre sí:
 | [Fase 5 · MediaPipe](docs/fase-05-mediapipe.md) | Holistic Landmarker, puntos que se guardan, regla del espejo y cómo probarlo |
 | [Fase 7 · Reconocedor LiteRT](docs/fase-07-reconocedor-litert.md) | Contrato del modelo, características, `modelo.json` y flujo de reconocimiento |
 | [Fase 8 · Modelo de lenguaje](docs/fase-08-modelo-lenguaje.md) | IA local con LiteRT-LM, instalación del modelo, validación y respaldo |
+| [Fase 9 · Interfaz de resultados](docs/fase-09-interfaz-resultados.md) | Edición, historial cifrado, vocabulario compatible |
 
 ## Compilar y probar
 
@@ -59,6 +60,7 @@ senas-lsc/
 ├── app/                   Aplicación Android (Kotlin, Jetpack Compose)
 ├── core/model/            Tipos de dominio y lector JSON, sin dependencias de Android
 ├── core/descargas/        Descarga reanudable, progreso y espacio (Kotlin puro)
+├── data/history/          Historial cifrado (AES-GCM) y su formato (Kotlin puro)
 ├── recognizer/api/        Contrato del reconocedor visual
 ├── sequence/              Ventanas, filtro temporal y secuencia de señas
 ├── interpreter/api/       Contrato del intérprete, instrucciones y validador
@@ -70,8 +72,7 @@ senas-lsc/
 └── docs/                  Documentación del proyecto
 ```
 
-Se añadirán en sus fases: `training/` (6, Python),
-`data/history/` (9).
+Se añadirán en sus fases: `training/` (6, Python) e `interpreter/remote/` (10).
 
 ## Autor
 
