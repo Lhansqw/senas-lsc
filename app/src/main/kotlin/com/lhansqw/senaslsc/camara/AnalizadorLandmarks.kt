@@ -56,6 +56,10 @@ class AnalizadorLandmarks(context: Context) : AnalizadorFotogramas, AutoCloseabl
     private val _estadoModelo = MutableStateFlow<EstadoModelo>(EstadoModelo.SinCargar)
     val estadoModelo: StateFlow<EstadoModelo> = _estadoModelo.asStateFlow()
 
+    /** Desactiva el modo reposo (al grabar muestras hacen falta todos los fotogramas, también sin manos). */
+    @Volatile
+    var sinReposo: Boolean = false
+
     /** Recibe cada fotograma convertido en puntos (en el hilo de análisis); no debe bloquear. */
     @Volatile
     var alExtraer: ((LandmarkFrame) -> Unit)? = null
@@ -64,7 +68,7 @@ class AnalizadorLandmarks(context: Context) : AnalizadorFotogramas, AutoCloseabl
         synchronized(bloqueo) {
             if (cerrado || _estadoModelo.value is EstadoModelo.Error) return false
             val marcaNs = imagen.imageInfo.timestamp
-            if (!regulador.debeAnalizar(marcaNs)) return false
+            if (!sinReposo && !regulador.debeAnalizar(marcaNs)) return false
             val ext = extractor ?: cargarModelo() ?: return false
 
             val bitmap = preparador.preparar(imagen)
