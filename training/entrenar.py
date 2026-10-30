@@ -34,13 +34,15 @@ def main(argv=None) -> int:
     ap.add_argument("--semilla", type=int, default=42)
     ap.add_argument("--validacion", type=float, default=0.15)
     ap.add_argument("--prueba", type=float, default=0.15)
+    ap.add_argument("--rostro", choices=["auto", "si", "no"], default="auto",
+                    help="Usar los puntos del rostro. «auto»: solo si se detectó la cara en al menos el 50 %% de los fotogramas")
     args = ap.parse_args(argv)
 
     import keras
     import numpy as np
 
     from senas import modelo as Mo
-    from senas.conjunto import construir
+    from senas.conjunto import construir, proporcion_con_rostro
 
     keras.utils.set_random_seed(args.semilla)
     vocabulario = V.leer(args.vocabulario)
@@ -60,9 +62,12 @@ def main(argv=None) -> int:
     print(f"Personas: {len(particion.entrenamiento)} entrenamiento, {len(particion.validacion)} validación, {len(particion.prueba)} prueba")
     print(f"Muestras: {len(entrenamiento)} entrenamiento, {len(validacion)} validación, {len(de('prueba'))} prueba")
     print(f"Etiquetas ({len(etiquetas)}): {', '.join(etiquetas)}")
+    con_rostro = proporcion_con_rostro(entrenamiento)
+    usar_rostro = args.rostro == "si" or (args.rostro == "auto" and con_rostro >= 0.5)
+    print(f"Rostro detectado en el {con_rostro * 100:.0f} % de los fotogramas → {'se usa' if usar_rostro else 'no se usa'}")
 
-    x_ent, y_ent = construir(entrenamiento, etiquetas, args.fotogramas, args.duracion_ms, args.copias_aumentadas, args.semilla)
-    x_val, y_val = construir(validacion, etiquetas, args.fotogramas, args.duracion_ms)
+    x_ent, y_ent = construir(entrenamiento, etiquetas, args.fotogramas, args.duracion_ms, args.copias_aumentadas, args.semilla, usar_rostro)
+    x_val, y_val = construir(validacion, etiquetas, args.fotogramas, args.duracion_ms, usar_rostro=usar_rostro)
 
     # Pesos por clase: que una seña con más muestras no domine el entrenamiento.
     conteo = Counter(y_ent.tolist())
@@ -85,6 +90,7 @@ def main(argv=None) -> int:
         "etiquetas": etiquetas,
         "fotogramas": args.fotogramas,
         "duracion_ms": args.duracion_ms,
+        "usa_rostro": usar_rostro,
         "semilla": args.semilla,
         "particion": particion.a_json(),
         "fuentes": sorted({m.fuente for m in muestras}),
