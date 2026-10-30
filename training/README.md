@@ -88,3 +88,5 @@ python -m pytest pruebas        # todo debe salir en verde
 | `senas/contrato.py` | Escritura y validación de `modelo.json` |
 | `entrenar.py`, `evaluar.py`, `exportar.py` | Los tres pasos del entrenamiento |
 | `entrenar_lsc70.ps1`, `vocabulario.lsc70.json` | Todo el proceso con LSC70 en Windows |
+| `optimizar.py` | Tamaño, exactitud y latencia de float32, float16 e int8 |
+| `comparar.py`, `comparar_lsc70.ps1` | Entrena y compara GRU, convolucional y Transformer |
