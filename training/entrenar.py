@@ -34,6 +34,7 @@ def main(argv=None) -> int:
     ap.add_argument("--semilla", type=int, default=42)
     ap.add_argument("--validacion", type=float, default=0.15)
     ap.add_argument("--prueba", type=float, default=0.15)
+    ap.add_argument("--arquitectura", choices=["gru", "conv", "transformer"], default="gru")
     ap.add_argument("--rostro", choices=["auto", "si", "no"], default="auto",
                     help="Usar los puntos del rostro. «auto»: solo si se detectó la cara en al menos el 50 %% de los fotogramas")
     args = ap.parse_args(argv)
@@ -73,7 +74,7 @@ def main(argv=None) -> int:
     conteo = Counter(y_ent.tolist())
     pesos = {c: len(y_ent) / (len(conteo) * n) for c, n in conteo.items()}
 
-    modelo = Mo.construir(args.fotogramas, len(etiquetas))
+    modelo = Mo.construir(args.fotogramas, len(etiquetas), arquitectura=args.arquitectura)
     historial = modelo.fit(
         x_ent, y_ent,
         validation_data=(x_val, y_val),
@@ -91,6 +92,8 @@ def main(argv=None) -> int:
         "fotogramas": args.fotogramas,
         "duracion_ms": args.duracion_ms,
         "usa_rostro": usar_rostro,
+        "arquitectura": args.arquitectura,
+        "parametros": int(modelo.count_params()),
         "semilla": args.semilla,
         "particion": particion.a_json(),
         "fuentes": sorted({m.fuente for m in muestras}),
