@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import com.lhansqw.senaslsc.camera.AnalizadorFotogramas
 import com.lhansqw.senaslsc.SenasApp
 import com.lhansqw.senaslsc.camera.ControladorCamara
+import com.lhansqw.senaslsc.grabacion.ControladorGrabacion
 import com.lhansqw.senaslsc.historial.aOrigenTexto
 import com.lhansqw.senaslsc.historial.glosasDe
 import com.lhansqw.senaslsc.ia.ControladorIaLocal
@@ -39,6 +40,9 @@ class CamaraViewModel(application: Application) : AndroidViewModel(application) 
     private val remota = ControladorIaRemota(app.preferenciasIaRemota)
     val senas = ProcesadorSenas(application, ia, remota) { app.preferenciasIaRemota.preferencia.value }
 
+    /** Herramienta de grabación de muestras para entrenar (fase 6). */
+    val grabacion = ControladorGrabacion(application)
+
     /** Si el usuario activó el historial (desactivado por defecto). */
     val historialActivo: StateFlow<Boolean> = app.preferenciasHistorial.guardar
 
@@ -48,7 +52,10 @@ class CamaraViewModel(application: Application) : AndroidViewModel(application) 
     val cargaSimuladaMs: StateFlow<Long> = _cargaSimuladaMs.asStateFlow()
 
     init {
-        landmarks.alExtraer = senas::enviarFotograma
+        landmarks.alExtraer = { frame ->
+            senas.enviarFotograma(frame)
+            grabacion.recibir(frame)
+        }
         controlador.analizador = AnalizadorFotogramas { imagen ->
             val analizado = landmarks.analizar(imagen)
             val retardo = _cargaSimuladaMs.value
@@ -89,5 +96,6 @@ class CamaraViewModel(application: Application) : AndroidViewModel(application) 
         landmarks.close()
         senas.close()
         ia.close()
+        grabacion.close()
     }
 }

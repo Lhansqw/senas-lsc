@@ -41,6 +41,7 @@ import com.lhansqw.senaslsc.R
 import com.lhansqw.senaslsc.camera.EstadoCamara
 import com.lhansqw.senaslsc.camera.Rendimiento
 import com.lhansqw.senaslsc.core.rendimiento.ResumenLatencia
+import com.lhansqw.senaslsc.grabacion.PanelGrabacion
 import com.lhansqw.senaslsc.permisos.ConPermisoCamara
 import com.lhansqw.senaslsc.reconocimiento.PanelReconocimiento
 import com.lhansqw.senaslsc.ui.AccionesTexto
@@ -50,18 +51,18 @@ import java.util.Locale
 private val CARGAS_SIMULADAS_MS = listOf(0L, 50L, 150L)
 
 @Composable
-fun PantallaCamara(onVolver: () -> Unit) {
+fun PantallaCamara(onVolver: () -> Unit, modoGrabacion: Boolean = false) {
     BackHandler(onBack = onVolver)
     ConPermisoCamara(onVolver = onVolver) {
         // Tema oscuro fijo: los controles se dibujan sobre la imagen de la cámara.
         TemaSenasLSC(oscuro = true, colorDinamico = false) {
-            VistaCamara(onVolver = onVolver)
+            VistaCamara(onVolver = onVolver, modoGrabacion = modoGrabacion)
         }
     }
 }
 
 @Composable
-private fun VistaCamara(onVolver: () -> Unit, viewModel: CamaraViewModel = viewModel()) {
+private fun VistaCamara(onVolver: () -> Unit, modoGrabacion: Boolean, viewModel: CamaraViewModel = viewModel()) {
     val controlador = viewModel.controlador
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -82,6 +83,16 @@ private fun VistaCamara(onVolver: () -> Unit, viewModel: CamaraViewModel = viewM
     val reposo by viewModel.landmarks.reposo.collectAsStateWithLifecycle()
     val reconocimiento by viewModel.senas.estado.collectAsStateWithLifecycle()
     val historialActivo by viewModel.historialActivo.collectAsStateWithLifecycle()
+    val estadoGrabacion by viewModel.grabacion.estado.collectAsStateWithLifecycle()
+
+    // Al grabar se analizan todos los fotogramas (sin modo reposo); al salir se cancela lo pendiente.
+    DisposableEffect(modoGrabacion) {
+        viewModel.landmarks.sinReposo = modoGrabacion
+        onDispose {
+            viewModel.landmarks.sinReposo = false
+            viewModel.grabacion.cancelar()
+        }
+    }
     val descripcionVista = stringResource(R.string.camara_vista_previa)
 
     Box(Modifier.fillMaxSize().background(Color.Black)) {
@@ -119,7 +130,9 @@ private fun VistaCamara(onVolver: () -> Unit, viewModel: CamaraViewModel = viewM
                 if (BuildConfig.DEBUG) {
                     SelectorCargaSimulada(cargaSimulada, viewModel::establecerCargaSimulada)
                 }
-                if (analisisActivo && activa != null) {
+                if (analisisActivo && activa != null && modoGrabacion) {
+                    PanelGrabacion(estadoGrabacion, viewModel.grabacion.carpeta.absolutePath, viewModel.grabacion)
+                } else if (analisisActivo && activa != null) {
                     PanelReconocimiento(
                         estado = reconocimiento,
                         onInterpretar = viewModel.senas::interpretar,
