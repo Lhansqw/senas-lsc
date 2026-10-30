@@ -39,6 +39,7 @@ class ContratoGeneradoTest {
                 assertEquals(5, c.entradas.size)
                 assertTrue(c.entradas.single { it.id == "lsc.como" }.interrogativa)
                 assertEquals(0.5f, c.metricas.getValue("exactitud"), 0f)
+                assertEquals(false, c.usaRostro)
                 assertTrue(c.validar().isEmpty())
             }
         }
