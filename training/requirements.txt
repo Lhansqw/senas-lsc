@@ -1,0 +1,7 @@
+# Entorno de entrenamiento (Python 3.12 o 3.13). Versiones comprobadas en PyPI (octubre de 2026).
+# Instalar:  python -m venv .venv  →  .venv\Scripts\activate  →  pip install -r requirements.txt
+tensorflow==2.21.0      # Keras 3: entrenamiento y conversión a LiteRT (.tflite)
+mediapipe==1.1.1        # misma versión que tasks-vision en la app: mismos puntos de referencia
+numpy==2.5.4
+ai-edge-litert==2.3.0   # intérprete LiteRT para comprobar el .tflite exportado (misma versión que la app)
+pytest==9.2.0
