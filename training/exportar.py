@@ -61,7 +61,7 @@ def main(argv=None) -> int:
     contenido = Mo.a_tflite(modelo, conf["fotogramas"])
 
     muestras = [m for m in M.cargar_carpeta(args.muestras) if m.sena in etiquetas][:32]
-    x, _ = construir(muestras, etiquetas, conf["fotogramas"], conf["duracion_ms"])
+    x, _ = construir(muestras, etiquetas, conf["fotogramas"], conf["duracion_ms"], usar_rostro=conf.get("usa_rostro", True))
     diferencia = float(np.abs(modelo.predict(x, verbose=0) - Mo.ejecutar_tflite(contenido, x)).max())
     if diferencia > TOLERANCIA:
         print(f"El .tflite no reproduce al modelo Keras (diferencia {diferencia:.2e}).")
@@ -78,6 +78,7 @@ def main(argv=None) -> int:
         umbral_energia=metricas["umbral_energia"],
         datos_entrenamiento=conf["fuentes"],
         metricas=metricas_para_contrato(metricas),
+        usa_rostro=conf.get("usa_rostro", True),
     )
     ruta_tflite = Mo.guardar_tflite(contenido, args.entrenamiento / "reconocedor_lsc.tflite")
     ruta_json = Co.guardar(contrato, args.entrenamiento / "modelo.json")
