@@ -50,6 +50,17 @@ class LectorContratoTest {
         assertTrue(c.entradas.single { it.id == "lsc.como" }.interrogativa)
         assertEquals(TipoSena.PALABRA, c.entradas[0].tipo)
         assertEquals(0.81f, c.metricas.getValue("macro_f1"), 1e-6f)
+        assertTrue(c.usaRostro)
+    }
+
+    @Test
+    fun `usa_rostro se lee y por defecto es verdadero`() {
+        val sinRostro = ejemplo.replace("\"por_fotograma\": 352 }", "\"por_fotograma\": 352, \"usa_rostro\": false }")
+        assertTrue("usa_rostro" in sinRostro)
+        assertEquals(false, (LectorContrato.leer(sinRostro) as ResultadoContrato.Valido).contrato.usaRostro)
+
+        val malo = ejemplo.replace("\"por_fotograma\": 352 }", "\"por_fotograma\": 352, \"usa_rostro\": \"no\" }")
+        assertTrue(errores(malo).single().contains("caracteristicas.usa_rostro"))
     }
 
     @Test
