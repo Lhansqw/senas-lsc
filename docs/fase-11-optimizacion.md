@@ -1,7 +1,7 @@
 # Fase 11 · Optimización
 
-> **Estado:** herramientas hechas y probadas. Faltan las mediciones en tu PC (arquitecturas y
-> cuantización con LSC70) y en el teléfono (latencia y batería, antes y después).
+> **Estado:** arquitecturas y cuantización medidas con LSC70 (decisión abajo). Faltan las
+> mediciones en el teléfono (latencia y batería, antes y después del modo reposo).
 
 La regla de esta fase: **no se optimiza nada sin medirlo antes y después.** Por eso casi todo lo
 que se añadió son instrumentos de medida; las cifras las ponen ellos, no este documento.
@@ -25,7 +25,30 @@ Lo que ya se sabe sin datos reales (modelos sin entrenar, 32 instantes, 42 seña
 | conv | 266 634 | 1039 KB | 522 KB | 267 KB | No → apta para GPU |
 | transformer | 190 602 | 742 KB | 382 KB | 217 KB | No → apta para GPU |
 
-La exactitud de cada una solo se sabe entrenando con LSC70 (ver abajo).
+### Resultados con LSC70 (31 de octubre de 2026)
+
+Medidos con `comparar_lsc70.ps1`: misma partición, mismas 10 personas de prueba (Per07, Per08,
+Per16, Per17, Per19, Per23, Per40, Per43, Per54, Per67), 420 muestras. Latencia en el PC con 1 hilo
+(solo para comparar entre sí).
+
+| Arquitectura | Exactitud | F1 macro | ECE | float32 | int8 | Exactitud int8 | p95 float32 → int8 |
+|---|---|---|---|---|---|---|---|
+| **gru** | **90,7 %** | **90,6 %** | 0,029 | 1130 KB | 317 KB | 90,5 % | 0,65 → 0,37 ms |
+| conv | 88,8 % | 88,6 % | 0,030 | 1047 KB | 275 KB | 88,8 % | 0,47 → 0,18 ms |
+| transformer | 87,6 % | 87,4 % | 0,041 | 770 KB | 245 KB | 87,4 % | 0,42 → 0,24 ms |
+
+float16 da exactamente la misma exactitud que float32 en las tres, a la mitad de tamaño.
+
+**Decisión:** se mantiene la **GRU** y se exporta en **int8**.
+
+- La GRU es la más exacta (1,9 puntos sobre `conv`, 3,1 sobre el Transformer). Con 10 personas
+  de prueba la diferencia con `conv` está cerca del ruido, pero las tres tardan menos de 1 ms: la
+  velocidad del modelo no decide nada, porque MediaPipe tarda decenas de milisegundos por fotograma.
+- int8 elige la misma seña que float32 en el 99,5 % de las muestras (pierde 0,2 puntos, una muestra
+  de 420), ocupa el 28 % y es casi el doble de rápido en CPU.
+- La GPU sigue sin tener sentido: la GRU usa `WHILE` y el modelo no es el cuello de botella.
+- Las señas más débiles son las mismas en las tres arquitecturas (S, 1, 6, H): el problema está en
+  los datos, no en la arquitectura. Se corrige grabando más muestras (herramienta de grabación).
 
 ### En la app
 
