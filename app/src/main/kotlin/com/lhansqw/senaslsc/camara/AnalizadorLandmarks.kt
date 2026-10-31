@@ -65,7 +65,7 @@ class AnalizadorLandmarks(context: Context) : AnalizadorFotogramas, AutoCloseabl
     var alExtraer: ((LandmarkFrame) -> Unit)? = null
 
     override fun analizar(imagen: ImageProxy): Boolean {
-        synchronized(bloqueo) {
+        return synchronized(bloqueo) {
             if (cerrado || _estadoModelo.value is EstadoModelo.Error) return false
             val marcaNs = imagen.imageInfo.timestamp
             if (!sinReposo && !regulador.debeAnalizar(marcaNs)) return false
@@ -83,7 +83,7 @@ class AnalizadorLandmarks(context: Context) : AnalizadorFotogramas, AutoCloseabl
                 inferenciaMs = extraccion.inferenciaMs,
             )
             alExtraer?.invoke(extraccion.frame)
-            return true
+            true
         }
     }
 
