@@ -74,65 +74,8 @@ fun TarjetaInternet(
 
             if (!consentimiento) {
                 Button(onClick = { pedirConsentimiento = true }) { Text(stringResource(R.string.remota_activar)) }
-                return@Column
-            }
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(stringResource(R.string.remota_permitida), modifier = Modifier.weight(1f))
-                Switch(checked = true, onCheckedChange = { if (!it) onConsentimiento(false) })
-            }
-
-            if (hayClave) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(stringResource(R.string.remota_clave_guardada), modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium)
-                    TextButton(onClick = onBorrarClave) { Text(stringResource(R.string.remota_borrar_clave)) }
-                }
             } else {
-                var clave by rememberSaveable { mutableStateOf("") }
-                OutlinedTextField(
-                    value = clave,
-                    onValueChange = { clave = it },
-                    label = { Text(stringResource(R.string.remota_clave)) },
-                    singleLine = true,
-                    visualTransformation = PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                Text(stringResource(R.string.remota_clave_ayuda), style = MaterialTheme.typography.bodySmall)
-                Button(onClick = { onGuardarClave(clave); clave = "" }, enabled = clave.isNotBlank()) {
-                    Text(stringResource(R.string.remota_guardar_clave))
-                }
-            }
-
-            var modeloEditado by rememberSaveable(modelo) { mutableStateOf(modelo) }
-            OutlinedTextField(
-                value = modeloEditado,
-                onValueChange = { modeloEditado = it },
-                label = { Text(stringResource(R.string.remota_modelo)) },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
-            )
-            if (modeloEditado.trim() != modelo) {
-                TextButton(onClick = { onModelo(modeloEditado) }) { Text(stringResource(R.string.remota_usar_modelo)) }
-            }
-
-            Text(stringResource(R.string.remota_cuando), style = MaterialTheme.typography.titleSmall)
-            Column(Modifier.selectableGroup()) {
-                OpcionPreferencia(PreferenciaInterprete.AUTOMATICO, R.string.remota_pref_auto, preferencia, onPreferencia)
-                OpcionPreferencia(PreferenciaInterprete.PREFERIR_INTERNET, R.string.remota_pref_internet, preferencia, onPreferencia)
-                OpcionPreferencia(PreferenciaInterprete.SOLO_TELEFONO, R.string.remota_pref_telefono, preferencia, onPreferencia)
-            }
-
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                OutlinedButton(onClick = onProbar, enabled = hayClave && prueba != EstadoPrueba.Probando) {
-                    Text(stringResource(R.string.remota_probar))
-                }
-                when (prueba) {
-                    EstadoPrueba.Ninguna -> Unit
-                    EstadoPrueba.Probando -> Text(stringResource(R.string.remota_probando))
-                    EstadoPrueba.Correcta -> Text(stringResource(R.string.remota_prueba_ok), color = MaterialTheme.colorScheme.primary)
-                    is EstadoPrueba.Fallida -> Text(prueba.motivo, color = MaterialTheme.colorScheme.error)
-                }
+                AjustesInternet(hayClave, modelo, preferencia, prueba, onConsentimiento, onGuardarClave, onBorrarClave, onModelo, onPreferencia, onProbar)
             }
         }
     }
@@ -152,6 +95,80 @@ fun TarjetaInternet(
                 TextButton(onClick = { pedirConsentimiento = false }) { Text(stringResource(R.string.accion_cancelar)) }
             },
         )
+    }
+}
+
+@Composable
+private fun AjustesInternet(
+    hayClave: Boolean,
+    modelo: String,
+    preferencia: PreferenciaInterprete,
+    prueba: EstadoPrueba,
+    onConsentimiento: (Boolean) -> Unit,
+    onGuardarClave: (String) -> Unit,
+    onBorrarClave: () -> Unit,
+    onModelo: (String) -> Unit,
+    onPreferencia: (PreferenciaInterprete) -> Unit,
+    onProbar: () -> Unit,
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(stringResource(R.string.remota_permitida), modifier = Modifier.weight(1f))
+            Switch(checked = true, onCheckedChange = { if (!it) onConsentimiento(false) })
+        }
+
+        if (hayClave) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(stringResource(R.string.remota_clave_guardada), modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium)
+                TextButton(onClick = onBorrarClave) { Text(stringResource(R.string.remota_borrar_clave)) }
+            }
+        } else {
+            var clave by rememberSaveable { mutableStateOf("") }
+            OutlinedTextField(
+                value = clave,
+                onValueChange = { clave = it },
+                label = { Text(stringResource(R.string.remota_clave)) },
+                singleLine = true,
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                modifier = Modifier.fillMaxWidth(),
+            )
+            Text(stringResource(R.string.remota_clave_ayuda), style = MaterialTheme.typography.bodySmall)
+            Button(onClick = { onGuardarClave(clave); clave = "" }, enabled = clave.isNotBlank()) {
+                Text(stringResource(R.string.remota_guardar_clave))
+            }
+        }
+
+        var modeloEditado by rememberSaveable(modelo) { mutableStateOf(modelo) }
+        OutlinedTextField(
+            value = modeloEditado,
+            onValueChange = { modeloEditado = it },
+            label = { Text(stringResource(R.string.remota_modelo)) },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        if (modeloEditado.trim() != modelo) {
+            TextButton(onClick = { onModelo(modeloEditado) }) { Text(stringResource(R.string.remota_usar_modelo)) }
+        }
+
+        Text(stringResource(R.string.remota_cuando), style = MaterialTheme.typography.titleSmall)
+        Column(Modifier.selectableGroup()) {
+            OpcionPreferencia(PreferenciaInterprete.AUTOMATICO, R.string.remota_pref_auto, preferencia, onPreferencia)
+            OpcionPreferencia(PreferenciaInterprete.PREFERIR_INTERNET, R.string.remota_pref_internet, preferencia, onPreferencia)
+            OpcionPreferencia(PreferenciaInterprete.SOLO_TELEFONO, R.string.remota_pref_telefono, preferencia, onPreferencia)
+        }
+
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            OutlinedButton(onClick = onProbar, enabled = hayClave && prueba != EstadoPrueba.Probando) {
+                Text(stringResource(R.string.remota_probar))
+            }
+            when (prueba) {
+                EstadoPrueba.Ninguna -> Unit
+                EstadoPrueba.Probando -> Text(stringResource(R.string.remota_probando))
+                EstadoPrueba.Correcta -> Text(stringResource(R.string.remota_prueba_ok), color = MaterialTheme.colorScheme.primary)
+                is EstadoPrueba.Fallida -> Text(prueba.motivo, color = MaterialTheme.colorScheme.error)
+            }
+        }
     }
 }
 
