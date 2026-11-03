@@ -39,6 +39,12 @@ class FormatoTest {
     }
 
     @Test
+    fun `sena en curso separa la glosa de la probabilidad`() {
+        assertEquals(SenaEnCurso("HOLA", 0.75f), senaEnCurso(prediccion("lsc.hola", 0.75f)) { glosas[it] })
+        assertNull(senaEnCurso(prediccion("lsc.hola", 0.75f, desconocida = true)) { glosas[it] })
+    }
+
+    @Test
     fun `lista para lector de pantalla`() {
         assertEquals("HOLA, GRACIAS", listaParaLector(listOf(SenaConfirmada(hola, 0.9f, 0, 1), SenaConfirmada(gracias, 0.8f, 2, 3))))
     }

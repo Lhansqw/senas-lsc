@@ -68,6 +68,12 @@ object Creditos {
             "https://developer.android.com/jetpack",
         ),
         Componente(
+            "Atkinson Hyperlegible Next",
+            "Tipografía de la app, pensada para leerse con baja visión",
+            "SIL OFL 1.1",
+            "https://github.com/googlefonts/atkinson-hyperlegible-next",
+        ),
+        Componente(
             "Kotlin y kotlinx.coroutines",
             "Lenguaje y tareas en segundo plano",
             "Apache 2.0",

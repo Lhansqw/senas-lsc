@@ -43,5 +43,5 @@ fun TemaSenasLSC(
         else -> EsquemaClaro
     }
 
-    MaterialTheme(colorScheme = esquema, content = contenido)
+    MaterialTheme(colorScheme = esquema, typography = TipografiaSenas, content = contenido)
 }
