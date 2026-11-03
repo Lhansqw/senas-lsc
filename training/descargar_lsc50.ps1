@@ -48,7 +48,7 @@ foreach ($a in $seleccion) {
 Write-Host ("`n{0} archivos, {1:N2} GB" -f $seleccion.Count, ($total / 1GB))
 if ($SoloListar) { exit 0 }
 
-$unidad = (Get-Item (Split-Path -Qualifier (Resolve-Path .).Path)).PSDrive
+$unidad = (Get-Location).Drive
 if ($unidad.Free -lt $total * 1.1) {
     throw ("No hay espacio suficiente: hacen falta {0:N1} GB y hay {1:N1} GB libres." -f ($total * 1.1 / 1GB), ($unidad.Free / 1GB))
 }
