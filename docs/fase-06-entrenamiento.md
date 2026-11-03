@@ -80,5 +80,5 @@ Cómo grabar: [DATOS.md](../training/DATOS.md#grabaciones-con-la-app-recomendado
 Falta:
 
 1. Grabar «sin seña» y las señas débiles con la app, y volver a entrenar.
-2. Validar las señas con una persona competente en LSC y decidir Ñ, MIL, MILLÓN, GUSTAR y LICOR.
+2. Validar las señas con una persona competente en LSC (incluidas Ñ, MIL, MILLÓN, GUSTAR y LICOR, añadidas después).
 3. Probar el modelo en el teléfono.

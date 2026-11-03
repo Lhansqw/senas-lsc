@@ -30,8 +30,8 @@ data/LSC70/
 
 ## vocabulario.json
 
-Para LSC70 ya está preparado `vocabulario.lsc70.json` (42 señas: 8 palabras, el alfabeto y los
-números, según la hoja `vocabulario_lsc_inicial.xlsx`). Para otro conjunto de datos, copia
+Para LSC70 ya está preparado `vocabulario.lsc70.json` (las 47 señas: 10 palabras, el alfabeto con Ñ y los
+números). Para otro conjunto de datos, copia
 `vocabulario.ejemplo.json` como `vocabulario.json` y deja solo las señas que vas a entrenar.
 En `carpetas` pon el nombre exacto de la carpeta de esa seña en el conjunto de datos. Cada seña debe
 validarla una persona competente en LSC antes de llegar a la app: las de LSC70 las hicieron
