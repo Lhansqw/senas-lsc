@@ -1,5 +1,5 @@
 {
-  "_nota": "Vocabulario para entrenar con LSC70 (LSC70AN: alfabeto y números; LSC70W: palabras). Son las señas marcadas «Sí» en la hoja vocabulario_lsc_inicial.xlsx. Pendientes de decidir: Ñ (carpeta NN), MIL, MILLON, GUSTAR y LICOR. Cada seña debe validarla una persona competente en LSC antes de publicar el modelo: las personas de LSC70 no son expertas.",
+  "_nota": "Vocabulario para entrenar con LSC70 completo: las 47 señas de LSC70AN (alfabeto, Ñ y números) y LSC70W (palabras). Cada seña debe validarla una persona competente en LSC antes de publicar el modelo: las personas de LSC70 no son expertas. La carpeta NN se toma como la letra Ñ.",
   "lengua": "lsc",
   "senas": [
     {
@@ -378,6 +378,51 @@
       "tipo": "numero",
       "carpetas": [
         "10"
+      ]
+    },
+    {
+      "id": "lsc.enie",
+      "glosa": "Ñ",
+      "significado": "ñ",
+      "tipo": "letra",
+      "carpetas": [
+        "NN"
+      ]
+    },
+    {
+      "id": "lsc.mil",
+      "glosa": "MIL",
+      "significado": "mil",
+      "tipo": "numero",
+      "carpetas": [
+        "MIL"
+      ]
+    },
+    {
+      "id": "lsc.millon",
+      "glosa": "MILLÓN",
+      "significado": "millón",
+      "tipo": "numero",
+      "carpetas": [
+        "MILLON"
+      ]
+    },
+    {
+      "id": "lsc.gustar",
+      "glosa": "GUSTAR",
+      "significado": "gustar",
+      "tipo": "palabra",
+      "carpetas": [
+        "GUSTAR"
+      ]
+    },
+    {
+      "id": "lsc.licor",
+      "glosa": "LICOR",
+      "significado": "licor",
+      "tipo": "palabra",
+      "carpetas": [
+        "LICOR"
       ]
     }
   ]
