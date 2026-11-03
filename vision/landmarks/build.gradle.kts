@@ -1,3 +1,5 @@
+import java.net.URI
+
 // Extracción de puntos de referencia con MediaPipe Holistic Landmarker.
 plugins {
     alias(libs.plugins.android.library)
@@ -43,7 +45,7 @@ abstract class DescargarModelo : DefaultTask() {
         archivo.parentFile.mkdirs()
         val temporal = File(archivo.parentFile, archivo.name + ".descargando")
         logger.lifecycle("Descargando ${url.get()}")
-        java.net.URI(url.get()).toURL().openStream().use { entrada ->
+        URI(url.get()).toURL().openStream().use { entrada ->
             temporal.outputStream().use { salida -> entrada.copyTo(salida) }
         }
         val cabecera = temporal.inputStream().use { it.readNBytes(2) }
@@ -66,6 +68,7 @@ val descargarModeloHolistic = tasks.register<DescargarModelo>("descargarModeloHo
     destino.set(layout.projectDirectory.file("src/main/assets/holistic_landmarker.task"))
     // Si el archivo ya existe no se vuelve a descargar.
     outputs.upToDateWhen { destino.get().asFile.exists() }
+    onlyIf("el modelo aún no está en los assets") { !destino.get().asFile.exists() }
 }
 
 tasks.named("preBuild") {

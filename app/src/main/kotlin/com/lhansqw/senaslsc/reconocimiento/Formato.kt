@@ -14,11 +14,18 @@ fun etiquetaSena(sena: SenaConfirmada): String = "${sena.entrada.glosa} ${format
  * Texto de lo que el modelo está viendo ahora mismo, o `null` si no hay nada que mostrar.
  * Una predicción desconocida no muestra ninguna seña: no se sugiere lo que no se reconoce.
  */
-fun textoPrediccionEnCurso(prediccion: PrediccionSena?, glosaDe: (String) -> String?): String? {
+fun textoPrediccionEnCurso(prediccion: PrediccionSena?, glosaDe: (String) -> String?): String? =
+    senaEnCurso(prediccion, glosaDe)?.let { "${it.glosa} ${formatearPorcentaje(it.probabilidad)}" }
+
+/** Seña que el modelo está viendo ahora, con su probabilidad de 0 a 1. */
+data class SenaEnCurso(val glosa: String, val probabilidad: Float)
+
+/** Igual que [textoPrediccionEnCurso], pero con la glosa y la probabilidad por separado. */
+fun senaEnCurso(prediccion: PrediccionSena?, glosaDe: (String) -> String?): SenaEnCurso? {
     if (prediccion == null || prediccion.desconocida) return null
     val mejor = prediccion.mejor ?: return null
     val glosa = glosaDe(mejor.id) ?: return null
-    return "$glosa ${formatearPorcentaje(mejor.probabilidad)}"
+    return SenaEnCurso(glosa, mejor.probabilidad)
 }
 
 /** Lista legible de las señas para lectores de pantalla: "HOLA, GRACIAS". */

@@ -58,6 +58,8 @@
     <string name="camara_analisis_pausado">Análisis en pausa</string>
     <string name="camara_pausar">Pausar análisis</string>
     <string name="camara_reanudar">Reanudar análisis</string>
+    <string name="camara_diagnostico_mostrar">mostrar el diagnóstico</string>
+    <string name="camara_diagnostico_ocultar">ocultar el diagnóstico</string>
     <string name="camara_carga_simulada">Carga simulada por fotograma (prueba)</string>
 
     <!-- MediaPipe -->
@@ -75,8 +77,10 @@
     <string name="reconocedor_invalido_titulo">El modelo de señas no es compatible con esta versión de la app</string>
     <string name="reconocedor_fallo_titulo">No se pudo cargar el modelo de señas</string>
     <string name="reconocedor_modelo">Modelo %1$s %2$s · %3$d señas</string>
-    <string name="reconocedor_viendo">Viendo: %1$s</string>
-    <string name="reconocedor_viendo_nada">Viendo: —</string>
+    <string name="reconocedor_viendo_titulo">Viendo</string>
+    <string name="reconocedor_viendo_lector">Viendo %1$s, probabilidad %2$s</string>
+    <string name="reconocedor_viendo_nada_lector">Viendo: ninguna seña reconocible</string>
+    <string name="reconocedor_secuencia_titulo">Señas confirmadas</string>
     <string name="reconocedor_sin_senas">Haz una seña frente a la cámara.</string>
     <string name="reconocedor_senas_lector">Señas reconocidas: %1$s</string>
     <string name="reconocedor_borrar_ultima">Borrar última</string>

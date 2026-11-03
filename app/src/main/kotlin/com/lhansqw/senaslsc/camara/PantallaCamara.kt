@@ -3,35 +3,44 @@ package com.lhansqw.senaslsc.camara
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.camera.compose.CameraXViewfinder
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -45,6 +54,8 @@ import com.lhansqw.senaslsc.grabacion.PanelGrabacion
 import com.lhansqw.senaslsc.permisos.ConPermisoCamara
 import com.lhansqw.senaslsc.reconocimiento.PanelReconocimiento
 import com.lhansqw.senaslsc.ui.AccionesTexto
+import com.lhansqw.senaslsc.ui.theme.ColoresCamara
+import com.lhansqw.senaslsc.ui.theme.EstiloCamara
 import com.lhansqw.senaslsc.ui.theme.TemaSenasLSC
 import java.util.Locale
 
@@ -117,6 +128,8 @@ private fun VistaCamara(onVolver: () -> Unit, modoGrabacion: Boolean, viewModel:
             is EstadoCamara.Activa -> (estadoModelo as? EstadoModelo.Error)?.let { MensajeCentral(it.mensaje) }
         }
 
+        var diagnostico by rememberSaveable { mutableStateOf(false) }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -124,16 +137,42 @@ private fun VistaCamara(onVolver: () -> Unit, modoGrabacion: Boolean, viewModel:
                 .padding(12.dp),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
-            PanelMetricas(estado, rendimiento, analisisActivo, estadoModelo, landmarks, reconocimiento.latenciaModelo, reposo)
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Pastilla(stringResource(R.string.accion_volver), onClick = onVolver)
+                    Pastilla(
+                        stringResource(if (analisisActivo) R.string.camara_pausar else R.string.camara_reanudar),
+                        onClick = viewModel::alternarAnalisis,
+                        enabled = estado is EstadoCamara.Activa,
+                        resaltada = !analisisActivo,
+                    )
+                }
+                Diagnostico(
+                    abierto = diagnostico,
+                    onAlternar = { diagnostico = !diagnostico },
+                    estado = estado,
+                    rendimiento = rendimiento,
+                    analisisActivo = analisisActivo,
+                    estadoModelo = estadoModelo,
+                    landmarks = landmarks,
+                    latenciaModelo = reconocimiento.latenciaModelo,
+                    reposo = reposo,
+                )
+            }
 
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                if (BuildConfig.DEBUG) {
+                if (BuildConfig.DEBUG && diagnostico) {
                     SelectorCargaSimulada(cargaSimulada, viewModel::establecerCargaSimulada)
                 }
                 if (analisisActivo && activa != null && modoGrabacion) {
                     PanelGrabacion(estadoGrabacion, viewModel.grabacion.carpeta.absolutePath, viewModel.grabacion)
                 } else if (analisisActivo && activa != null) {
                     PanelReconocimiento(
+                        detalles = diagnostico,
                         estado = reconocimiento,
                         onInterpretar = viewModel.senas::interpretar,
                         onBorrarUltima = viewModel.senas::eliminarUltima,
@@ -152,26 +191,36 @@ private fun VistaCamara(onVolver: () -> Unit, modoGrabacion: Boolean, viewModel:
                         },
                     )
                 }
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-                    OutlinedButton(
-                        onClick = onVolver,
-                        modifier = Modifier.weight(1f),
-                    ) { Text(stringResource(R.string.accion_volver)) }
-                    Button(
-                        onClick = viewModel::alternarAnalisis,
-                        enabled = estado is EstadoCamara.Activa,
-                        modifier = Modifier.weight(1f),
-                    ) {
-                        Text(stringResource(if (analisisActivo) R.string.camara_pausar else R.string.camara_reanudar))
-                    }
-                }
             }
         }
     }
 }
 
+/** Botón compacto sobre la cámara. Resaltado en turquesa cuando hay que actuar (análisis en pausa). */
 @Composable
-private fun PanelMetricas(
+private fun Pastilla(texto: String, onClick: () -> Unit, enabled: Boolean = true, resaltada: Boolean = false) {
+    Surface(
+        onClick = onClick,
+        enabled = enabled,
+        shape = CircleShape,
+        color = if (resaltada) ColoresCamara.Turquesa else ColoresCamara.Velo,
+        contentColor = if (resaltada) ColoresCamara.Tinta else ColoresCamara.Texto,
+        modifier = Modifier.heightIn(min = 48.dp),
+    ) {
+        Box(contentAlignment = Alignment.Center, modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp)) {
+            Text(texto, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
+        }
+    }
+}
+
+/**
+ * Diagnóstico del análisis. Cerrado muestra solo los FPS (o la pausa); al tocarlo se despliegan la
+ * latencia, lo que detecta MediaPipe y la resolución, y el panel de señas muestra el modelo.
+ */
+@Composable
+private fun Diagnostico(
+    abierto: Boolean,
+    onAlternar: () -> Unit,
     estado: EstadoCamara,
     rendimiento: Rendimiento,
     analisisActivo: Boolean,
@@ -232,13 +281,35 @@ private fun PanelMetricas(
             add(stringResource(if (it.frontal) R.string.camara_frontal else R.string.camara_trasera))
         }
     }
+    val accion = stringResource(if (abierto) R.string.camara_diagnostico_ocultar else R.string.camara_diagnostico_mostrar)
     Column(
         modifier = Modifier
-            .background(Color.Black.copy(alpha = 0.6f), RoundedCornerShape(12.dp))
-            .padding(horizontal = 12.dp, vertical = 8.dp),
+            .clip(RoundedCornerShape(16.dp))
+            .background(ColoresCamara.Velo)
+            .clickable(onClickLabel = accion, role = Role.Button, onClick = onAlternar)
+            .heightIn(min = 48.dp)
+            .padding(horizontal = 14.dp, vertical = 8.dp)
+            .animateContentSize(),
+        verticalArrangement = Arrangement.Center,
     ) {
-        lineas.forEach { linea ->
-            Text(linea, color = Color.White, style = MaterialTheme.typography.bodyMedium, fontFamily = FontFamily.Monospace)
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            // Punto de estado: turquesa si se analiza, apagado en pausa.
+            Box(
+                Modifier
+                    .size(8.dp)
+                    .background(if (analisisActivo) ColoresCamara.Turquesa else ColoresCamara.TextoApagado, CircleShape),
+            )
+            Text(lineas.first(), color = ColoresCamara.Texto, style = EstiloCamara.cifras)
+        }
+        if (abierto) {
+            lineas.drop(1).forEach { linea ->
+                Text(
+                    linea,
+                    color = ColoresCamara.TextoSecundario,
+                    style = EstiloCamara.cifras,
+                    modifier = Modifier.padding(start = 16.dp),
+                )
+            }
         }
     }
 }
@@ -247,10 +318,10 @@ private fun PanelMetricas(
 private fun SelectorCargaSimulada(actual: Long, onCambiar: (Long) -> Unit) {
     Column(
         modifier = Modifier
-            .background(Color.Black.copy(alpha = 0.6f), RoundedCornerShape(12.dp))
+            .background(ColoresCamara.Velo, RoundedCornerShape(16.dp))
             .padding(horizontal = 12.dp, vertical = 4.dp),
     ) {
-        Text(stringResource(R.string.camara_carga_simulada), color = Color.White, style = MaterialTheme.typography.labelMedium)
+        Text(stringResource(R.string.camara_carga_simulada), color = ColoresCamara.Texto, style = MaterialTheme.typography.labelMedium)
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             CARGAS_SIMULADAS_MS.forEach { ms ->
                 FilterChip(
@@ -266,7 +337,12 @@ private fun SelectorCargaSimulada(actual: Long, onCambiar: (Long) -> Unit) {
 @Composable
 private fun MensajeCentral(texto: String) {
     Box(Modifier.fillMaxSize().padding(32.dp), contentAlignment = Alignment.Center) {
-        Text(texto, color = Color.White, style = MaterialTheme.typography.bodyLarge)
+        Text(
+            texto,
+            color = ColoresCamara.Texto,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.background(ColoresCamara.Velo, RoundedCornerShape(16.dp)).padding(16.dp),
+        )
     }
 }
 
