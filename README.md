@@ -58,18 +58,25 @@ Requisitos: Android Studio reciente, JDK 17 o superior y SDK de Android 37 (ver
 [docs/05-entorno.md](docs/05-entorno.md)). La primera compilación necesita Internet para descargar
 el modelo de MediaPipe.
 
+**iPhone y Apple Watch:** la lógica de reconocimiento se comparte con Kotlin Multiplatform
+(módulos marcados KMP). La app de iPhone reconoce las señas y el reloj muestra la frase en la
+muñeca, porque el reloj no tiene cámara. Se compila en una Mac: ver [ios/README.md](ios/README.md).
+
 ## Estructura del repositorio
 
 ```
 senas-lsc/
 ├── app/                   Aplicación Android (Kotlin, Jetpack Compose)
-├── core/model/            Tipos de dominio y lector JSON, sin dependencias de Android
+├── shared/                Lógica de reconocimiento común (KMP) y XCFramework para iOS
+├── ios/                   App de iPhone y de Apple Watch (SwiftUI; ver ios/README.md)
+├── core/model/            Tipos de dominio y lector JSON, sin dependencias de Android (KMP)
 ├── core/descargas/        Descarga reanudable, progreso y espacio (Kotlin puro)
 ├── data/history/          Historial cifrado (AES-GCM) y su formato (Kotlin puro)
-├── recognizer/api/        Contrato del reconocedor visual
-├── sequence/              Ventanas, filtro temporal y secuencia de señas
-├── interpreter/api/       Contrato del intérprete, instrucciones y validador
-├── interpreter/rules/     Intérprete por reglas (sin modelo de lenguaje)
+├── recognizer/api/        Contrato del reconocedor visual y características (KMP)
+├── sequence/              Ventanas, filtro temporal y secuencia de señas (KMP)
+├── vision/comun/          Subconjuntos de puntos de MediaPipe, comunes a Android e iOS (KMP)
+├── interpreter/api/       Contrato del intérprete, instrucciones y validador (KMP)
+├── interpreter/rules/     Intérprete por reglas, sin modelo de lenguaje (KMP)
 ├── camera/                Captura con CameraX (librería Android)
 ├── vision/landmarks/      Puntos de referencia con MediaPipe (librería Android)
 ├── recognizer/litert/     Reconocedor con LiteRT (librería Android; ver MODELO.md)
