@@ -3,6 +3,7 @@ package com.lhansqw.senaslsc.vision
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.SystemClock
+import android.util.Log
 import com.google.mediapipe.framework.image.BitmapImageBuilder
 import com.google.mediapipe.tasks.components.containers.NormalizedLandmark
 import com.google.mediapipe.tasks.core.BaseOptions
@@ -30,7 +31,13 @@ data class Extraccion(
  * Crear el modelo tarda (cientos de milisegundos), por eso se hace una vez y se reutiliza.
  * No es seguro para varios hilos: se usa siempre desde el hilo de análisis.
  */
-class ExtractorLandmarks private constructor(private val landmarker: HolisticLandmarker) : AutoCloseable {
+class ExtractorLandmarks private constructor(
+    private val landmarker: HolisticLandmarker,
+    /** Dónde corre MediaPipe; se muestra en el panel para comparar latencias. */
+    val delegado: Delegate,
+) : AutoCloseable {
+
+    val enGpu: Boolean get() = delegado == Delegate.GPU
 
     private var ultimoTimestampMs = Long.MIN_VALUE
 
@@ -70,7 +77,7 @@ class ExtractorLandmarks private constructor(private val landmarker: HolisticLan
          * Crea el extractor. Lanza una excepción si el modelo no está en los assets o no se puede
          * cargar; quien llama debe mostrar el error.
          *
-         * @param delegado CPU por defecto. La GPU se evalúa en la fase 11.
+         * @param delegado CPU por defecto; [crearPreferirGpu] prueba primero la GPU.
          */
         fun crear(
             context: Context,
@@ -90,8 +97,22 @@ class ExtractorLandmarks private constructor(private val landmarker: HolisticLan
                 .setOutputFaceBlendshapes(false)
                 .setOutputPoseSegmentationMasks(false)
                 .build()
-            return ExtractorLandmarks(HolisticLandmarker.createFromOptions(context.applicationContext, opciones))
+            return ExtractorLandmarks(HolisticLandmarker.createFromOptions(context.applicationContext, opciones), delegado)
         }
+
+        /**
+         * Intenta la GPU (en teléfonos de gama baja suele ir bastante más rápida que la CPU) y, si
+         * el teléfono no la admite, crea el extractor en CPU.
+         */
+        fun crearPreferirGpu(context: Context, confianzaMinima: Float = 0.5f): ExtractorLandmarks =
+            try {
+                crear(context, Delegate.GPU, confianzaMinima)
+            } catch (e: Exception) {
+                Log.w(TAG, "MediaPipe no pudo usar la GPU; se usa la CPU", e)
+                crear(context, Delegate.CPU, confianzaMinima)
+            }
+
+        private const val TAG = "ExtractorLandmarks"
 
         private fun List<NormalizedLandmark>.aPuntos(): List<Punto3D> = map { Punto3D(it.x(), it.y(), it.z()) }
     }

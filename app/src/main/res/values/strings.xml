@@ -65,7 +65,9 @@
     <!-- MediaPipe -->
     <string name="mediapipe_cargando">MediaPipe: cargando modelo…</string>
     <string name="mediapipe_error">MediaPipe: error al cargar el modelo</string>
-    <string name="mediapipe_inferencia">MediaPipe: %1$d ms por fotograma</string>
+    <string name="mediapipe_inferencia">MediaPipe (%2$s): %1$d ms por fotograma</string>
+    <string name="mediapipe_gpu">GPU</string>
+    <string name="mediapipe_cpu">CPU</string>
     <string name="mediapipe_detectado">Manos: %1$d · Cuerpo: %2$s · Rostro: %3$s</string>
     <string name="si">sí</string>
     <string name="no">no</string>

@@ -29,6 +29,13 @@
 -keep class com.google.ai.edge.litertlm.** { *; }
 -dontwarn com.google.ai.edge.litertlm.**
 
+# --- WorkManager / Room (llegan como dependencia de otra biblioteca) ---
+# Room crea la base de datos buscando por reflexión la clase generada «<Base>_Impl». Sin esto,
+# R8 la elimina y la app se cierra al abrirse: «Failed to create an instance of class
+# androidx.work.impl.WorkDatabase».
+-keep class * extends androidx.room.RoomDatabase { <init>(...); }
+-keep class androidx.work.impl.WorkDatabase_Impl { *; }
+
 # Anotaciones de compilación que algunas bibliotecas referencian pero no incluyen.
 -dontwarn javax.annotation.**
 -dontwarn com.google.auto.value.**

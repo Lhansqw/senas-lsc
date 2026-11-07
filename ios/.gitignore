@@ -1,0 +1,10 @@
+# Se generan en la Mac con preparar.sh
+SenasLSC.xcodeproj/
+SenasLSC.xcworkspace/
+Pods/
+Modelos/
+SenasLSC/Info.plist
+SenasLSCWatch/Info.plist
+build/
+DerivedData/
+xcuserdata/

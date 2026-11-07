@@ -48,14 +48,42 @@ def construir(muestras: list[Muestra], etiquetas: list[str], fotogramas: int, du
     """
     indice = {e: i for i, e in enumerate(etiquetas)}
     rnd = np.random.default_rng(semilla)
-    xs, ys = [], []
+
+    num_muestras_base = len(muestras)
+    num_muestras_totales = num_muestras_base * (1 + copias_aumentadas)
+
+    if num_muestras_totales == 0:
+        return np.array([]), np.array([])
+
+    # Inferir dimensiones de X y Y procesando una única muestra
+    # Esto asegura que las dimensiones sean correctas para la pre-asignación
+    primera_muestra = muestras[0]
+    if primera_muestra.sena not in indice:
+        raise ValueError(f"La seña {primera_muestra.sena} no está entre las etiquetas del modelo")
+
+    base_primera = preparar(primera_muestra.fotogramas)
+    x_primera = ventana(base_primera, fotogramas, duracion_ms, usar_rostro)
+
+    # Pre-asignar los arrays de NumPy
+    xs_np = np.zeros((num_muestras_totales, *x_primera.shape), dtype=np.float32)
+    ys_np = np.zeros(num_muestras_totales, dtype=np.int64) # Las etiquetas suelen ser int64
+
+    idx_actual = 0
     for m in muestras:
         if m.sena not in indice:
             raise ValueError(f"La seña {m.sena} no está entre las etiquetas del modelo")
+
         base = preparar(m.fotogramas)
-        xs.append(ventana(base, fotogramas, duracion_ms, usar_rostro))
-        ys.append(indice[m.sena])
+
+        # Muestra original
+        xs_np[idx_actual] = ventana(base, fotogramas, duracion_ms, usar_rostro)
+        ys_np[idx_actual] = indice[m.sena]
+        idx_actual += 1
+
+        # Copias aumentadas
         for _ in range(copias_aumentadas):
-            xs.append(ventana(aumentar(base, rnd), fotogramas, duracion_ms, usar_rostro))
-            ys.append(indice[m.sena])
-    return np.stack(xs).astype(np.float32), np.array(ys, dtype=np.int64)
+            xs_np[idx_actual] = ventana(aumentar(base, rnd), fotogramas, duracion_ms, usar_rostro)
+            ys_np[idx_actual] = indice[m.sena]
+            idx_actual += 1
+
+    return xs_np, ys_np

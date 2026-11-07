@@ -21,7 +21,8 @@ data class ResultadoLandmarks(
 
 sealed interface EstadoModelo {
     data object SinCargar : EstadoModelo
-    data object Listo : EstadoModelo
+    /** @param enGpu MediaPipe corre en la GPU (si no, en la CPU). */
+    data class Listo(val enGpu: Boolean) : EstadoModelo
     data class Error(val mensaje: String) : EstadoModelo
 }
 
@@ -72,7 +73,17 @@ class AnalizadorLandmarks(context: Context) : AnalizadorFotogramas, AutoCloseabl
             val ext = extractor ?: cargarModelo() ?: return false
 
             val bitmap = preparador.preparar(imagen)
-            val extraccion = ext.extraer(bitmap, marcaNs / 1_000_000)
+            val extraccion = try {
+                ext.extraer(bitmap, marcaNs / 1_000_000)
+            } catch (e: Exception) {
+                // Algunas GPU aceptan el modelo pero fallan al ejecutarlo: se pasa a la CPU.
+                if (!ext.enGpu) throw e
+                Log.w(TAG, "MediaPipe falló en la GPU; se pasa a la CPU", e)
+                ext.close()
+                extractor = null
+                cargarModelo(soloCpu = true)
+                return true
+            }
             regulador.registrarResultado(marcaNs, extraccion?.frame?.hayManos == true)
             _reposo.value = regulador.enReposo
             if (extraccion == null) return true
@@ -104,10 +115,11 @@ class AnalizadorLandmarks(context: Context) : AnalizadorFotogramas, AutoCloseabl
         }
     }
 
-    private fun cargarModelo(): ExtractorLandmarks? = try {
-        ExtractorLandmarks.crear(contextoApp).also {
+    private fun cargarModelo(soloCpu: Boolean = false): ExtractorLandmarks? = try {
+        val nuevo = if (soloCpu) ExtractorLandmarks.crear(contextoApp) else ExtractorLandmarks.crearPreferirGpu(contextoApp)
+        nuevo.also {
             extractor = it
-            _estadoModelo.value = EstadoModelo.Listo
+            _estadoModelo.value = EstadoModelo.Listo(enGpu = it.enGpu)
         }
     } catch (e: Exception) {
         // Falta el asset, el archivo está dañado o el dispositivo no puede ejecutar el modelo.

@@ -1,8 +1,11 @@
-// Contrato del reconocedor visual. La implementación con LiteRT llega en la fase 7.
+// Contrato del reconocedor visual y cálculo de características. Kotlin Multiplatform:
+// Android lo implementa con LiteRT y iPhone con TensorFlow Lite para iOS.
 plugins {
-    id("org.jetbrains.kotlin.jvm")
+    id("org.jetbrains.kotlin.multiplatform")
 }
 
-dependencies {
-    api(project(":core:model"))
+kotlin {
+    sourceSets.commonMain.dependencies {
+        api(project(":core:model"))
+    }
 }

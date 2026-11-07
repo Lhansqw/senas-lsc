@@ -20,6 +20,12 @@ android {
         versionName = providers.gradleProperty("senas.versionName").orNull ?: "0.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Solo procesadores ARM (teléfonos). x86/x86_64 son para emuladores y duplican el tamaño
+        // del APK; -Psenas.emulador=true los vuelve a incluir.
+        if (providers.gradleProperty("senas.emulador").orNull != "true") {
+            ndk { abiFilters += listOf("arm64-v8a", "armeabi-v7a") }
+        }
     }
 
     // Firma de la versión de producción: keystore.properties en la raíz (no se sube al repositorio;
@@ -47,7 +53,14 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
-            signingConfigs.findByName("produccion")?.let { signingConfig = it }
+            // Sin clave de producción, -Psenas.firmaDepuracion=true firma con la clave de depuración
+            // para probar la versión optimizada en un teléfono (no sirve para publicar).
+            val produccion = signingConfigs.findByName("produccion")
+            when {
+                produccion != null -> signingConfig = produccion
+                providers.gradleProperty("senas.firmaDepuracion").orNull == "true" ->
+                    signingConfig = signingConfigs.getByName("debug")
+            }
         }
     }
 
@@ -73,6 +86,7 @@ dependencies {
     implementation(project(":sequence"))
     implementation(project(":interpreter:api"))
     implementation(project(":interpreter:rules"))
+    implementation(project(":shared"))
     implementation(project(":data:history"))
     implementation(project(":camera"))
     implementation(project(":vision:landmarks"))

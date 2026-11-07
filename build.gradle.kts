@@ -3,12 +3,14 @@
 
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 buildscript {
     dependencies {
         // AGP 9 incluye Kotlin integrado. Esta línea fija una versión más reciente de KGP,
         // que debe coincidir con la del plugin del compilador de Compose.
-        // Los módulos Kotlin puros aplican org.jetbrains.kotlin.jvm sin versión: la toman de aquí.
+        // Los módulos Kotlin puros aplican org.jetbrains.kotlin.jvm o .multiplatform sin versión:
+        // la toman de aquí.
         classpath(libs.kotlin.gradle.plugin)
     }
 }
@@ -35,6 +37,29 @@ subprojects {
         }
         dependencies {
             "testImplementation"(libs.junit)
+        }
+    }
+
+    // Módulos Kotlin Multiplatform: lógica compartida con la app de iPhone (y Apple Watch).
+    // Android y las pruebas JUnit usan el target jvm(). Los de iOS solo se compilan del todo
+    // en una Mac; en Windows, Gradle los omite.
+    plugins.withId("org.jetbrains.kotlin.multiplatform") {
+        extensions.configure<KotlinMultiplatformExtension> {
+            jvm {
+                compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
+            }
+            iosArm64()
+            iosSimulatorArm64()
+
+            sourceSets.getByName("jvmTest").dependencies {
+                implementation(libs.junit)
+            }
+        }
+        // Así `gradlew test` sigue ejecutando también las pruebas de estos módulos.
+        tasks.register("test") {
+            group = "verification"
+            description = "Ejecuta las pruebas JUnit del target jvm."
+            dependsOn("jvmTest")
         }
     }
 }

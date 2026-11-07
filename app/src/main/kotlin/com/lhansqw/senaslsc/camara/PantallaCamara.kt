@@ -262,8 +262,14 @@ private fun Diagnostico(
             when (estadoModelo) {
                 EstadoModelo.SinCargar -> add(stringResource(R.string.mediapipe_cargando))
                 is EstadoModelo.Error -> add(stringResource(R.string.mediapipe_error))
-                EstadoModelo.Listo -> landmarks?.let { r ->
-                    add(stringResource(R.string.mediapipe_inferencia, r.inferenciaMs))
+                is EstadoModelo.Listo -> landmarks?.let { r ->
+                    add(
+                        stringResource(
+                            R.string.mediapipe_inferencia,
+                            r.inferenciaMs,
+                            stringResource(if (estadoModelo.enGpu) R.string.mediapipe_gpu else R.string.mediapipe_cpu),
+                        ),
+                    )
                     val manos = listOfNotNull(r.frame.manoIzquierda, r.frame.manoDerecha).size
                     add(
                         stringResource(

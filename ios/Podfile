@@ -1,0 +1,13 @@
+# Dependencias nativas de la app de iPhone (el reloj no necesita ninguna).
+# MediaPipe para iOS solo se distribuye por CocoaPods.
+platform :ios, '17.0'
+use_frameworks! :linkage => :static
+
+project 'SenasLSC.xcodeproj'
+
+target 'SenasLSC' do
+  # Hand Landmarker + Pose Landmarker (no hay Holistic Landmarker para iOS).
+  pod 'MediaPipeTasksVision', '~> 0.10.21'
+  # Ejecuta reconocedor_lsc.tflite, el mismo modelo que LiteRT en Android.
+  pod 'TensorFlowLiteSwift', '~> 2.17.0'
+end
