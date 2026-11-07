@@ -20,7 +20,7 @@ android {
 }
 
 dependencies {
-    api(project(":core:model"))
+    api(project(":vision:comun"))
     implementation(libs.mediapipe.tasks.vision)
 
     testImplementation(libs.junit)

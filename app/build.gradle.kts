@@ -86,6 +86,7 @@ dependencies {
     implementation(project(":sequence"))
     implementation(project(":interpreter:api"))
     implementation(project(":interpreter:rules"))
+    implementation(project(":shared"))
     implementation(project(":data:history"))
     implementation(project(":camera"))
     implementation(project(":vision:landmarks"))
