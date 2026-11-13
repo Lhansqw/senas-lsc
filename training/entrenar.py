@@ -30,8 +30,12 @@ def main(argv=None) -> int:
     ap.add_argument("--duracion-ms", type=int, default=1000)
     ap.add_argument("--epocas", type=int, default=80)
     ap.add_argument("--lote", type=int, default=32)
-    ap.add_argument("--copias-aumentadas", type=int, default=4)
+    # 10 copias: con 47 señas, 4 dejaban flojas Ñ, H, V y K (F1 87,5 % → 88,3 % con LSC70).
+    ap.add_argument("--copias-aumentadas", type=int, default=10)
     ap.add_argument("--semilla", type=int, default=42)
+    # Con LSC50 en validación, la pérdida toca fondo en la época 2 (unos pocos errores muy confiados
+    # de una persona) mientras la exactitud sigue subiendo: vigilar la pérdida dejaba el modelo a medias.
+    ap.add_argument("--vigilar", choices=["val_loss", "val_accuracy"], default="val_loss")
     ap.add_argument("--validacion", type=float, default=0.15)
     ap.add_argument("--prueba", type=float, default=0.15)
     ap.add_argument("--arquitectura", choices=["gru", "conv", "transformer"], default="gru")
@@ -81,7 +85,7 @@ def main(argv=None) -> int:
         epochs=args.epocas,
         batch_size=args.lote,
         class_weight=pesos,
-        callbacks=[keras.callbacks.EarlyStopping(monitor="val_loss", patience=12, restore_best_weights=True)],
+        callbacks=[keras.callbacks.EarlyStopping(monitor=args.vigilar, patience=12, restore_best_weights=True)],
         verbose=2,
     )
 

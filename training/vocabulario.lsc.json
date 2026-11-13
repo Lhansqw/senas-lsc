@@ -1,0 +1,835 @@
+{
+  "_nota": "Vocabulario para entrenar con LSC70 y LSC50 (91 señas). En LSC70 «carpetas» son los nombres de carpeta; en LSC50, el código de clase (0000…0049). HOLA, NOMBRE y YO están en los dos. BUENOS DÍAS, BUENAS TARDES y BUENAS NOCHES de LSC50 (0001–0003) no se usan: la app las forma con BUENAS + DÍAS/TARDES/NOCHES de LSC70. Cada seña debe validarla una persona competente en LSC antes de publicar el modelo.",
+  "lengua": "lsc",
+  "senas": [
+    {
+      "id": "lsc.hola",
+      "glosa": "HOLA",
+      "significado": "hola",
+      "tipo": "palabra",
+      "carpetas": [
+        "HOLA",
+        "0030"
+      ]
+    },
+    {
+      "id": "lsc.nombre",
+      "glosa": "NOMBRE",
+      "significado": "nombre",
+      "tipo": "palabra",
+      "carpetas": [
+        "NOMBRE",
+        "0005"
+      ]
+    },
+    {
+      "id": "lsc.yo",
+      "glosa": "YO",
+      "significado": "yo",
+      "tipo": "palabra",
+      "carpetas": [
+        "YO",
+        "0038"
+      ]
+    },
+    {
+      "id": "lsc.buenas",
+      "glosa": "BUENAS",
+      "significado": "buenas",
+      "tipo": "palabra",
+      "carpetas": [
+        "BUENAS"
+      ]
+    },
+    {
+      "id": "lsc.tardes",
+      "glosa": "TARDES",
+      "significado": "tardes",
+      "tipo": "palabra",
+      "carpetas": [
+        "TARDES"
+      ]
+    },
+    {
+      "id": "lsc.noches",
+      "glosa": "NOCHES",
+      "significado": "noches",
+      "tipo": "palabra",
+      "carpetas": [
+        "NOCHES"
+      ]
+    },
+    {
+      "id": "lsc.dias",
+      "glosa": "DÍAS",
+      "significado": "días",
+      "tipo": "palabra",
+      "carpetas": [
+        "DIAS"
+      ]
+    },
+    {
+      "id": "lsc.anos",
+      "glosa": "AÑOS",
+      "significado": "años",
+      "tipo": "palabra",
+      "carpetas": [
+        "ANNOS"
+      ]
+    },
+    {
+      "id": "lsc.a",
+      "glosa": "A",
+      "significado": "a",
+      "tipo": "letra",
+      "carpetas": [
+        "A"
+      ]
+    },
+    {
+      "id": "lsc.b",
+      "glosa": "B",
+      "significado": "b",
+      "tipo": "letra",
+      "carpetas": [
+        "B"
+      ]
+    },
+    {
+      "id": "lsc.c",
+      "glosa": "C",
+      "significado": "c",
+      "tipo": "letra",
+      "carpetas": [
+        "C"
+      ]
+    },
+    {
+      "id": "lsc.d",
+      "glosa": "D",
+      "significado": "d",
+      "tipo": "letra",
+      "carpetas": [
+        "D"
+      ]
+    },
+    {
+      "id": "lsc.e",
+      "glosa": "E",
+      "significado": "e",
+      "tipo": "letra",
+      "carpetas": [
+        "E"
+      ]
+    },
+    {
+      "id": "lsc.f",
+      "glosa": "F",
+      "significado": "f",
+      "tipo": "letra",
+      "carpetas": [
+        "F"
+      ]
+    },
+    {
+      "id": "lsc.g",
+      "glosa": "G",
+      "significado": "g",
+      "tipo": "letra",
+      "carpetas": [
+        "G"
+      ]
+    },
+    {
+      "id": "lsc.h",
+      "glosa": "H",
+      "significado": "h",
+      "tipo": "letra",
+      "carpetas": [
+        "H"
+      ]
+    },
+    {
+      "id": "lsc.i",
+      "glosa": "I",
+      "significado": "i",
+      "tipo": "letra",
+      "carpetas": [
+        "I"
+      ]
+    },
+    {
+      "id": "lsc.j",
+      "glosa": "J",
+      "significado": "j",
+      "tipo": "letra",
+      "carpetas": [
+        "J"
+      ]
+    },
+    {
+      "id": "lsc.k",
+      "glosa": "K",
+      "significado": "k",
+      "tipo": "letra",
+      "carpetas": [
+        "K"
+      ]
+    },
+    {
+      "id": "lsc.l",
+      "glosa": "L",
+      "significado": "l",
+      "tipo": "letra",
+      "carpetas": [
+        "L"
+      ]
+    },
+    {
+      "id": "lsc.m",
+      "glosa": "M",
+      "significado": "m",
+      "tipo": "letra",
+      "carpetas": [
+        "M"
+      ]
+    },
+    {
+      "id": "lsc.n",
+      "glosa": "N",
+      "significado": "n",
+      "tipo": "letra",
+      "carpetas": [
+        "N"
+      ]
+    },
+    {
+      "id": "lsc.o",
+      "glosa": "O",
+      "significado": "o",
+      "tipo": "letra",
+      "carpetas": [
+        "O"
+      ]
+    },
+    {
+      "id": "lsc.p",
+      "glosa": "P",
+      "significado": "p",
+      "tipo": "letra",
+      "carpetas": [
+        "P"
+      ]
+    },
+    {
+      "id": "lsc.q",
+      "glosa": "Q",
+      "significado": "q",
+      "tipo": "letra",
+      "carpetas": [
+        "Q"
+      ]
+    },
+    {
+      "id": "lsc.r",
+      "glosa": "R",
+      "significado": "r",
+      "tipo": "letra",
+      "carpetas": [
+        "R"
+      ]
+    },
+    {
+      "id": "lsc.s",
+      "glosa": "S",
+      "significado": "s",
+      "tipo": "letra",
+      "carpetas": [
+        "S"
+      ]
+    },
+    {
+      "id": "lsc.t",
+      "glosa": "T",
+      "significado": "t",
+      "tipo": "letra",
+      "carpetas": [
+        "T"
+      ]
+    },
+    {
+      "id": "lsc.u",
+      "glosa": "U",
+      "significado": "u",
+      "tipo": "letra",
+      "carpetas": [
+        "U"
+      ]
+    },
+    {
+      "id": "lsc.v",
+      "glosa": "V",
+      "significado": "v",
+      "tipo": "letra",
+      "carpetas": [
+        "V"
+      ]
+    },
+    {
+      "id": "lsc.w",
+      "glosa": "W",
+      "significado": "w",
+      "tipo": "letra",
+      "carpetas": [
+        "W"
+      ]
+    },
+    {
+      "id": "lsc.x",
+      "glosa": "X",
+      "significado": "x",
+      "tipo": "letra",
+      "carpetas": [
+        "X"
+      ]
+    },
+    {
+      "id": "lsc.y",
+      "glosa": "Y",
+      "significado": "y",
+      "tipo": "letra",
+      "carpetas": [
+        "Y"
+      ]
+    },
+    {
+      "id": "lsc.z",
+      "glosa": "Z",
+      "significado": "z",
+      "tipo": "letra",
+      "carpetas": [
+        "Z"
+      ]
+    },
+    {
+      "id": "lsc.n1",
+      "glosa": "1",
+      "significado": "1",
+      "tipo": "numero",
+      "carpetas": [
+        "1"
+      ]
+    },
+    {
+      "id": "lsc.n4",
+      "glosa": "4",
+      "significado": "4",
+      "tipo": "numero",
+      "carpetas": [
+        "4"
+      ]
+    },
+    {
+      "id": "lsc.n5",
+      "glosa": "5",
+      "significado": "5",
+      "tipo": "numero",
+      "carpetas": [
+        "5"
+      ]
+    },
+    {
+      "id": "lsc.n6",
+      "glosa": "6",
+      "significado": "6",
+      "tipo": "numero",
+      "carpetas": [
+        "6"
+      ]
+    },
+    {
+      "id": "lsc.n7",
+      "glosa": "7",
+      "significado": "7",
+      "tipo": "numero",
+      "carpetas": [
+        "7"
+      ]
+    },
+    {
+      "id": "lsc.n8",
+      "glosa": "8",
+      "significado": "8",
+      "tipo": "numero",
+      "carpetas": [
+        "8"
+      ]
+    },
+    {
+      "id": "lsc.n9",
+      "glosa": "9",
+      "significado": "9",
+      "tipo": "numero",
+      "carpetas": [
+        "9"
+      ]
+    },
+    {
+      "id": "lsc.n10",
+      "glosa": "10",
+      "significado": "10",
+      "tipo": "numero",
+      "carpetas": [
+        "10"
+      ]
+    },
+    {
+      "id": "lsc.enie",
+      "glosa": "Ñ",
+      "significado": "ñ",
+      "tipo": "letra",
+      "carpetas": [
+        "NN"
+      ]
+    },
+    {
+      "id": "lsc.mil",
+      "glosa": "MIL",
+      "significado": "mil",
+      "tipo": "numero",
+      "carpetas": [
+        "MIL"
+      ]
+    },
+    {
+      "id": "lsc.millon",
+      "glosa": "MILLÓN",
+      "significado": "millón",
+      "tipo": "numero",
+      "carpetas": [
+        "MILLON"
+      ]
+    },
+    {
+      "id": "lsc.gustar",
+      "glosa": "GUSTAR",
+      "significado": "gustar",
+      "tipo": "palabra",
+      "carpetas": [
+        "GUSTAR"
+      ]
+    },
+    {
+      "id": "lsc.licor",
+      "glosa": "LICOR",
+      "significado": "licor",
+      "tipo": "palabra",
+      "carpetas": [
+        "LICOR"
+      ]
+    },
+    {
+      "id": "lsc.gracias",
+      "glosa": "GRACIAS",
+      "significado": "gracias",
+      "tipo": "palabra",
+      "carpetas": [
+        "0000"
+      ]
+    },
+    {
+      "id": "lsc.sena",
+      "glosa": "SEÑA",
+      "significado": "seña",
+      "tipo": "palabra",
+      "carpetas": [
+        "0004"
+      ]
+    },
+    {
+      "id": "lsc.trabajar",
+      "glosa": "TRABAJAR",
+      "significado": "trabajar",
+      "tipo": "palabra",
+      "carpetas": [
+        "0006"
+      ]
+    },
+    {
+      "id": "lsc.comer",
+      "glosa": "COMER",
+      "significado": "comer",
+      "tipo": "palabra",
+      "carpetas": [
+        "0007"
+      ]
+    },
+    {
+      "id": "lsc.vivir",
+      "glosa": "VIVIR",
+      "significado": "vivir",
+      "tipo": "palabra",
+      "carpetas": [
+        "0008"
+      ]
+    },
+    {
+      "id": "lsc.poco",
+      "glosa": "POCO",
+      "significado": "poco",
+      "tipo": "palabra",
+      "carpetas": [
+        "0009"
+      ]
+    },
+    {
+      "id": "lsc.familia",
+      "glosa": "FAMILIA",
+      "significado": "familia",
+      "tipo": "palabra",
+      "carpetas": [
+        "0010"
+      ]
+    },
+    {
+      "id": "lsc.personas",
+      "glosa": "PERSONAS",
+      "significado": "personas",
+      "tipo": "palabra",
+      "carpetas": [
+        "0011"
+      ]
+    },
+    {
+      "id": "lsc.mujer",
+      "glosa": "MUJER",
+      "significado": "mujer",
+      "tipo": "palabra",
+      "carpetas": [
+        "0012"
+      ]
+    },
+    {
+      "id": "lsc.hombre",
+      "glosa": "HOMBRE",
+      "significado": "hombre",
+      "tipo": "palabra",
+      "carpetas": [
+        "0013"
+      ]
+    },
+    {
+      "id": "lsc.nino",
+      "glosa": "NIÑO",
+      "significado": "niño",
+      "tipo": "palabra",
+      "carpetas": [
+        "0014"
+      ]
+    },
+    {
+      "id": "lsc.nina",
+      "glosa": "NIÑA",
+      "significado": "niña",
+      "tipo": "palabra",
+      "carpetas": [
+        "0015"
+      ]
+    },
+    {
+      "id": "lsc.abuelo",
+      "glosa": "ABUELO",
+      "significado": "abuelo",
+      "tipo": "palabra",
+      "carpetas": [
+        "0016"
+      ]
+    },
+    {
+      "id": "lsc.tio",
+      "glosa": "TÍO",
+      "significado": "tío",
+      "tipo": "palabra",
+      "carpetas": [
+        "0017"
+      ]
+    },
+    {
+      "id": "lsc.hermano",
+      "glosa": "HERMANO",
+      "significado": "hermano",
+      "tipo": "palabra",
+      "carpetas": [
+        "0018"
+      ]
+    },
+    {
+      "id": "lsc.hambre",
+      "glosa": "HAMBRE",
+      "significado": "hambre",
+      "tipo": "palabra",
+      "carpetas": [
+        "0019"
+      ]
+    },
+    {
+      "id": "lsc.feliz",
+      "glosa": "FELIZ",
+      "significado": "feliz",
+      "tipo": "palabra",
+      "carpetas": [
+        "0020"
+      ]
+    },
+    {
+      "id": "lsc.contento",
+      "glosa": "CONTENTO",
+      "significado": "contento",
+      "tipo": "palabra",
+      "carpetas": [
+        "0021"
+      ]
+    },
+    {
+      "id": "lsc.triste",
+      "glosa": "TRISTE",
+      "significado": "triste",
+      "tipo": "palabra",
+      "carpetas": [
+        "0022"
+      ]
+    },
+    {
+      "id": "lsc.aburrido",
+      "glosa": "ABURRIDO",
+      "significado": "aburrido",
+      "tipo": "palabra",
+      "carpetas": [
+        "0023"
+      ]
+    },
+    {
+      "id": "lsc.bien",
+      "glosa": "BIEN",
+      "significado": "bien",
+      "tipo": "palabra",
+      "carpetas": [
+        "0024"
+      ]
+    },
+    {
+      "id": "lsc.mal",
+      "glosa": "MAL",
+      "significado": "mal",
+      "tipo": "palabra",
+      "carpetas": [
+        "0025"
+      ]
+    },
+    {
+      "id": "lsc.como_estas",
+      "glosa": "CÓMO ESTÁS",
+      "significado": "cómo estás",
+      "tipo": "palabra",
+      "carpetas": [
+        "0026"
+      ],
+      "interrogativa": true
+    },
+    {
+      "id": "lsc.mas_o_menos",
+      "glosa": "MÁS O MENOS",
+      "significado": "más o menos",
+      "tipo": "palabra",
+      "carpetas": [
+        "0027"
+      ]
+    },
+    {
+      "id": "lsc.sentir",
+      "glosa": "SENTIR",
+      "significado": "sentir",
+      "tipo": "palabra",
+      "carpetas": [
+        "0028"
+      ]
+    },
+    {
+      "id": "lsc.juicioso",
+      "glosa": "JUICIOSO",
+      "significado": "juicioso",
+      "tipo": "palabra",
+      "carpetas": [
+        "0029"
+      ]
+    },
+    {
+      "id": "lsc.adios",
+      "glosa": "ADIÓS",
+      "significado": "adiós",
+      "tipo": "palabra",
+      "carpetas": [
+        "0031"
+      ]
+    },
+    {
+      "id": "lsc.por_favor",
+      "glosa": "POR FAVOR",
+      "significado": "por favor",
+      "tipo": "palabra",
+      "carpetas": [
+        "0032"
+      ]
+    },
+    {
+      "id": "lsc.con_gusto",
+      "glosa": "CON GUSTO",
+      "significado": "con gusto",
+      "tipo": "palabra",
+      "carpetas": [
+        "0033"
+      ]
+    },
+    {
+      "id": "lsc.bienvenido",
+      "glosa": "BIENVENIDO",
+      "significado": "bienvenido",
+      "tipo": "palabra",
+      "carpetas": [
+        "0034"
+      ]
+    },
+    {
+      "id": "lsc.perdon",
+      "glosa": "PERDÓN",
+      "significado": "perdón",
+      "tipo": "palabra",
+      "carpetas": [
+        "0035"
+      ]
+    },
+    {
+      "id": "lsc.permiso",
+      "glosa": "PERMISO",
+      "significado": "permiso",
+      "tipo": "palabra",
+      "carpetas": [
+        "0036"
+      ]
+    },
+    {
+      "id": "lsc.nunca",
+      "glosa": "NUNCA",
+      "significado": "nunca",
+      "tipo": "palabra",
+      "carpetas": [
+        "0037"
+      ]
+    },
+    {
+      "id": "lsc.tu",
+      "glosa": "TÚ",
+      "significado": "tú",
+      "tipo": "palabra",
+      "carpetas": [
+        "0039"
+      ]
+    },
+    {
+      "id": "lsc.ustedes",
+      "glosa": "USTEDES",
+      "significado": "ustedes",
+      "tipo": "palabra",
+      "carpetas": [
+        "0040"
+      ]
+    },
+    {
+      "id": "lsc.que",
+      "glosa": "QUÉ",
+      "significado": "qué",
+      "tipo": "palabra",
+      "carpetas": [
+        "0041"
+      ],
+      "interrogativa": true
+    },
+    {
+      "id": "lsc.cuando",
+      "glosa": "CUÁNDO",
+      "significado": "cuándo",
+      "tipo": "palabra",
+      "carpetas": [
+        "0042"
+      ],
+      "interrogativa": true
+    },
+    {
+      "id": "lsc.donde",
+      "glosa": "DÓNDE",
+      "significado": "dónde",
+      "tipo": "palabra",
+      "carpetas": [
+        "0043"
+      ],
+      "interrogativa": true
+    },
+    {
+      "id": "lsc.como",
+      "glosa": "CÓMO",
+      "significado": "cómo",
+      "tipo": "palabra",
+      "carpetas": [
+        "0044"
+      ],
+      "interrogativa": true
+    },
+    {
+      "id": "lsc.por_que",
+      "glosa": "POR QUÉ",
+      "significado": "por qué",
+      "tipo": "palabra",
+      "carpetas": [
+        "0045"
+      ],
+      "interrogativa": true
+    },
+    {
+      "id": "lsc.quien",
+      "glosa": "QUIÉN",
+      "significado": "quién",
+      "tipo": "palabra",
+      "carpetas": [
+        "0046"
+      ],
+      "interrogativa": true
+    },
+    {
+      "id": "lsc.diferente",
+      "glosa": "DIFERENTE",
+      "significado": "diferente",
+      "tipo": "palabra",
+      "carpetas": [
+        "0047"
+      ]
+    },
+    {
+      "id": "lsc.todos",
+      "glosa": "TODOS",
+      "significado": "todos",
+      "tipo": "palabra",
+      "carpetas": [
+        "0048"
+      ]
+    },
+    {
+      "id": "lsc.mucho",
+      "glosa": "MUCHO",
+      "significado": "mucho",
+      "tipo": "palabra",
+      "carpetas": [
+        "0049"
+      ]
+    }
+  ]
+}

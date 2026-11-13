@@ -1,0 +1,676 @@
+{
+  "formato": 1,
+  "nombre": "reconocedor-lsc",
+  "version": "0.3.0",
+  "lengua": "lsc",
+  "caracteristicas": {
+    "version": 1,
+    "version_subconjuntos": 1,
+    "por_fotograma": 352,
+    "usa_rostro": false
+  },
+  "ventana": {
+    "fotogramas": 32,
+    "duracion_ms": 1000
+  },
+  "salida": {
+    "etiquetas": [
+      "lsc.a",
+      "lsc.abuelo",
+      "lsc.aburrido",
+      "lsc.adios",
+      "lsc.anos",
+      "lsc.b",
+      "lsc.bien",
+      "lsc.bienvenido",
+      "lsc.buenas",
+      "lsc.c",
+      "lsc.comer",
+      "lsc.como",
+      "lsc.como_estas",
+      "lsc.con_gusto",
+      "lsc.contento",
+      "lsc.cuando",
+      "lsc.d",
+      "lsc.dias",
+      "lsc.diferente",
+      "lsc.donde",
+      "lsc.e",
+      "lsc.enie",
+      "lsc.f",
+      "lsc.familia",
+      "lsc.feliz",
+      "lsc.g",
+      "lsc.gracias",
+      "lsc.gustar",
+      "lsc.h",
+      "lsc.hambre",
+      "lsc.hermano",
+      "lsc.hola",
+      "lsc.hombre",
+      "lsc.i",
+      "lsc.j",
+      "lsc.juicioso",
+      "lsc.k",
+      "lsc.l",
+      "lsc.licor",
+      "lsc.m",
+      "lsc.mal",
+      "lsc.mas_o_menos",
+      "lsc.mil",
+      "lsc.millon",
+      "lsc.mucho",
+      "lsc.mujer",
+      "lsc.n",
+      "lsc.n1",
+      "lsc.n10",
+      "lsc.n4",
+      "lsc.n5",
+      "lsc.n6",
+      "lsc.n7",
+      "lsc.n8",
+      "lsc.n9",
+      "lsc.nina",
+      "lsc.nino",
+      "lsc.noches",
+      "lsc.nombre",
+      "lsc.nunca",
+      "lsc.o",
+      "lsc.p",
+      "lsc.perdon",
+      "lsc.permiso",
+      "lsc.personas",
+      "lsc.poco",
+      "lsc.por_favor",
+      "lsc.por_que",
+      "lsc.q",
+      "lsc.que",
+      "lsc.quien",
+      "lsc.r",
+      "lsc.s",
+      "lsc.sena",
+      "lsc.sentir",
+      "lsc.t",
+      "lsc.tardes",
+      "lsc.tio",
+      "lsc.todos",
+      "lsc.trabajar",
+      "lsc.triste",
+      "lsc.tu",
+      "lsc.u",
+      "lsc.ustedes",
+      "lsc.v",
+      "lsc.vivir",
+      "lsc.w",
+      "lsc.x",
+      "lsc.y",
+      "lsc.yo",
+      "lsc.z"
+    ],
+    "etiqueta_sin_sena": null,
+    "temperatura": 2.5928808461859294,
+    "umbral_energia": -14.740566631448443
+  },
+  "vocabulario": [
+    {
+      "id": "lsc.a",
+      "glosa": "A",
+      "significado": "a",
+      "tipo": "letra"
+    },
+    {
+      "id": "lsc.abuelo",
+      "glosa": "ABUELO",
+      "significado": "abuelo",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.aburrido",
+      "glosa": "ABURRIDO",
+      "significado": "aburrido",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.adios",
+      "glosa": "ADIÓS",
+      "significado": "adiós",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.anos",
+      "glosa": "AÑOS",
+      "significado": "años",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.b",
+      "glosa": "B",
+      "significado": "b",
+      "tipo": "letra"
+    },
+    {
+      "id": "lsc.bien",
+      "glosa": "BIEN",
+      "significado": "bien",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.bienvenido",
+      "glosa": "BIENVENIDO",
+      "significado": "bienvenido",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.buenas",
+      "glosa": "BUENAS",
+      "significado": "buenas",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.c",
+      "glosa": "C",
+      "significado": "c",
+      "tipo": "letra"
+    },
+    {
+      "id": "lsc.comer",
+      "glosa": "COMER",
+      "significado": "comer",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.como",
+      "glosa": "CÓMO",
+      "significado": "cómo",
+      "tipo": "palabra",
+      "interrogativa": true
+    },
+    {
+      "id": "lsc.como_estas",
+      "glosa": "CÓMO ESTÁS",
+      "significado": "cómo estás",
+      "tipo": "palabra",
+      "interrogativa": true
+    },
+    {
+      "id": "lsc.con_gusto",
+      "glosa": "CON GUSTO",
+      "significado": "con gusto",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.contento",
+      "glosa": "CONTENTO",
+      "significado": "contento",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.cuando",
+      "glosa": "CUÁNDO",
+      "significado": "cuándo",
+      "tipo": "palabra",
+      "interrogativa": true
+    },
+    {
+      "id": "lsc.d",
+      "glosa": "D",
+      "significado": "d",
+      "tipo": "letra"
+    },
+    {
+      "id": "lsc.dias",
+      "glosa": "DÍAS",
+      "significado": "días",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.diferente",
+      "glosa": "DIFERENTE",
+      "significado": "diferente",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.donde",
+      "glosa": "DÓNDE",
+      "significado": "dónde",
+      "tipo": "palabra",
+      "interrogativa": true
+    },
+    {
+      "id": "lsc.e",
+      "glosa": "E",
+      "significado": "e",
+      "tipo": "letra"
+    },
+    {
+      "id": "lsc.enie",
+      "glosa": "Ñ",
+      "significado": "ñ",
+      "tipo": "letra"
+    },
+    {
+      "id": "lsc.f",
+      "glosa": "F",
+      "significado": "f",
+      "tipo": "letra"
+    },
+    {
+      "id": "lsc.familia",
+      "glosa": "FAMILIA",
+      "significado": "familia",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.feliz",
+      "glosa": "FELIZ",
+      "significado": "feliz",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.g",
+      "glosa": "G",
+      "significado": "g",
+      "tipo": "letra"
+    },
+    {
+      "id": "lsc.gracias",
+      "glosa": "GRACIAS",
+      "significado": "gracias",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.gustar",
+      "glosa": "GUSTAR",
+      "significado": "gustar",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.h",
+      "glosa": "H",
+      "significado": "h",
+      "tipo": "letra"
+    },
+    {
+      "id": "lsc.hambre",
+      "glosa": "HAMBRE",
+      "significado": "hambre",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.hermano",
+      "glosa": "HERMANO",
+      "significado": "hermano",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.hola",
+      "glosa": "HOLA",
+      "significado": "hola",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.hombre",
+      "glosa": "HOMBRE",
+      "significado": "hombre",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.i",
+      "glosa": "I",
+      "significado": "i",
+      "tipo": "letra"
+    },
+    {
+      "id": "lsc.j",
+      "glosa": "J",
+      "significado": "j",
+      "tipo": "letra"
+    },
+    {
+      "id": "lsc.juicioso",
+      "glosa": "JUICIOSO",
+      "significado": "juicioso",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.k",
+      "glosa": "K",
+      "significado": "k",
+      "tipo": "letra"
+    },
+    {
+      "id": "lsc.l",
+      "glosa": "L",
+      "significado": "l",
+      "tipo": "letra"
+    },
+    {
+      "id": "lsc.licor",
+      "glosa": "LICOR",
+      "significado": "licor",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.m",
+      "glosa": "M",
+      "significado": "m",
+      "tipo": "letra"
+    },
+    {
+      "id": "lsc.mal",
+      "glosa": "MAL",
+      "significado": "mal",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.mas_o_menos",
+      "glosa": "MÁS O MENOS",
+      "significado": "más o menos",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.mil",
+      "glosa": "MIL",
+      "significado": "mil",
+      "tipo": "numero"
+    },
+    {
+      "id": "lsc.millon",
+      "glosa": "MILLÓN",
+      "significado": "millón",
+      "tipo": "numero"
+    },
+    {
+      "id": "lsc.mucho",
+      "glosa": "MUCHO",
+      "significado": "mucho",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.mujer",
+      "glosa": "MUJER",
+      "significado": "mujer",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.n",
+      "glosa": "N",
+      "significado": "n",
+      "tipo": "letra"
+    },
+    {
+      "id": "lsc.n1",
+      "glosa": "1",
+      "significado": "1",
+      "tipo": "numero"
+    },
+    {
+      "id": "lsc.n10",
+      "glosa": "10",
+      "significado": "10",
+      "tipo": "numero"
+    },
+    {
+      "id": "lsc.n4",
+      "glosa": "4",
+      "significado": "4",
+      "tipo": "numero"
+    },
+    {
+      "id": "lsc.n5",
+      "glosa": "5",
+      "significado": "5",
+      "tipo": "numero"
+    },
+    {
+      "id": "lsc.n6",
+      "glosa": "6",
+      "significado": "6",
+      "tipo": "numero"
+    },
+    {
+      "id": "lsc.n7",
+      "glosa": "7",
+      "significado": "7",
+      "tipo": "numero"
+    },
+    {
+      "id": "lsc.n8",
+      "glosa": "8",
+      "significado": "8",
+      "tipo": "numero"
+    },
+    {
+      "id": "lsc.n9",
+      "glosa": "9",
+      "significado": "9",
+      "tipo": "numero"
+    },
+    {
+      "id": "lsc.nina",
+      "glosa": "NIÑA",
+      "significado": "niña",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.nino",
+      "glosa": "NIÑO",
+      "significado": "niño",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.noches",
+      "glosa": "NOCHES",
+      "significado": "noches",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.nombre",
+      "glosa": "NOMBRE",
+      "significado": "nombre",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.nunca",
+      "glosa": "NUNCA",
+      "significado": "nunca",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.o",
+      "glosa": "O",
+      "significado": "o",
+      "tipo": "letra"
+    },
+    {
+      "id": "lsc.p",
+      "glosa": "P",
+      "significado": "p",
+      "tipo": "letra"
+    },
+    {
+      "id": "lsc.perdon",
+      "glosa": "PERDÓN",
+      "significado": "perdón",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.permiso",
+      "glosa": "PERMISO",
+      "significado": "permiso",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.personas",
+      "glosa": "PERSONAS",
+      "significado": "personas",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.poco",
+      "glosa": "POCO",
+      "significado": "poco",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.por_favor",
+      "glosa": "POR FAVOR",
+      "significado": "por favor",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.por_que",
+      "glosa": "POR QUÉ",
+      "significado": "por qué",
+      "tipo": "palabra",
+      "interrogativa": true
+    },
+    {
+      "id": "lsc.q",
+      "glosa": "Q",
+      "significado": "q",
+      "tipo": "letra"
+    },
+    {
+      "id": "lsc.que",
+      "glosa": "QUÉ",
+      "significado": "qué",
+      "tipo": "palabra",
+      "interrogativa": true
+    },
+    {
+      "id": "lsc.quien",
+      "glosa": "QUIÉN",
+      "significado": "quién",
+      "tipo": "palabra",
+      "interrogativa": true
+    },
+    {
+      "id": "lsc.r",
+      "glosa": "R",
+      "significado": "r",
+      "tipo": "letra"
+    },
+    {
+      "id": "lsc.s",
+      "glosa": "S",
+      "significado": "s",
+      "tipo": "letra"
+    },
+    {
+      "id": "lsc.sena",
+      "glosa": "SEÑA",
+      "significado": "seña",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.sentir",
+      "glosa": "SENTIR",
+      "significado": "sentir",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.t",
+      "glosa": "T",
+      "significado": "t",
+      "tipo": "letra"
+    },
+    {
+      "id": "lsc.tardes",
+      "glosa": "TARDES",
+      "significado": "tardes",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.tio",
+      "glosa": "TÍO",
+      "significado": "tío",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.todos",
+      "glosa": "TODOS",
+      "significado": "todos",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.trabajar",
+      "glosa": "TRABAJAR",
+      "significado": "trabajar",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.triste",
+      "glosa": "TRISTE",
+      "significado": "triste",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.tu",
+      "glosa": "TÚ",
+      "significado": "tú",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.u",
+      "glosa": "U",
+      "significado": "u",
+      "tipo": "letra"
+    },
+    {
+      "id": "lsc.ustedes",
+      "glosa": "USTEDES",
+      "significado": "ustedes",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.v",
+      "glosa": "V",
+      "significado": "v",
+      "tipo": "letra"
+    },
+    {
+      "id": "lsc.vivir",
+      "glosa": "VIVIR",
+      "significado": "vivir",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.w",
+      "glosa": "W",
+      "significado": "w",
+      "tipo": "letra"
+    },
+    {
+      "id": "lsc.x",
+      "glosa": "X",
+      "significado": "x",
+      "tipo": "letra"
+    },
+    {
+      "id": "lsc.y",
+      "glosa": "Y",
+      "significado": "y",
+      "tipo": "letra"
+    },
+    {
+      "id": "lsc.yo",
+      "glosa": "YO",
+      "significado": "yo",
+      "tipo": "palabra"
+    },
+    {
+      "id": "lsc.z",
+      "glosa": "Z",
+      "significado": "z",
+      "tipo": "letra"
+    }
+  ],
+  "datos_entrenamiento": [
+    "LSC70 (Universidad del Cauca, 2024), CC BY 4.0, doi:10.17632/9ssyn8tff5.2; LSC50 (Universidad de los Andes, 2024), CC BY 4.0, doi:10.6084/m9.figshare.27383016"
+  ],
+  "metricas": {
+    "exactitud": 0.863013698630137,
+    "macro_f1": 0.8168164546671555
+  }
+}

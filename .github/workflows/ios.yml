@@ -5,10 +5,10 @@ name: iOS y Apple Watch
 on:
   workflow_dispatch:
   pull_request:
-    paths: ["ios/**", "shared/**", "core/model/**", "sequence/**", "recognizer/api/**", "interpreter/api/**", "interpreter/rules/**", "vision/comun/**"]
+    paths: ["ios/**", "shared/**", "core/model/**", "sequence/**", "recognizer/api/**", "interpreter/api/**", "interpreter/rules/**", "vision/comun/**", "recognizer/litert/src/main/assets/**"]
   push:
     branches: [main]
-    paths: ["ios/**", "shared/**", "core/model/**", "sequence/**", "recognizer/api/**", "interpreter/api/**", "interpreter/rules/**", "vision/comun/**"]
+    paths: ["ios/**", "shared/**", "core/model/**", "sequence/**", "recognizer/api/**", "interpreter/api/**", "interpreter/rules/**", "vision/comun/**", "recognizer/litert/src/main/assets/**"]
 
 jobs:
   compilar:
