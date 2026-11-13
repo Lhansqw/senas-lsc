@@ -55,6 +55,9 @@ targets:
         TARGETED_DEVICE_FAMILY: "1"
         # El XCFramework es estático y usa la biblioteca de C++ de Kotlin/Native.
         OTHER_LDFLAGS: ["$(inherited)", "-lc++"]
+        # SenasShared solo se compila para simuladores arm64 (shared/build.gradle.kts): sin esto,
+        # el build genérico de simulador también enlaza x86_64 y faltan todos sus símbolos.
+        "EXCLUDED_ARCHS[sdk=iphonesimulator*]": x86_64
     preBuildScripts:
       - name: Compilar SenasShared (Kotlin)
         basedOnDependencyAnalysis: false

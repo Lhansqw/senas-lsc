@@ -11,3 +11,40 @@ target 'SenasLSC' do
   # Ejecuta reconocedor_lsc.tflite, el mismo modelo que LiteRT en Android.
   pod 'TensorFlowLiteSwift', '~> 2.17.0'
 end
+
+# MediaPipeTasksCommon ya lleva TensorFlow Lite dentro: si TensorFlowLiteSwift (y con él
+# TensorFlowLiteC) también se enlaza estático en la app, el enlazador encuentra 54 símbolos
+# duplicados. Como framework dinámico, su copia de TFLite queda dentro de su propia imagen.
+# CocoaPods rechaza por defecto un framework dinámico con dependencias estáticas (justo lo que
+# queremos aquí: TensorFlowLiteC queda enlazado dentro de TensorFlowLiteSwift), así que se omite
+# esa comprobación.
+Pod::Installer::Xcode::TargetValidator.send(:define_method, :verify_no_static_framework_transitive_dependencies) {}
+
+pre_install do |installer|
+  installer.pod_targets.each do |pod|
+    next unless pod.name == 'TensorFlowLiteSwift'
+    def pod.build_type
+      Pod::BuildType.dynamic_framework
+    end
+  end
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      # Como la app (project.yml): SenasShared no existe para simuladores x86_64.
+      config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'x86_64'
+      next unless target.name == 'TensorFlowLiteSwift'
+      # Sin la comprobación de arriba, CocoaPods no enlaza TensorFlowLiteC aquí: se hace a mano.
+      config.build_settings['FRAMEWORK_SEARCH_PATHS'] = ['$(inherited)', '"${PODS_XCFRAMEWORKS_BUILD_DIR}/TensorFlowLiteC/Core"']
+      config.build_settings['OTHER_LDFLAGS'] = ['$(inherited)', '-framework', '"TensorFlowLiteC"', '-lc++']
+    end
+  end
+  # …y la app deja de enlazarlo: es la copia que chocaba con la de MediaPipe.
+  installer.aggregate_targets.each do |aggregate|
+    aggregate.xcconfigs.each do |nombre, xcconfig|
+      xcconfig.other_linker_flags[:frameworks]&.delete('TensorFlowLiteC')
+      xcconfig.save_as(aggregate.xcconfig_path(nombre))
+    end
+  end
+end
