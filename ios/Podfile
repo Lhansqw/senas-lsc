@@ -15,6 +15,11 @@ end
 # MediaPipeTasksCommon ya lleva TensorFlow Lite dentro: si TensorFlowLiteSwift (y con él
 # TensorFlowLiteC) también se enlaza estático en la app, el enlazador encuentra 54 símbolos
 # duplicados. Como framework dinámico, su copia de TFLite queda dentro de su propia imagen.
+# CocoaPods rechaza por defecto un framework dinámico con dependencias estáticas (justo lo que
+# queremos aquí: TensorFlowLiteC queda enlazado dentro de TensorFlowLiteSwift), así que se omite
+# esa comprobación.
+Pod::Installer::Xcode::TargetValidator.send(:define_method, :verify_no_static_framework_transitive_dependencies) {}
+
 pre_install do |installer|
   installer.pod_targets.each do |pod|
     next unless pod.name == 'TensorFlowLiteSwift'
