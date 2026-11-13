@@ -1,4 +1,4 @@
-# Ficha del modelo: reconocedor-lsc70 0.2.0
+# Ficha del modelo: reconocedor-lsc70 0.2.1
 
 Generada por `training/ficha.py` a partir de los archivos del entrenamiento. No editar a mano.
 
@@ -20,7 +20,7 @@ decisiones sobre personas. Siempre muestra sus resultados como propuesta revisab
 - Arquitectura: gru  284 271 parámetros
 - Entrada: 32 instantes × 352 características (versión 1); salida: logits de 47 clases.
 - Usa el rostro: no.
-- Calibración: temperatura 1.272, umbral de energía -7.544.
+- Calibración: temperatura 1.462, umbral de energía -8.661.
 - Tamaño del archivo `.tflite`: 317 KB.
 
 ## Resultados con personas que el modelo no vio
@@ -29,28 +29,28 @@ Personas de prueba: Per07, Per08, Per16, Per17, Per19, Per23, Per40, Per43, Per5
 
 | Métrica | Valor |
 |---|---|
-| Exactitud | 87.8 % |
-| F1 macro | 87.5 % |
-| Error de calibración (ECE) | 0.032 |
-| Señas conocidas rechazadas por el umbral | 1.5 % |
+| Exactitud | 88.5 % |
+| F1 macro | 88.3 % |
+| Error de calibración (ECE) | 0.027 |
+| Señas conocidas rechazadas por el umbral | 1.1 % |
 
 ### Señas con peor resultado
 
 | Seña | F1 | Recall | Muestras |
 |---|---|---|---|
-| H | 54.5 % | 60.0 % | 10 |
-| 6 | 55.6 % | 50.0 % | 10 |
-| S | 57.1 % | 40.0 % | 10 |
-| Ñ | 61.5 % | 44.4 % | 9 |
-| 1 | 64.3 % | 90.0 % | 10 |
+| S | 62.5 % | 50.0 % | 10 |
+| LICOR | 66.7 % | 70.0 % | 10 |
+| 6 | 66.7 % | 50.0 % | 10 |
+| 1 | 71.4 % | 100.0 % | 10 |
+| G | 75.0 % | 60.0 % | 10 |
 
 ### Versiones cuantizadas
 
 | Versión | Tamaño | Exactitud |
 |---|---|---|
-| float32 | 1133 KB | 87.8 % |
-| float16 | 582 KB | 87.8 % |
-| int8 | 317 KB | 87.6 % |
+| float32 | 1133 KB | 88.5 % |
+| float16 | 582 KB | 88.5 % |
+| int8 | 317 KB | 88.5 % |
 
 ## Limitaciones conocidas
 

@@ -30,7 +30,8 @@ def main(argv=None) -> int:
     ap.add_argument("--duracion-ms", type=int, default=1000)
     ap.add_argument("--epocas", type=int, default=80)
     ap.add_argument("--lote", type=int, default=32)
-    ap.add_argument("--copias-aumentadas", type=int, default=4)
+    # 10 copias: con 47 señas, 4 dejaban flojas Ñ, H, V y K (F1 87,5 % → 88,3 % con LSC70).
+    ap.add_argument("--copias-aumentadas", type=int, default=10)
     ap.add_argument("--semilla", type=int, default=42)
     ap.add_argument("--validacion", type=float, default=0.15)
     ap.add_argument("--prueba", type=float, default=0.15)

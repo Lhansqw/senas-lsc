@@ -1,7 +1,7 @@
 {
   "formato": 1,
   "nombre": "reconocedor-lsc70",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "lengua": "lsc",
   "caracteristicas": {
     "version": 1,
@@ -64,8 +64,8 @@
       "lsc.z"
     ],
     "etiqueta_sin_sena": null,
-    "temperatura": 1.2723690238499816,
-    "umbral_energia": -7.544422335454307
+    "temperatura": 1.461641639497706,
+    "umbral_energia": -8.661018725675248
   },
   "vocabulario": [
     {
@@ -355,7 +355,7 @@
     "LSC70 (Universidad del Cauca, 2024), CC BY 4.0, doi:10.17632/9ssyn8tff5.2"
   ],
   "metricas": {
-    "exactitud": 0.8784648187633263,
-    "macro_f1": 0.8754665919467743
+    "exactitud": 0.8848614072494669,
+    "macro_f1": 0.8832883241303519
   }
 }
