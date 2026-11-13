@@ -1,7 +1,7 @@
 {
   "formato": 1,
   "nombre": "reconocedor-lsc70",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "lengua": "lsc",
   "caracteristicas": {
     "version": 1,
@@ -23,15 +23,20 @@
       "lsc.d",
       "lsc.dias",
       "lsc.e",
+      "lsc.enie",
       "lsc.f",
       "lsc.g",
+      "lsc.gustar",
       "lsc.h",
       "lsc.hola",
       "lsc.i",
       "lsc.j",
       "lsc.k",
       "lsc.l",
+      "lsc.licor",
       "lsc.m",
+      "lsc.mil",
+      "lsc.millon",
       "lsc.n",
       "lsc.n1",
       "lsc.n10",
@@ -59,8 +64,8 @@
       "lsc.z"
     ],
     "etiqueta_sin_sena": null,
-    "temperatura": 1.573846636887309,
-    "umbral_energia": -9.393515997300756
+    "temperatura": 1.2723690238499816,
+    "umbral_energia": -7.544422335454307
   },
   "vocabulario": [
     {
@@ -112,6 +117,12 @@
       "tipo": "letra"
     },
     {
+      "id": "lsc.enie",
+      "glosa": "Ñ",
+      "significado": "ñ",
+      "tipo": "letra"
+    },
+    {
       "id": "lsc.f",
       "glosa": "F",
       "significado": "f",
@@ -122,6 +133,12 @@
       "glosa": "G",
       "significado": "g",
       "tipo": "letra"
+    },
+    {
+      "id": "lsc.gustar",
+      "glosa": "GUSTAR",
+      "significado": "gustar",
+      "tipo": "palabra"
     },
     {
       "id": "lsc.h",
@@ -160,10 +177,28 @@
       "tipo": "letra"
     },
     {
+      "id": "lsc.licor",
+      "glosa": "LICOR",
+      "significado": "licor",
+      "tipo": "palabra"
+    },
+    {
       "id": "lsc.m",
       "glosa": "M",
       "significado": "m",
       "tipo": "letra"
+    },
+    {
+      "id": "lsc.mil",
+      "glosa": "MIL",
+      "significado": "mil",
+      "tipo": "numero"
+    },
+    {
+      "id": "lsc.millon",
+      "glosa": "MILLÓN",
+      "significado": "millón",
+      "tipo": "numero"
     },
     {
       "id": "lsc.n",
@@ -320,7 +355,7 @@
     "LSC70 (Universidad del Cauca, 2024), CC BY 4.0, doi:10.17632/9ssyn8tff5.2"
   ],
   "metricas": {
-    "exactitud": 0.9071428571428571,
-    "macro_f1": 0.9058678342242752
+    "exactitud": 0.8784648187633263,
+    "macro_f1": 0.8754665919467743
   }
 }

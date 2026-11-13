@@ -1,10 +1,10 @@
-# Ficha del modelo: reconocedor-lsc70 0.1.0
+# Ficha del modelo: reconocedor-lsc70 0.2.0
 
 Generada por `training/ficha.py` a partir de los archivos del entrenamiento. No editar a mano.
 
 ## Para qué sirve
 
-Reconoce 42 señas aisladas de la Lengua de Señas Colombiana (LSC) a partir de los
+Reconoce 47 señas aisladas de la Lengua de Señas Colombiana (LSC) a partir de los
 puntos de MediaPipe de manos y cuerpo, en ventanas de 1000 ms. Lo usa la app Señas LSC para mostrar las señas como texto.
 
 **No sirve para** traducir conversaciones en LSC, reconocer señas fuera de su vocabulario ni tomar
@@ -17,32 +17,40 @@ decisiones sobre personas. Siempre muestra sus resultados como propuesta revisab
 
 ## Modelo
 
-- Arquitectura: gru
-- Entrada: 32 instantes × 352 características (versión 1); salida: logits de 42 clases.
+- Arquitectura: gru  284 271 parámetros
+- Entrada: 32 instantes × 352 características (versión 1); salida: logits de 47 clases.
 - Usa el rostro: no.
-- Calibración: temperatura 1.574, umbral de energía -9.394.
-- Tamaño del archivo `.tflite`: 1130 KB.
+- Calibración: temperatura 1.272, umbral de energía -7.544.
+- Tamaño del archivo `.tflite`: 317 KB.
 
 ## Resultados con personas que el modelo no vio
 
-Personas de prueba: Per07, Per08, Per16, Per17, Per19, Per23, Per40, Per43, Per54, Per67 (420 muestras).
+Personas de prueba: Per07, Per08, Per16, Per17, Per19, Per23, Per40, Per43, Per54, Per67 (469 muestras).
 
 | Métrica | Valor |
 |---|---|
-| Exactitud | 90.7 % |
-| F1 macro | 90.6 % |
-| Error de calibración (ECE) | 0.029 |
-| Señas conocidas rechazadas por el umbral | 1.4 % |
+| Exactitud | 87.8 % |
+| F1 macro | 87.5 % |
+| Error de calibración (ECE) | 0.032 |
+| Señas conocidas rechazadas por el umbral | 1.5 % |
 
 ### Señas con peor resultado
 
 | Seña | F1 | Recall | Muestras |
 |---|---|---|---|
-| S | 47.1 % | 40.0 % | 10 |
-| 1 | 72.0 % | 90.0 % | 10 |
-| 6 | 73.7 % | 70.0 % | 10 |
-| H | 76.2 % | 80.0 % | 10 |
-| G | 77.8 % | 70.0 % | 10 |
+| H | 54.5 % | 60.0 % | 10 |
+| 6 | 55.6 % | 50.0 % | 10 |
+| S | 57.1 % | 40.0 % | 10 |
+| Ñ | 61.5 % | 44.4 % | 9 |
+| 1 | 64.3 % | 90.0 % | 10 |
+
+### Versiones cuantizadas
+
+| Versión | Tamaño | Exactitud |
+|---|---|---|
+| float32 | 1133 KB | 87.8 % |
+| float16 | 582 KB | 87.8 % |
+| int8 | 317 KB | 87.6 % |
 
 ## Limitaciones conocidas
 
