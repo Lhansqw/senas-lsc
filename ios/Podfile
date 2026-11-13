@@ -28,3 +28,23 @@ pre_install do |installer|
     end
   end
 end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      # Como la app (project.yml): SenasShared no existe para simuladores x86_64.
+      config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'x86_64'
+      next unless target.name == 'TensorFlowLiteSwift'
+      # Sin la comprobación de arriba, CocoaPods no enlaza TensorFlowLiteC aquí: se hace a mano.
+      config.build_settings['FRAMEWORK_SEARCH_PATHS'] = ['$(inherited)', '"${PODS_XCFRAMEWORKS_BUILD_DIR}/TensorFlowLiteC/Core"']
+      config.build_settings['OTHER_LDFLAGS'] = ['$(inherited)', '-framework', '"TensorFlowLiteC"', '-lc++']
+    end
+  end
+  # …y la app deja de enlazarlo: es la copia que chocaba con la de MediaPipe.
+  installer.aggregate_targets.each do |aggregate|
+    aggregate.xcconfigs.each do |nombre, xcconfig|
+      xcconfig.other_linker_flags[:frameworks]&.delete('TensorFlowLiteC')
+      xcconfig.save_as(aggregate.xcconfig_path(nombre))
+    end
+  end
+end
