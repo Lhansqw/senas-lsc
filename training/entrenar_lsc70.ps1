@@ -6,6 +6,8 @@
     1. Crea el entorno de Python (.venv) e instala las dependencias, si hace falta.
     2. Extrae los puntos de MediaPipe de LSC70AN (alfabeto y números) y LSC70W (palabras).
        Se puede interrumpir: al volver a ejecutarlo continúa donde iba.
+       Si está data\LSC50\LANDMARKS.zip (descargar_lsc50.ps1 -Filtro LANDMARKS), importa también
+       LSC50 y entrena con vocabulario.lsc.json (91 señas).
     3. Entrena, evalúa con personas que el modelo no vio y exporta el .tflite y modelo.json.
     4. Copia el modelo a la app (recognizer/litert/src/main/assets).
 
@@ -42,7 +44,18 @@ $Datos = "data\LSC70"
 $Puntos = "data\puntos"
 $Salida = "outputs\lsc70-v$Version"
 $Vocabulario = "vocabulario.lsc70.json"
+$Nombre = "reconocedor-lsc70"
 $Cita = "LSC70 (Universidad del Cauca, 2024), CC BY 4.0, doi:10.17632/9ssyn8tff5.2"
+$Lsc50 = "data\LSC50\LANDMARKS.zip"
+$Vigilar = "val_loss"
+if (Test-Path $Lsc50) {
+    # Con LSC50 la pérdida de validación toca fondo en la época 2: se vigila la exactitud.
+    $Vigilar = "val_accuracy"
+    $Salida = "outputs\lsc-v$Version"
+    $Vocabulario = "vocabulario.lsc.json"
+    $Nombre = "reconocedor-lsc"
+    $Cita += "; LSC50 (Universidad de los Andes, 2024), CC BY 4.0, doi:10.6084/m9.figshare.27383016"
+}
 
 function Paso($texto) { Write-Host "`n=== $texto ===" -ForegroundColor Cyan }
 function Ejecutar {
@@ -84,10 +97,14 @@ Ejecutar extraer.py --raiz "$Datos\LSC70W" --vocabulario $Vocabulario --salida $
 if (Test-Path "data\grabaciones") {
     Ejecutar importar_grabaciones.py --entrada "data\grabaciones" --salida $Puntos --vocabulario $Vocabulario
 }
+# LSC50 ya trae los puntos de MediaPipe: se leen del zip sin descomprimir.
+if (Test-Path $Lsc50) {
+    Ejecutar importar_lsc50.py --zip $Lsc50 --salida $Puntos --vocabulario $Vocabulario
+}
 if ($SoloExtraer) { Write-Host "`nPuntos extraídos en $Puntos." -ForegroundColor Green; exit 0 }
 
 Paso "3. Entrenar"
-Ejecutar entrenar.py --muestras $Puntos --vocabulario $Vocabulario --salida $Salida --epocas $Epocas --arquitectura $Arquitectura
+Ejecutar entrenar.py --muestras $Puntos --vocabulario $Vocabulario --salida $Salida --epocas $Epocas --arquitectura $Arquitectura --vigilar $Vigilar
 
 Paso "4. Evaluar con personas no vistas"
 Ejecutar evaluar.py --entrenamiento $Salida --muestras $Puntos
@@ -97,7 +114,7 @@ Ejecutar optimizar.py --entrenamiento $Salida --muestras $Puntos
 
 Paso "6. Exportar"
 $exportar = @("exportar.py", "--entrenamiento", $Salida, "--muestras", $Puntos, "--vocabulario", $Vocabulario,
-              "--nombre", "reconocedor-lsc70", "--version", $Version, "--datos", $Cita, "--cuantizacion", $Cuantizacion)
+              "--nombre", $Nombre, "--version", $Version, "--datos", $Cita, "--cuantizacion", $Cuantizacion)
 if (-not $SinInstalar) { $exportar += "--instalar" }
 Ejecutar @exportar
 if (-not $SinInstalar) {
