@@ -12,7 +12,7 @@ data class Componente(
 /**
  * Créditos y licencias que se muestran en «Acerca de» (fase 12).
  *
- * LSC70 se publica con licencia CC BY 4.0, que **exige** citar a los autores allí donde se
+ * LSC70 y LSC50 se publican con licencia CC BY 4.0, que **exige** citar a los autores allí donde se
  * distribuya un trabajo derivado (el modelo de señas va dentro de la app): por eso la cita está en
  * la propia app y no solo en el repositorio.
  */
@@ -28,6 +28,18 @@ object Creditos {
         uso = "Datos con los que se entrenó el reconocedor de señas",
         licencia = "CC BY 4.0",
         enlace = "https://data.mendeley.com/datasets/9ssyn8tff5/2",
+    )
+
+    const val CITA_LSC50 =
+        "LSC50: Colombian Sign Language Video and Inertial Measurement Dataset, Universidad de los Andes (2024). " +
+            "Figshare, doi:10.6084/m9.figshare.27383016. Licencia CC BY 4.0. " +
+            "El modelo de señas de esta app se entrenó con los puntos del cuerpo que incluye el conjunto; no se modificaron los datos originales."
+
+    val datosLsc50 = Componente(
+        nombre = "LSC50",
+        uso = "Datos de conversación con señantes nativos con los que se entrenó el reconocedor",
+        licencia = "CC BY 4.0",
+        enlace = "https://doi.org/10.6084/m9.figshare.27383016",
     )
 
     val componentes = listOf(

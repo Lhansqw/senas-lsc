@@ -8,8 +8,8 @@ import org.junit.Test
 import java.io.File
 
 /**
- * La app de iPhone y la del Apple Watch (ios/) repiten en Swift algunos textos de Kotlin: la cita
- * obligatoria de LSC70 y las claves de los mensajes del reloj. Esta prueba falla si se desincronizan.
+ * La app de iPhone y la del Apple Watch (ios/) repiten en Swift algunos textos de Kotlin: las citas
+ * obligatorias de LSC70 y LSC50 y las claves de los mensajes del reloj. Esta prueba falla si se desincronizan.
  */
 class CoherenciaIosTest {
 
@@ -21,10 +21,12 @@ class CoherenciaIosTest {
     }
 
     @Test
-    fun `la cita de LSC70 es la misma en iPhone`() {
+    fun `las citas de LSC70 y LSC50 son las mismas en iPhone`() {
         val acerca = swift("SenasLSC/Pantallas/PantallaAcerca.swift")
         assertTrue("La cita de LSC70 en Swift no coincide con Creditos.CITA_LSC70", "\"${Creditos.CITA_LSC70}\"" in acerca)
         assertTrue("\"${Creditos.datos.enlace}\"" in acerca)
+        assertTrue("La cita de LSC50 en Swift no coincide con Creditos.CITA_LSC50", "\"${Creditos.CITA_LSC50}\"" in acerca)
+        assertTrue("\"${Creditos.datosLsc50.enlace}\"" in acerca)
     }
 
     @Test

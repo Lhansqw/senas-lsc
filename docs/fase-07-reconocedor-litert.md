@@ -66,6 +66,7 @@ Implementadas en `recognizer/api/.../Caracteristicas.kt`; las pruebas fijan su o
 - La clase `etiqueta_sin_sena` (movimientos que no son señas) nunca se muestra como seña.
 - La entrada es **desconocida** si gana esa clase o si la energía `−T·log Σ exp(logit/T)` supera
   `umbral_energia`. Una entrada desconocida no se confirma nunca.
+- Las señas de `ocultas` tampoco se muestran: si gana una, la entrada es desconocida.
 - Después actúa el filtro temporal de la fase 3: 3 ventanas seguidas con confianza ≥ 0,70 y
   margen ≥ 0,15.
 
@@ -84,6 +85,7 @@ Ejemplo completo en [`docs/modelo.ejemplo.json`](modelo.ejemplo.json).
 | `salida.etiqueta_sin_sena` | Etiqueta de la clase «sin seña», o `null` |
 | `salida.temperatura` | Temperatura de calibración (> 0) |
 | `salida.umbral_energia` | Umbral de energía, o `null` para no usarlo |
+| `salida.ocultas` (opcional) | Señas que el modelo produce pero la app no muestra porque las reconoce mal; `exportar.py --ocultar` |
 | `vocabulario[]` | Por cada seña: `id`, `glosa`, `significado`, `tipo` (`letra`/`numero`/`palabra`), `interrogativa`, `variante` |
 | `datos_entrenamiento[]` | Conjuntos usados, con su licencia |
 | `metricas` | Métricas con personas no vistas (`exactitud`, `macro_f1`, `rechazo_desconocidas`); se muestran en la app |

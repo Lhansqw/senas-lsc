@@ -21,9 +21,9 @@ struct PantallaVocabulario: View {
                         .font(Tipografia.fuente(.callout, tamano: 16))
                         .foregroundStyle(Paleta.tenue)
                 } footer: {
-                    Text("Modelo \(contrato.nombre) \(contrato.version) · \(contrato.entradas.count) señas")
+                    Text("Modelo \(contrato.nombre) \(contrato.version) · \(contrato.visibles.count) señas")
                 }
-                ForEach(contrato.entradas.filter(coincide), id: \.id) { entrada in
+                ForEach(contrato.visibles.filter(coincide), id: \.id) { entrada in
                     VStack(alignment: .leading, spacing: 2) {
                         Text(entrada.glosa).font(Tipografia.fuente(.headline, tamano: 17, peso: .bold))
                         Text(entrada.significado).font(Tipografia.fuente(.subheadline, tamano: 15)).foregroundStyle(Paleta.tenue)

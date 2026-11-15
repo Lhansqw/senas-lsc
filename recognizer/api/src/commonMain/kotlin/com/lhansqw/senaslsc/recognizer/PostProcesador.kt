@@ -14,6 +14,7 @@ import kotlin.math.ln
  * - Entrada desconocida si gana la clase «sin seña» o si la **energía**
  *   (`−T · log Σ exp(logit / T)`) supera el umbral. Una energía alta indica que ninguna clase
  *   encaja bien: es la señal de que la persona hace algo que el modelo no conoce.
+ * - Las señas [ocultas] tampoco son candidatas, y si una gana la entrada es desconocida.
  */
 class PostProcesador(
     private val etiquetas: List<String>,
@@ -21,6 +22,7 @@ class PostProcesador(
     private val temperatura: Float = 1f,
     private val umbralEnergia: Float? = null,
     private val maximoCandidatas: Int = 3,
+    private val ocultas: Set<String> = emptySet(),
 ) {
     init {
         require(etiquetas.isNotEmpty()) { "No hay etiquetas" }
@@ -29,6 +31,7 @@ class PostProcesador(
     }
 
     private val indiceSinSena = etiquetaSinSena?.let { etiquetas.indexOf(it) }?.takeIf { it >= 0 }
+    private val indicesOcultos = etiquetas.indices.filter { etiquetas[it] in ocultas }.toSet()
 
     constructor(contrato: ContratoModelo, maximoCandidatas: Int = 3) : this(
         contrato.etiquetas,
@@ -36,6 +39,7 @@ class PostProcesador(
         contrato.temperatura,
         contrato.umbralEnergia,
         maximoCandidatas,
+        contrato.ocultas,
     )
 
     fun aplicar(logits: FloatArray, inicioMs: Long, finMs: Long): PrediccionSena {
@@ -50,10 +54,11 @@ class PostProcesador(
         val energia = (-temperatura * (maximo + ln(suma))).toFloat()
 
         val ganadora = probabilidades.indices.maxBy { probabilidades[it] }
-        val desconocida = ganadora == indiceSinSena || (umbralEnergia != null && energia > umbralEnergia)
+        val desconocida = ganadora == indiceSinSena || ganadora in indicesOcultos ||
+            (umbralEnergia != null && energia > umbralEnergia)
 
         val candidatas = probabilidades.indices
-            .filter { it != indiceSinSena }
+            .filter { it != indiceSinSena && it !in indicesOcultos }
             .sortedByDescending { probabilidades[it] }
             .take(maximoCandidatas)
             .map { Candidata(etiquetas[it], probabilidades[it].toFloat().coerceIn(0f, 1f)) }

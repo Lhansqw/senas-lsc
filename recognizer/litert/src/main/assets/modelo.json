@@ -109,7 +109,14 @@
     ],
     "etiqueta_sin_sena": null,
     "temperatura": 2.5928808461859294,
-    "umbral_energia": -14.740566631448443
+    "umbral_energia": -14.740566631448443,
+    "ocultas": [
+      "lsc.como_estas",
+      "lsc.mujer",
+      "lsc.nina",
+      "lsc.que",
+      "lsc.sentir"
+    ]
   },
   "vocabulario": [
     {

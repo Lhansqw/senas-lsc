@@ -79,7 +79,7 @@ fun PantallaAcerca(onVolver: () -> Unit) {
                 if (c == null) {
                     Text(stringResource(R.string.vocabulario_sin_modelo), style = MaterialTheme.typography.bodyMedium)
                 } else {
-                    Text(stringResource(R.string.vocabulario_modelo, c.nombre, c.version, c.entradas.size), fontWeight = FontWeight.SemiBold)
+                    Text(stringResource(R.string.vocabulario_modelo, c.nombre, c.version, c.visibles.size), fontWeight = FontWeight.SemiBold)
                     resumenMetricas(c.metricas)?.let {
                         Text(stringResource(R.string.acerca_metricas, it), style = MaterialTheme.typography.bodySmall)
                     }
@@ -89,6 +89,8 @@ fun PantallaAcerca(onVolver: () -> Unit) {
             Seccion(stringResource(R.string.acerca_datos)) {
                 Text(Creditos.CITA_LSC70, style = MaterialTheme.typography.bodyMedium)
                 Text(Creditos.datos.enlace, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+                Text(Creditos.CITA_LSC50, style = MaterialTheme.typography.bodyMedium)
+                Text(Creditos.datosLsc50.enlace, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
             }
             Seccion(stringResource(R.string.acerca_licencias)) {
                 Creditos.componentes.forEachIndexed { i, comp ->

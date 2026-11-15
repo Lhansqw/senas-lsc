@@ -6,7 +6,7 @@ import org.junit.Test
 
 class CreditosTest {
 
-    private val todos = Creditos.componentes + Creditos.datos
+    private val todos = Creditos.componentes + Creditos.datos + Creditos.datosLsc50
 
     @Test
     fun `todos los componentes tienen uso, licencia y enlace https`() {
@@ -24,6 +24,14 @@ class CreditosTest {
             assertTrue("falta «$it» en la cita", it in Creditos.CITA_LSC70)
         }
         assertEquals("CC BY 4.0", Creditos.datos.licencia)
+    }
+
+    @Test
+    fun `la cita de LSC50 cumple CC BY 4_0`() {
+        listOf("LSC50", "Universidad de los Andes", "10.6084/m9.figshare.27383016", "CC BY 4.0").forEach {
+            assertTrue("falta «$it» en la cita", it in Creditos.CITA_LSC50)
+        }
+        assertEquals("CC BY 4.0", Creditos.datosLsc50.licencia)
     }
 
     @Test
