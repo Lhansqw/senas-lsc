@@ -1,7 +1,7 @@
 import java.io.RandomAccessFile
 import java.net.URI
 
-// Extracción de puntos de referencia con MediaPipe Holistic Landmarker.
+// Extracción de puntos de referencia con MediaPipe Hand Landmarker + Pose Landmarker.
 plugins {
     alias(libs.plugins.android.library)
 }
@@ -22,6 +22,8 @@ android {
 
 dependencies {
     api(project(":vision:comun"))
+    // ConstructorFotograma: qué mano es cuál con las muñecas de la pose (lo comparte con iOS).
+    implementation(project(":shared"))
     implementation(libs.mediapipe.tasks.vision)
 
     testImplementation(libs.junit)
@@ -76,16 +78,25 @@ abstract class DescargarModelo : DefaultTask() {
     }
 }
 
-val descargarModeloHolistic = tasks.register<DescargarModelo>("descargarModeloHolistic") {
-    group = "senas"
-    description = "Descarga holistic_landmarker.task (MediaPipe) a src/main/assets si falta."
-    url.set("https://storage.googleapis.com/mediapipe-models/holistic_landmarker/holistic_landmarker/float16/1/holistic_landmarker.task")
-    destino.set(layout.projectDirectory.file("src/main/assets/holistic_landmarker.task"))
-    // Si el archivo ya existe no se vuelve a descargar.
-    outputs.upToDateWhen { destino.get().asFile.exists() }
-    onlyIf("el modelo aún no está en los assets") { !destino.get().asFile.exists() }
+// Los mismos modelos que la app de iPhone (ios/preparar.sh).
+val modelosMediaPipe = mapOf(
+    "Manos" to "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task",
+    "Pose" to "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task",
+)
+
+val descargasModelos = modelosMediaPipe.map { (nombre, direccion) ->
+    val archivo = direccion.substringAfterLast('/')
+    tasks.register<DescargarModelo>("descargarModelo$nombre") {
+        group = "senas"
+        description = "Descarga $archivo (MediaPipe) a src/main/assets si falta."
+        url.set(direccion)
+        destino.set(layout.projectDirectory.file("src/main/assets/$archivo"))
+        // Si el archivo ya existe no se vuelve a descargar.
+        outputs.upToDateWhen { destino.get().asFile.exists() }
+        onlyIf("el modelo aún no está en los assets") { !destino.get().asFile.exists() }
+    }
 }
 
 tasks.named("preBuild") {
-    dependsOn(descargarModeloHolistic)
+    dependsOn(descargasModelos)
 }

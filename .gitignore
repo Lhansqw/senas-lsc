@@ -26,8 +26,8 @@ training/outputs/
 training/modelos/
 .pytest_cache/
 *.litertlm
-# Modelo de MediaPipe: lo descarga Gradle (tarea descargarModeloHolistic)
-vision/landmarks/src/main/assets/holistic_landmarker.task
+# Modelos de MediaPipe: los descarga Gradle (tareas descargarModeloManos y descargarModeloPose)
+vision/landmarks/src/main/assets/*.task
 
 # Sistema
 .DS_Store

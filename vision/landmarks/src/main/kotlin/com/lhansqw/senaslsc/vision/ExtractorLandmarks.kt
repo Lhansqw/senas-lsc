@@ -9,10 +9,13 @@ import com.google.mediapipe.tasks.components.containers.NormalizedLandmark
 import com.google.mediapipe.tasks.core.BaseOptions
 import com.google.mediapipe.tasks.core.Delegate
 import com.google.mediapipe.tasks.vision.core.RunningMode
-import com.google.mediapipe.tasks.vision.holisticlandmarker.HolisticLandmarker
-import com.google.mediapipe.tasks.vision.holisticlandmarker.HolisticLandmarker.HolisticLandmarkerOptions
+import com.google.mediapipe.tasks.vision.handlandmarker.HandLandmarker
+import com.google.mediapipe.tasks.vision.handlandmarker.HandLandmarker.HandLandmarkerOptions
+import com.google.mediapipe.tasks.vision.poselandmarker.PoseLandmarker
+import com.google.mediapipe.tasks.vision.poselandmarker.PoseLandmarker.PoseLandmarkerOptions
 import com.lhansqw.senaslsc.core.model.LandmarkFrame
-import com.lhansqw.senaslsc.core.model.Punto3D
+import com.lhansqw.senaslsc.reconocimiento.ConstructorFotograma
+import com.lhansqw.senaslsc.reconocimiento.ManoDetectada
 
 /** Resultado de procesar un fotograma. */
 data class Extraccion(
@@ -22,17 +25,25 @@ data class Extraccion(
 )
 
 /**
- * Convierte imágenes en [LandmarkFrame] con MediaPipe Holistic Landmarker.
+ * Convierte imágenes en [LandmarkFrame] con MediaPipe Hand Landmarker (hasta 2 manos) y Pose
+ * Landmarker, igual que la app de iPhone.
+ *
+ * Antes se usaba Holistic Landmarker, que calcula también la cara en cada fotograma. El modelo de
+ * señas no la usa (`usa_rostro: false`) y en un teléfono de gama baja Holistic iba a ~4 FPS.
+ * [ConstructorFotograma] (común con iOS) decide qué mano es cuál con las muñecas de la pose.
+ * Medido con las personas de prueba de LSC70 (`training/paridad_manos_pose.py`): el modelo, entrenado
+ * con Holistic, acierta el 87,2 % con estos puntos frente al 90,0 % con Holistic.
  *
  * Usa el modo VIDEO, que es síncrono: cada llamada devuelve el resultado de su fotograma. El
  * control de carga lo hace CameraX (KEEP_ONLY_LATEST): si MediaPipe tarda, los fotogramas
  * intermedios se descartan antes de llegar aquí.
  *
- * Crear el modelo tarda (cientos de milisegundos), por eso se hace una vez y se reutiliza.
+ * Crear los modelos tarda (cientos de milisegundos), por eso se hace una vez y se reutilizan.
  * No es seguro para varios hilos: se usa siempre desde el hilo de análisis.
  */
 class ExtractorLandmarks private constructor(
-    private val landmarker: HolisticLandmarker,
+    private val manos: HandLandmarker,
+    private val pose: PoseLandmarker,
     /** Dónde corre MediaPipe; se muestra en el panel para comparar latencias. */
     val delegado: Delegate,
 ) : AutoCloseable {
@@ -53,28 +64,37 @@ class ExtractorLandmarks private constructor(
 
         val mpImage = BitmapImageBuilder(imagen).build()
         val inicio = SystemClock.elapsedRealtime()
-        val resultado = landmarker.detectForVideo(mpImage, timestampMs)
+        val resultadoManos = manos.detectForVideo(mpImage, timestampMs)
+        val resultadoPose = pose.detectForVideo(mpImage, timestampMs)
         val inferenciaMs = SystemClock.elapsedRealtime() - inicio
 
-        val frame = Subconjuntos.construirFrame(
+        val detectadas = resultadoManos.landmarks().mapIndexed { i, puntos ->
+            // MediaPipe etiqueta las manos suponiendo una imagen en espejo. Esta llega sin espejo,
+            // así que «Right» es la mano izquierda de la persona.
+            val etiqueta = resultadoManos.handednesses().getOrNull(i)?.firstOrNull()?.categoryName()
+            ManoDetectada(puntos.aCoordenadas(), izquierdaSegunEtiqueta = etiqueta == "Right")
+        }
+        val frame = ConstructorFotograma.construir(
             timestampMs = timestampMs,
-            manoIzquierda = resultado.leftHandLandmarks().aPuntos(),
-            manoDerecha = resultado.rightHandLandmarks().aPuntos(),
-            pose = resultado.poseLandmarks().aPuntos(),
-            rostro = resultado.faceLandmarks().aPuntos(),
+            manos = detectadas,
+            pose = resultadoPose.landmarks().firstOrNull()?.aCoordenadas(),
             relacionAspecto = imagen.width.toFloat() / imagen.height,
         )
         return Extraccion(frame, inferenciaMs)
     }
 
-    override fun close() = landmarker.close()
+    override fun close() {
+        manos.close()
+        pose.close()
+    }
 
     companion object {
-        /** Nombre del modelo en los assets; lo descarga la tarea de Gradle `descargarModeloHolistic`. */
-        const val MODELO = "holistic_landmarker.task"
+        /** Modelos en los assets; los descargan las tareas de Gradle `descargarModeloManos` y `descargarModeloPose`. */
+        const val MODELO_MANOS = "hand_landmarker.task"
+        const val MODELO_POSE = "pose_landmarker_full.task"
 
         /**
-         * Crea el extractor. Lanza una excepción si el modelo no está en los assets o no se puede
+         * Crea el extractor. Lanza una excepción si un modelo no está en los assets o no se puede
          * cargar; quien llama debe mostrar el error.
          *
          * @param delegado CPU por defecto; [crearPreferirGpu] prueba primero la GPU.
@@ -84,20 +104,35 @@ class ExtractorLandmarks private constructor(
             delegado: Delegate = Delegate.CPU,
             confianzaMinima: Float = 0.5f,
         ): ExtractorLandmarks {
-            val base = BaseOptions.builder()
-                .setModelAssetPath(MODELO)
-                .setDelegate(delegado)
-                .build()
-            val opciones = HolisticLandmarkerOptions.builder()
-                .setBaseOptions(base)
+            val app = context.applicationContext
+            fun base(modelo: String) = BaseOptions.builder().setModelAssetPath(modelo).setDelegate(delegado).build()
+
+            val opcionesManos = HandLandmarkerOptions.builder()
+                .setBaseOptions(base(MODELO_MANOS))
                 .setRunningMode(RunningMode.VIDEO)
-                .setMinFaceDetectionConfidence(confianzaMinima)
-                .setMinPoseDetectionConfidence(confianzaMinima)
-                .setMinHandLandmarksConfidence(confianzaMinima)
-                .setOutputFaceBlendshapes(false)
-                .setOutputPoseSegmentationMasks(false)
+                .setNumHands(2)
+                .setMinHandDetectionConfidence(confianzaMinima)
+                .setMinHandPresenceConfidence(confianzaMinima)
+                .setMinTrackingConfidence(confianzaMinima)
                 .build()
-            return ExtractorLandmarks(HolisticLandmarker.createFromOptions(context.applicationContext, opciones), delegado)
+            val opcionesPose = PoseLandmarkerOptions.builder()
+                .setBaseOptions(base(MODELO_POSE))
+                .setRunningMode(RunningMode.VIDEO)
+                .setNumPoses(1)
+                .setMinPoseDetectionConfidence(confianzaMinima)
+                .setMinPosePresenceConfidence(confianzaMinima)
+                .setMinTrackingConfidence(confianzaMinima)
+                .setOutputSegmentationMasks(false)
+                .build()
+
+            val manos = HandLandmarker.createFromOptions(app, opcionesManos)
+            val pose = try {
+                PoseLandmarker.createFromOptions(app, opcionesPose)
+            } catch (e: Exception) {
+                manos.close()
+                throw e
+            }
+            return ExtractorLandmarks(manos, pose, delegado)
         }
 
         /**
@@ -114,6 +149,15 @@ class ExtractorLandmarks private constructor(
 
         private const val TAG = "ExtractorLandmarks"
 
-        private fun List<NormalizedLandmark>.aPuntos(): List<Punto3D> = map { Punto3D(it.x(), it.y(), it.z()) }
+        /** Puntos seguidos como `x, y, z, x, y, z…`, el formato que espera [ConstructorFotograma]. */
+        private fun List<NormalizedLandmark>.aCoordenadas(): FloatArray {
+            val coordenadas = FloatArray(size * 3)
+            forEachIndexed { i, p ->
+                coordenadas[3 * i] = p.x()
+                coordenadas[3 * i + 1] = p.y()
+                coordenadas[3 * i + 2] = p.z()
+            }
+            return coordenadas
+        }
     }
 }

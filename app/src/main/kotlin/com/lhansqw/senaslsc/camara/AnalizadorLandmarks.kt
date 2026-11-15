@@ -125,7 +125,7 @@ class AnalizadorLandmarks(context: Context) : AnalizadorFotogramas, AutoCloseabl
         // Falta el asset, el archivo está dañado o el dispositivo no puede ejecutar el modelo.
         Log.e(TAG, "No se pudo cargar MediaPipe", e)
         _estadoModelo.value = EstadoModelo.Error(
-            "No se pudo cargar el modelo de MediaPipe (${ExtractorLandmarks.MODELO}). " +
+            "No se pudieron cargar los modelos de MediaPipe (${ExtractorLandmarks.MODELO_MANOS}, ${ExtractorLandmarks.MODELO_POSE}). " +
                 "Compila de nuevo para descargarlo. Detalle: ${e.message ?: e.javaClass.simpleName}",
         )
         null

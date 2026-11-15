@@ -16,6 +16,7 @@ import argparse
 import sys
 import time
 import urllib.request
+import zipfile
 from collections import Counter
 from pathlib import Path
 
@@ -48,7 +49,8 @@ def descargar_modelo(destino: Path) -> Path:
     temporal = destino.with_suffix(".descargando")
     print(f"Descargando {URL_MODELO}")
     urllib.request.urlretrieve(URL_MODELO, temporal)
-    if temporal.stat().st_size < 1_000_000 or temporal.read_bytes()[:2] != b"PK":
+    # No basta con mirar si empieza por «PK»: los .task de MediaPipe llevan relleno al principio.
+    if temporal.stat().st_size < 1_000_000 or not zipfile.is_zipfile(temporal):
         temporal.unlink()
         raise RuntimeError("El archivo descargado no es un modelo .task válido")
     temporal.replace(destino)
