@@ -4,7 +4,7 @@ Diario de trabajo para retomar donde se dejó. Lo más reciente, arriba.
 
 ## Estado al cerrar el 15/11/2026
 
-**Rama actual:** `rendimiento/mediapipe-manos-cuerpo`, solo en local (sin push ni PR). Tiene dos
+**Rama actual:** `rendimiento/mediapipe-manos-cuerpo`, subida a GitHub (sin PR). Tiene dos
 commits firmados sobre `main`:
 
 1. `e0c9b08` fix(build): conservar Flogger con R8 para que MediaPipe arranque. Comprobado en el teléfono.
