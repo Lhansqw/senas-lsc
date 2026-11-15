@@ -17,6 +17,11 @@
 -keep class * implements com.google.mediapipe.framework.PacketWithHeaderCallback { *; }
 -dontwarn com.google.mediapipe.**
 
+# MediaPipe registra con Flogger, que busca en la pila a quien lo llama por el nombre de sus propias
+# clases. Si R8 las renombra, el grafo no arranca al abrir la cámara: «no caller found on the stack».
+-keep class com.google.common.flogger.** { *; }
+-dontwarn com.google.common.flogger.**
+
 # MediaPipe lee sus opciones como protobuf ligero, que usa reflexión sobre los campos.
 -keep class * extends com.google.protobuf.GeneratedMessageLite { *; }
 -dontwarn com.google.protobuf.**
