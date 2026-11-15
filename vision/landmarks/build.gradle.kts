@@ -1,3 +1,4 @@
+import java.io.RandomAccessFile
 import java.net.URI
 
 // Extracción de puntos de referencia con MediaPipe Holistic Landmarker.
@@ -48,8 +49,7 @@ abstract class DescargarModelo : DefaultTask() {
         URI(url.get()).toURL().openStream().use { entrada ->
             temporal.outputStream().use { salida -> entrada.copyTo(salida) }
         }
-        val cabecera = temporal.inputStream().use { it.readNBytes(2) }
-        if (temporal.length() < 1_000_000 || !cabecera.contentEquals(byteArrayOf(0x50, 0x4B))) {
+        if (temporal.length() < 1_000_000 || !esZip(temporal)) {
             temporal.delete()
             throw GradleException("El archivo descargado no es un modelo .task válido: ${url.get()}")
         }
@@ -58,6 +58,21 @@ abstract class DescargarModelo : DefaultTask() {
             throw GradleException("No se pudo guardar el modelo en ${archivo.absolutePath}")
         }
         logger.lifecycle("Modelo guardado en ${archivo.absolutePath} (${archivo.length() / 1024} KB)")
+    }
+
+    /**
+     * Busca el final del directorio central del ZIP (`PK\u0005\u0006`) en los últimos 64 KB.
+     * No basta con mirar el principio: los .task de MediaPipe llevan relleno antes del primer `PK`.
+     */
+    private fun esZip(archivo: File): Boolean {
+        val cola = minOf(archivo.length(), 65_557L).toInt()
+        val bytes = RandomAccessFile(archivo, "r").use { f ->
+            f.seek(archivo.length() - cola)
+            ByteArray(cola).also(f::readFully)
+        }
+        return (0..cola - 4).any {
+            bytes[it] == 0x50.toByte() && bytes[it + 1] == 0x4B.toByte() && bytes[it + 2] == 0x05.toByte() && bytes[it + 3] == 0x06.toByte()
+        }
     }
 }
 
