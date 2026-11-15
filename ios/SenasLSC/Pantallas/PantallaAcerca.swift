@@ -1,11 +1,13 @@
 import SwiftUI
 
-/// Privacidad, límites y licencias. La cita de LSC70 es obligatoria (CC BY 4.0) y debe ser igual
-/// que `Creditos.CITA_LSC70` de Android; lo comprueba `CoherenciaIosTest` en app/src/test.
+/// Privacidad, límites y licencias. Las citas de LSC70 y LSC50 son obligatorias (CC BY 4.0) y deben
+/// ser iguales que `Creditos.CITA_LSC70` y `Creditos.CITA_LSC50` de Android; lo comprueba `CoherenciaIosTest` en app/src/test.
 struct PantallaAcerca: View {
     // En una sola línea para que la prueba pueda compararla tal cual.
     static let citaLSC70 = "LSC70: conjunto de datos de Lengua de Señas Colombiana, Universidad del Cauca (2024). Mendeley Data, doi:10.17632/9ssyn8tff5.2. Licencia CC BY 4.0. El modelo de señas de esta app se entrenó con estos datos; no se modificaron las imágenes originales."
     static let enlaceLSC70 = "https://data.mendeley.com/datasets/9ssyn8tff5/2"
+    static let citaLSC50 = "LSC50: Colombian Sign Language Video and Inertial Measurement Dataset, Universidad de los Andes (2024). Figshare, doi:10.6084/m9.figshare.27383016. Licencia CC BY 4.0. El modelo de señas de esta app se entrenó con los puntos del cuerpo que incluye el conjunto; no se modificaron los datos originales."
+    static let enlaceLSC50 = "https://doi.org/10.6084/m9.figshare.27383016"
 
     private let componentes: [(nombre: String, uso: String, licencia: String)] = [
         ("MediaPipe Hand y Pose Landmarker", "Detectar manos y cuerpo en la cámara", "Apache 2.0"),
@@ -25,6 +27,9 @@ struct PantallaAcerca: View {
             Section("Datos de entrenamiento") {
                 Text(Self.citaLSC70)
                 Link(Self.enlaceLSC70, destination: URL(string: Self.enlaceLSC70)!)
+                    .font(Tipografia.fuente(.footnote, tamano: 14))
+                Text(Self.citaLSC50)
+                Link(Self.enlaceLSC50, destination: URL(string: Self.enlaceLSC50)!)
                     .font(Tipografia.fuente(.footnote, tamano: 14))
             }
             Section("Software de terceros") {

@@ -89,6 +89,8 @@ fun PantallaAcerca(onVolver: () -> Unit) {
             Seccion(stringResource(R.string.acerca_datos)) {
                 Text(Creditos.CITA_LSC70, style = MaterialTheme.typography.bodyMedium)
                 Text(Creditos.datos.enlace, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+                Text(Creditos.CITA_LSC50, style = MaterialTheme.typography.bodyMedium)
+                Text(Creditos.datosLsc50.enlace, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
             }
             Seccion(stringResource(R.string.acerca_licencias)) {
                 Creditos.componentes.forEachIndexed { i, comp ->
