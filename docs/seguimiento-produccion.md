@@ -4,13 +4,11 @@ Diario de trabajo para retomar donde se dejó. Lo más reciente, arriba.
 
 ## Estado al cerrar el 15/11/2026
 
-**Rama actual:** `rendimiento/mediapipe-manos-cuerpo`, **con cambios sin commit** (falta escribir la
-contraseña de GPG para firmar). Hay que hacer dos commits:
+**Rama actual:** `rendimiento/mediapipe-manos-cuerpo`, solo en local (sin push ni PR). Tiene dos
+commits firmados sobre `main`:
 
-1. `fix(build): conservar Flogger con R8 para que MediaPipe arranque`. Solo `app/proguard-rules.pro`.
-2. `perf(vision): MediaPipe Hand + Pose en vez de Holistic`. Incluye `ExtractorLandmarks.kt`,
-   `vision/landmarks/build.gradle.kts`, `.gitignore`, `AnalizadorLandmarks.kt`,
-   `training/extraer.py`, `training/paridad_manos_pose.py` y este archivo.
+1. `e0c9b08` fix(build): conservar Flogger con R8 para que MediaPipe arranque. Comprobado en el teléfono.
+2. `a35e861` perf(vision): MediaPipe Hand + Pose en vez de Holistic. **Todavía sin medir en el teléfono.**
 
 **Esperando:** medir en el teléfono el APK con Hand + Pose. Ya está copiado en Descargas del
 teléfono (SHA-256 `ed2af8bf…a05a`), pero falta instalarlo y medir.
@@ -21,9 +19,9 @@ teléfono (SHA-256 `ed2af8bf…a05a`), pero falta instalarlo y medir.
    señar 20 s y anotar los FPS, la latencia de Análisis p50/p95 y los ms de MediaPipe por fotograma.
    - **Antes, con Holistic:** 4,1 FPS · Análisis p50 214 / p95 281 ms · MediaPipe 181 ms por fotograma
      · modelo de señas p50 5,3 / p95 23,6 ms.
-   - Si mejora y reconoce mejor → hacer los commits, abrir el PR y fusionarlo.
-   - Si no compensa → volver a Holistic (`git checkout` de esos archivos) y buscar velocidad por
-     otro lado (menos resolución de análisis, preparación de la imagen: ~33 ms por fotograma).
+   - Si mejora y reconoce mejor → push de la rama, abrir el PR y fusionarlo.
+   - Si no compensa → `git revert a35e861` (vuelve a Holistic y mantiene el arreglo de R8) y buscar
+     velocidad por otro lado (menos resolución de análisis, preparación de la imagen: ~33 ms por fotograma).
 2. Si sigue lento al confirmar señas: ajustar `ConfiguracionFiltro` (`sequence/.../FiltroTemporal.kt`).
    Ahora pide 3 ventanas seguidas con confianza ≥ 0,70.
 3. Más adelante: reentrenar con puntos de Hand + Pose para recuperar los 2,8 puntos de exactitud
@@ -43,7 +41,7 @@ teléfono (SHA-256 `ed2af8bf…a05a`), pero falta instalarlo y medir.
   `AC:7D:6C:75:63:14:62:D9:8A:1B:86:6C:29:FA:AE:D7:0D:50:05:49:07:78:6F:24:FB:6E:49:8A:81:A1:00:7E`.
 - **R8 rompía la cámara:** MediaPipe usa Flogger, que busca sus clases por nombre en la pila
   (`no caller found on the stack for: o51`). Se arregló con `-keep class com.google.common.flogger.**`.
-  Comprobado en el teléfono; falta el commit (punto 1 de arriba).
+  Comprobado en el teléfono (commit `e0c9b08`).
 - **Paridad Holistic frente a Hand + Pose** (469 muestras de prueba de LSC70, modelo 0.3.0):
   Holistic 90,0 % · Hand + Pose 87,2 % · eligen la misma seña en el 90,8 %. Se decidió seguir con
   Hand + Pose por velocidad.
