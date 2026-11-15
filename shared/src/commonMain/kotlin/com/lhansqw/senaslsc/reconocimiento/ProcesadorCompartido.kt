@@ -82,7 +82,7 @@ class ProcesadorCompartido private constructor(
             val modelo = EstadoModeloSenas.Listo(
                 nombre = contrato.nombre,
                 version = contrato.version,
-                numeroSenas = contrato.entradas.size,
+                numeroSenas = contrato.visibles.size,
                 metricas = contrato.metricas,
                 glosas = contrato.entradas.associate { it.id to it.glosa },
             )

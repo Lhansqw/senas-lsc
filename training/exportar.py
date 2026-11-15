@@ -56,6 +56,8 @@ def main(argv=None) -> int:
                     help="Reducir el tamaño de los pesos (medir antes con optimizar.py)")
     ap.add_argument("--datos", nargs="+", default=None,
                     help="Cómo citar los datos de entrenamiento en modelo.json (por defecto, el nombre de cada fuente)")
+    ap.add_argument("--ocultar", nargs="+", default=None, metavar="ID",
+                    help="Señas que la app no muestra por reconocerse mal (p. ej. F1 0 %% en la ficha)")
     args = ap.parse_args(argv)
 
     import keras
@@ -94,6 +96,7 @@ def main(argv=None) -> int:
         datos_entrenamiento=args.datos or conf["fuentes"],
         metricas=metricas_para_contrato(metricas),
         usa_rostro=conf.get("usa_rostro", True),
+        ocultas=args.ocultar,
     )
     ruta_tflite = Mo.guardar_tflite(contenido, args.entrenamiento / "reconocedor_lsc.tflite")
     ruta_json = Co.guardar(contrato, args.entrenamiento / "modelo.json")

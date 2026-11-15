@@ -15,7 +15,7 @@ _ID = re.compile(r"^[a-z]{2,8}\.[a-z0-9_]+$")
 
 def construir(nombre: str, version: str, vocabulario: Vocabulario, etiquetas: list[str], fotogramas: int, duracion_ms: int,
               temperatura: float, umbral_energia: float | None, datos_entrenamiento: list[str], metricas: dict[str, float],
-              usa_rostro: bool = True) -> dict:
+              usa_rostro: bool = True, ocultas: list[str] | None = None) -> dict:
     entradas = [vocabulario.por_id(e) for e in etiquetas if e != ETIQUETA_SIN_SENA]
     if any(e is None for e in entradas):
         faltan = [e for e in etiquetas if e != ETIQUETA_SIN_SENA and vocabulario.por_id(e) is None]
@@ -38,6 +38,9 @@ def construir(nombre: str, version: str, vocabulario: Vocabulario, etiquetas: li
         "datos_entrenamiento": datos_entrenamiento,
         "metricas": {k: float(v) for k, v in metricas.items()},
     }
+    # Señas que reconoce mal: la app no las muestra y las trata como desconocidas.
+    if ocultas:
+        contrato["salida"]["ocultas"] = sorted(set(ocultas))
     errores = validar(contrato)
     if errores:
         raise ValueError("modelo.json no sería válido: " + "; ".join(errores))
@@ -70,6 +73,11 @@ def validar(c: dict) -> list[str]:
     ids = [v["id"] for v in c["vocabulario"]]
     if set(senas) != set(ids):
         e.append("las etiquetas y el vocabulario no coinciden")
+    ocultas = set(sal.get("ocultas", []))
+    if ocultas - set(senas):
+        e.append(f"señas ocultas que el modelo no produce: {sorted(ocultas - set(senas))}")
+    if senas and set(senas) <= ocultas:
+        e.append("todas las señas están ocultas")
     if any(not _ID.match(i) or not i.startswith(c["lengua"] + ".") for i in ids):
         e.append("identificadores de vocabulario no válidos")
     return e

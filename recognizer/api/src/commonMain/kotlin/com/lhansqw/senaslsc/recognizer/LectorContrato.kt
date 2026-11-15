@@ -69,6 +69,7 @@ object LectorContrato {
             etiquetaSinSena = salida.textoOpcional("etiqueta_sin_sena", "salida.etiqueta_sin_sena"),
             temperatura = salida.numero("temperatura", "salida.temperatura").toFloat(),
             umbralEnergia = salida.numeroOpcional("umbral_energia", "salida.umbral_energia")?.toFloat(),
+            ocultas = if ("ocultas" in salida.campos) salida.listaTextos("ocultas", "salida.ocultas").toSet() else emptySet(),
             entradas = r.lista("vocabulario").mapIndexed { i, e -> entrada(e.comoObjeto("vocabulario[$i]"), "vocabulario[$i]") },
             datosEntrenamiento = r.listaTextos("datos_entrenamiento"),
             metricas = r.objetoOpcional("metricas")?.campos?.mapValues { (clave, valor) ->

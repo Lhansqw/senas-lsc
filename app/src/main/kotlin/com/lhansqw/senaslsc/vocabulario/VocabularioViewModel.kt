@@ -37,7 +37,7 @@ class VocabularioViewModel(application: Application) : AndroidViewModel(applicat
     val tipo: StateFlow<TipoSena?> = _tipo.asStateFlow()
 
     val grupos: StateFlow<List<GrupoVocabulario>> = combine(_estado, _consulta, _tipo) { e, q, t ->
-        if (e is EstadoVocabulario.Listo) filtrarVocabulario(e.contrato.entradas, q, t) else emptyList()
+        if (e is EstadoVocabulario.Listo) filtrarVocabulario(e.contrato.visibles, q, t) else emptyList()
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     init {

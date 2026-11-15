@@ -11,7 +11,7 @@
 | `app/build.gradle.kts` | Firma desde `keystore.properties`; versión desde `gradle.properties`; `-Psenas.r8=false` para compilar sin R8 |
 | `scripts/crear_firma.ps1` | Crea la clave de firma fuera del repositorio (una sola vez) |
 | `scripts/version_instalable.ps1` | Pruebas → APK y AAB firmados → verifica la firma → `dist\` con SHA-256 |
-| Pantalla «Acerca de» | Qué hace y qué no, privacidad, modelo instalado, cita de LSC70 (obligatoria por CC BY 4.0) y licencias |
+| Pantalla «Acerca de» | Qué hace y qué no, privacidad, modelo instalado, citas de LSC70 y LSC50 (obligatorias por CC BY 4.0) y licencias |
 | [`docs/ficha-modelo.md`](ficha-modelo.md) | Ficha del modelo con las cifras medidas; la regenera `training/ficha.py` |
 
 ## Pasos
@@ -52,8 +52,8 @@ o copiando el APK y abriéndolo).
 | 6 | «Interpretar» | Propuesta de frase editable; copiar y compartir funcionan |
 | 7 | Modo avión y repetir 3–6 | Funciona igual (todo es local) |
 | 8 | Girar el teléfono | No se pierde la cámara ni la frase |
-| 9 | «Vocabulario compatible» | 42 señas, buscador y filtros |
-| 10 | «Acerca de» | Modelo 0.1.0, cita de LSC70 y licencias |
+| 9 | «Vocabulario compatible» | 86 señas (sin CÓMO ESTÁS, MUJER, NIÑA, QUÉ ni SENTIR), buscador y filtros |
+| 10 | «Acerca de» | Modelo 0.3.0, citas de LSC70 y LSC50 y licencias |
 | 11 | Historial: activarlo, guardar una frase, cerrar y abrir la app | La frase sigue; «Borrar todo el historial» la elimina |
 | 12 | IA local (si el teléfono es compatible) | Descarga solo al pedirla; propuestas marcadas como IA |
 | 13 | TalkBack activado en inicio y cámara | Todos los botones se anuncian con su nombre |

@@ -60,3 +60,13 @@ def test_guardar_es_json_utf8(tmp_path):
     texto = ruta.read_text(encoding="utf-8")
     assert "CÓMO" in texto
     assert json.loads(texto)["nombre"] == "prueba"
+
+
+def test_senas_ocultas():
+    c = _contrato(ocultas=["lsc.hola"])
+    assert c["salida"]["ocultas"] == ["lsc.hola"]
+    assert "ocultas" not in _contrato()["salida"]
+    with pytest.raises(ValueError):
+        _contrato(ocultas=["lsc.a"])  # el modelo no la produce
+    with pytest.raises(ValueError):
+        _contrato(ocultas=["lsc.hola", "lsc.como"])  # no quedaría ninguna seña

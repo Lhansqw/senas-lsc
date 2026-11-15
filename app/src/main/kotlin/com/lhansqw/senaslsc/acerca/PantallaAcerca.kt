@@ -79,7 +79,7 @@ fun PantallaAcerca(onVolver: () -> Unit) {
                 if (c == null) {
                     Text(stringResource(R.string.vocabulario_sin_modelo), style = MaterialTheme.typography.bodyMedium)
                 } else {
-                    Text(stringResource(R.string.vocabulario_modelo, c.nombre, c.version, c.entradas.size), fontWeight = FontWeight.SemiBold)
+                    Text(stringResource(R.string.vocabulario_modelo, c.nombre, c.version, c.visibles.size), fontWeight = FontWeight.SemiBold)
                     resumenMetricas(c.metricas)?.let {
                         Text(stringResource(R.string.acerca_metricas, it), style = MaterialTheme.typography.bodySmall)
                     }

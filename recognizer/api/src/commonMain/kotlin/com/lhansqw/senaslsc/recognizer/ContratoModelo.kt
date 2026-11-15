@@ -42,7 +42,15 @@ data class ContratoModelo(
      * esas características aunque MediaPipe detecte la cara. Si falta en `modelo.json`, `true`.
      */
     val usaRostro: Boolean = true,
+    /**
+     * Señas que el modelo produce pero la app no muestra porque reconoce mal (F1 bajo con personas
+     * no vistas). Si una de ellas gana, la entrada se trata como desconocida.
+     */
+    val ocultas: Set<String> = emptySet(),
 ) {
+
+    /** Señas que la app publica: [entradas] sin las [ocultas]. */
+    val visibles: List<EntradaVocabulario> get() = entradas.filter { it.id !in ocultas }
 
     /** Lista de problemas que impiden usar el modelo; vacía si es compatible. */
     fun validar(): List<String> = buildList {
@@ -72,12 +80,15 @@ data class ContratoModelo(
         if (sinEntrada.isNotEmpty()) add("Etiquetas sin entrada de vocabulario: $sinEntrada.")
         val sobrantes = ids - senas.toSet()
         if (sobrantes.isNotEmpty()) add("Entradas de vocabulario que el modelo no produce: ${sobrantes.sorted()}.")
+        val ocultasAjenas = ocultas - senas.toSet()
+        if (ocultasAjenas.isNotEmpty()) add("Señas ocultas que el modelo no produce: ${ocultasAjenas.sorted()}.")
+        if (senas.isNotEmpty() && senas.all { it in ocultas }) add("Todas las señas están ocultas.")
         val otraLengua = entradas.filter { it.lengua != lengua }.map { it.id }
         if (otraLengua.isNotEmpty()) add("Entradas de otra lengua: $otraLengua.")
     }
 
     /** Vocabulario publicado en la app. Solo se debe llamar si [validar] no devolvió problemas. */
-    fun vocabulario(): Vocabulario = Vocabulario(lengua, entradas)
+    fun vocabulario(): Vocabulario = Vocabulario(lengua, visibles)
 
     fun ficha(): FichaModelo = FichaModelo(nombre, version, lengua, datosEntrenamiento)
 

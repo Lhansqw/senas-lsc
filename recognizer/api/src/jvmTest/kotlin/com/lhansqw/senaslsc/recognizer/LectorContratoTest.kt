@@ -98,4 +98,26 @@ class LectorContratoTest {
     fun `un id de vocabulario mal formado se informa sin fallar`() {
         assertTrue(errores(ejemplo.replace("\"id\": \"lsc.hola\"", "\"id\": \"HOLA\"")).isNotEmpty())
     }
+
+    @Test
+    fun `las senas ocultas no forman parte del vocabulario publicado`() {
+        val conOcultas = ejemplo.replace("\"umbral_energia\": -2.5", "\"umbral_energia\": -2.5, \"ocultas\": [\"lsc.como\"]")
+        val c = (LectorContrato.leer(conOcultas) as ResultadoContrato.Valido).contrato
+        assertEquals(setOf("lsc.como"), c.ocultas)
+        assertEquals(3, c.entradas.size)
+        assertEquals(listOf("lsc.hola", "lsc.gracias"), c.visibles.map { it.id })
+        assertTrue("lsc.como" !in c.vocabulario())
+        assertTrue((LectorContrato.leer(ejemplo) as ResultadoContrato.Valido).contrato.ocultas.isEmpty())
+    }
+
+    @Test
+    fun `rechaza senas ocultas que el modelo no produce o que lo ocultan todo`() {
+        val ajena = ejemplo.replace("\"umbral_energia\": -2.5", "\"umbral_energia\": -2.5, \"ocultas\": [\"lsc.adios\"]")
+        assertTrue(errores(ajena).any { "lsc.adios" in it })
+        val todas = ejemplo.replace(
+            "\"umbral_energia\": -2.5",
+            "\"umbral_energia\": -2.5, \"ocultas\": [\"lsc.hola\", \"lsc.gracias\", \"lsc.como\"]",
+        )
+        assertTrue(errores(todas).any { "ocultas" in it })
+    }
 }

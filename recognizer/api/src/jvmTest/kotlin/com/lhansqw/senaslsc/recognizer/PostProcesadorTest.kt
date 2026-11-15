@@ -73,4 +73,15 @@ class PostProcesadorTest {
             }
         }
     }
+
+    @Test
+    fun `una sena oculta no es candidata y si gana la entrada es desconocida`() {
+        val pp = PostProcesador(etiquetas, "sin_sena", ocultas = setOf("lsc.hola"))
+
+        val gana = pp.aplicar(floatArrayOf(0f, 5f, 1f, 0f), 0, 1)
+        assertTrue(gana.desconocida)
+        assertEquals(listOf("lsc.gracias", "lsc.adios"), gana.candidatas.map { it.id })
+
+        assertFalse(pp.aplicar(floatArrayOf(0f, 1f, 5f, 0f), 0, 1).desconocida)
+    }
 }

@@ -112,7 +112,7 @@ private fun FichaModelo(listo: EstadoVocabulario.Listo) {
     val c = listo.contrato
     Card(Modifier.fillMaxWidth()) {
         Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(stringResource(R.string.vocabulario_modelo, c.nombre, c.version, c.entradas.size), fontWeight = FontWeight.SemiBold)
+            Text(stringResource(R.string.vocabulario_modelo, c.nombre, c.version, c.visibles.size), fontWeight = FontWeight.SemiBold)
             resumenMetricas(c.metricas)?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
             if (c.datosEntrenamiento.isNotEmpty()) {
                 Text(
