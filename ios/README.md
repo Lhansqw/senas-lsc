@@ -55,6 +55,9 @@ exactitud en iPhone:
 
 ## Pendiente para versiones posteriores
 
-- Historial cifrado (Keychain), modelo de lenguaje local y Gemini.
+- Historial cifrado: `RepositorioHistorial` ya está en SenasShared; falta implementar en Swift
+  `Cifrador` (CryptoKit con una clave del Keychain) y `Almacen` (archivo en Application Support).
+- Modelo de lenguaje local y Gemini. `ProtocoloGemini` (petición y lectura de la respuesta) ya es
+  común; falta la conexión HTTP en iOS (URLSession o Ktor con el motor darwin).
 - Modo grabación de muestras.
 - Complicación del reloj con la última frase.

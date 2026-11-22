@@ -14,6 +14,7 @@ mediapipe = "1.1.1"           # tasks-vision; misma versión que el ejemplo ofic
 litert = "2.3.0"              # LiteRT (CompiledModel); versión de la documentación oficial
 litertlm = "0.18.1"           # LiteRT-LM; requiere Kotlin 2.3 o superior (metadatos 2.4.0)
 coroutines = "1.11.0"
+kotlinx-datetime = "0.8.0"    # fechas y zonas horarias en Kotlin Multiplatform (historial)
 junit = "4.13.2"
 
 [libraries]
@@ -37,6 +38,7 @@ litert = { group = "com.google.ai.edge.litert", name = "litert", version.ref = "
 
 litertlm-android = { group = "com.google.ai.edge.litertlm", name = "litertlm-android", version.ref = "litertlm" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
 
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
 compose-ui = { group = "androidx.compose.ui", name = "ui" }

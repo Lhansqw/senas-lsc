@@ -16,13 +16,15 @@ kotlin {
         target.binaries.framework {
             baseName = "SenasShared"
             isStatic = true
-            // Swift ve directamente los tipos de estos módulos (LandmarkFrame, PropuestaFrase…).
+            // Swift ve directamente los tipos de estos módulos (LandmarkFrame, PropuestaFrase,
+            // RepositorioHistorial…). Cifrador y Almacen del historial se implementan en Swift.
             export(project(":core:model"))
             export(project(":recognizer:api"))
             export(project(":sequence"))
             export(project(":interpreter:api"))
             export(project(":interpreter:rules"))
             export(project(":vision:comun"))
+            export(project(":data:history"))
             xcf.add(this)
         }
     }
@@ -34,5 +36,7 @@ kotlin {
         api(project(":interpreter:api"))
         api(project(":interpreter:rules"))
         api(project(":vision:comun"))
+        api(project(":interpreter:remoto"))
+        api(project(":data:history"))
     }
 }
