@@ -40,7 +40,7 @@ subprojects {
         }
     }
 
-    // Módulos Kotlin Multiplatform: lógica compartida con la app de iPhone (y Apple Watch).
+    // Módulos Kotlin Multiplatform: lógica compartida con la app de iPhone.
     // Android y las pruebas JUnit usan el target jvm(). Los de iOS solo se compilan del todo
     // en una Mac; en Windows, Gradle los omite.
     plugins.withId("org.jetbrains.kotlin.multiplatform") {

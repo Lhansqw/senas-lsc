@@ -1,6 +1,6 @@
-# Compila la app de iPhone y la del Apple Watch en macOS, sin firmar.
+# Compila la app de iPhone en macOS, sin firmar.
 # Sirve para comprobar el código Swift y el XCFramework de Kotlin sin tener una Mac.
-name: iOS y Apple Watch
+name: iOS
 
 on:
   workflow_dispatch:

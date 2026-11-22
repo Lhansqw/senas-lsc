@@ -22,9 +22,6 @@ class ProcesadorCompartido private constructor(
 ) {
     val estado: EstadoReconocimiento get() = coordinador.estado
 
-    /** Resumen del estado para el reloj (Apple Watch o Wear OS). */
-    val resumenReloj: ResumenReloj get() = ResumenReloj.de(coordinador.estado)
-
     /**
      * Procesa un fotograma ya convertido con [ConstructorFotograma] y devuelve el estado nuevo.
      * En Swift lanza un error si el modelo falla, en vez de cerrar la app.

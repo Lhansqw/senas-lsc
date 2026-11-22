@@ -1,5 +1,5 @@
 #!/bin/sh
-# Prepara el proyecto de iPhone y Apple Watch en una Mac.
+# Prepara el proyecto de iPhone en una Mac.
 # Requisitos: Xcode 16+, JDK 17+, Homebrew (para xcodegen) y CocoaPods.
 #   brew install xcodegen cocoapods
 set -eu
