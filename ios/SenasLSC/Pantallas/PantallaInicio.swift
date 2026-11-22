@@ -18,15 +18,12 @@ struct PantallaInicio: View {
                 .padding(.vertical, 8)
             }
             Section {
-                NavigationLink("Abrir cámara") { PantallaCamara() }
-                NavigationLink("Vocabulario compatible") { PantallaVocabulario() }
-                NavigationLink("Acerca de, privacidad y licencias") { PantallaAcerca() }
-            }
-            .font(Tipografia.fuente(.body, tamano: 17, peso: .semibold))
-            Section {
-                Label("Si tienes un Apple Watch, abre Señas LSC en el reloj para ver la frase en la muñeca.", systemImage: "applewatch")
-                    .font(Tipografia.fuente(.footnote, tamano: 14))
-                    .foregroundStyle(Paleta.tenue)
+                Group {
+                    NavigationLink("Abrir cámara") { PantallaCamara() }
+                    NavigationLink("Vocabulario compatible") { PantallaVocabulario() }
+                    NavigationLink("Acerca de, privacidad y licencias") { PantallaAcerca() }
+                }
+                .font(Tipografia.fuente(.body, tamano: 17, peso: .semibold))
             } footer: {
                 Text("Versión \(version)")
             }

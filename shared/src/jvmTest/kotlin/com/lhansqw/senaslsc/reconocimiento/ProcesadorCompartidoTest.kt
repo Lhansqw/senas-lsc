@@ -3,6 +3,7 @@ package com.lhansqw.senaslsc.reconocimiento
 import com.lhansqw.senaslsc.recognizer.Caracteristicas
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -47,10 +48,9 @@ class ProcesadorCompartidoTest {
     private val pose = FloatArray(99) { i -> if (i % 3 == 2) 0f else 0.4f + (i % 7) * 0.03f }
 
     @Test
-    fun `sin modelo el reloj muestra no disponible`() {
+    fun `sin modelo no reconoce senas`() {
         val p = ProcesadorCompartido.crear(null, null)
         assertEquals(EstadoModeloSenas.SinModelo, p.estado.modelo)
-        assertEquals(EstadoReloj.NO_DISPONIBLE, p.resumenReloj.estado)
         p.agregarFotograma(ConstructorFotograma.construir(0, listOf(manoDerecha), pose, 1f))
         assertTrue(p.estado.senas.isEmpty())
     }
@@ -73,11 +73,10 @@ class ProcesadorCompartidoTest {
     }
 
     @Test
-    fun `reconoce una sena, cierra la frase con la pausa y la resume para el reloj`() {
+    fun `reconoce una sena y cierra la frase con la pausa`() {
         val inferencia = InferenciaHola()
         val p = ProcesadorCompartido.crear(modeloJson, inferencia)
         assertTrue(p.estado.modelo is EstadoModeloSenas.Listo)
-        assertEquals(EstadoReloj.RECONOCIENDO, p.resumenReloj.estado)
 
         var t = 1_000L
         repeat(90) { // 3 s haciendo la seña a 30 FPS
@@ -86,22 +85,18 @@ class ProcesadorCompartidoTest {
         }
         assertTrue(inferencia.llamadas > 1)
         assertEquals("HOLA", p.estado.senas.firstOrNull()?.entrada?.glosa)
-        assertEquals("HOLA", p.resumenReloj.ultimaSena)
 
         repeat(120) { // 4 s con las manos bajadas
             p.agregarFotograma(ConstructorFotograma.construir(t, emptyList(), pose, 0.75f))
             t += 33
         }
-        val resumen = p.resumenReloj
         assertTrue(p.estado.secuenciaCerrada)
-        assertEquals(EstadoReloj.FRASE_LISTA, resumen.estado)
-        assertEquals(p.estado.propuesta!!.texto, resumen.frase)
-        assertEquals(p.estado.senas.size, resumen.numeroSenas)
+        assertNotNull(p.estado.propuesta)
 
         assertTrue(p.corregir("Hola a todos"))
-        assertEquals("Hola a todos", p.resumenReloj.frase)
+        assertEquals("Hola a todos", p.estado.propuesta?.texto)
         p.limpiar()
-        assertEquals(0, p.resumenReloj.numeroSenas)
+        assertTrue(p.estado.senas.isEmpty())
         assertFalse(p.corregir("x"))
     }
 }

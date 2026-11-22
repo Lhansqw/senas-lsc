@@ -1,4 +1,4 @@
-# Proyecto Xcode de Señas LSC para iPhone y Apple Watch, descrito para XcodeGen.
+# Proyecto Xcode de Señas LSC para iPhone, descrito para XcodeGen.
 # El .xcodeproj no se guarda en git: se genera en la Mac (ver ios/README.md):
 #   cd ios && ./preparar.sh && open SenasLSC.xcworkspace
 name: SenasLSC
@@ -6,7 +6,6 @@ options:
   bundleIdPrefix: com.lhansqw.senaslsc
   deploymentTarget:
     iOS: "17.0"
-    watchOS: "10.0"
   createIntermediateGroups: true
 
 settings:
@@ -37,7 +36,6 @@ targets:
       - path: ../app/src/main/res/font/atkinson_hyperlegible_next.ttf
         buildPhase: resources
     dependencies:
-      - target: SenasLSCWatch
       - framework: ../shared/build/XCFrameworks/release/SenasShared.xcframework
     info:
       path: SenasLSC/Info.plist
@@ -65,30 +63,10 @@ targets:
           cd "$SRCROOT/.."
           ./gradlew :shared:assembleSenasSharedReleaseXCFramework --console=plain
 
-  SenasLSCWatch:
-    type: application
-    platform: watchOS
-    sources:
-      - path: SenasLSCWatch
-      - path: Comun
-      - path: ../app/src/main/res/font/atkinson_hyperlegible_next.ttf
-        buildPhase: resources
-    info:
-      path: SenasLSCWatch/Info.plist
-      properties:
-        CFBundleDisplayName: Señas LSC
-        CFBundleDevelopmentRegion: es
-        WKApplication: true
-        WKCompanionAppBundleIdentifier: com.lhansqw.senaslsc
-    settings:
-      base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.lhansqw.senaslsc.watchkitapp
-
 schemes:
   SenasLSC:
     build:
       targets:
         SenasLSC: all
-        SenasLSCWatch: all
     run:
       config: Debug

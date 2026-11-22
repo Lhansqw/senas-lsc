@@ -2,10 +2,10 @@ import AVFoundation
 import Foundation
 import SenasShared
 
-/// Estado de la pantalla de cámara. Une la cámara, MediaPipe, el modelo de señas y el reloj.
+/// Estado de la pantalla de cámara. Une la cámara, MediaPipe y el modelo de señas.
 ///
 /// Todo el reconocimiento corre en la cola serie de la cámara (`CamaraFrontal.cola`), y las órdenes
-/// del usuario o del reloj también se encolan ahí: igual que en Android, nunca hay dos accesos a la
+/// del usuario también se encolan ahí: igual que en Android, nunca hay dos accesos a la
 /// vez al procesador compartido. La interfaz se actualiza en la cola principal.
 @MainActor
 final class ModeloReconocimiento: ObservableObject {
@@ -14,7 +14,6 @@ final class ModeloReconocimiento: ObservableObject {
     @Published private(set) var aviso: String?
 
     let camara = CamaraFrontal()
-    private let reloj = ConexionReloj()
 
     // Solo se usan desde camara.cola.
     private nonisolated(unsafe) let procesador: ProcesadorCompartido
@@ -39,13 +38,7 @@ final class ModeloReconocimiento: ObservableObject {
             aviso = "No se pudo preparar MediaPipe: \(error.localizedDescription)"
         }
         self.aviso = aviso
-
-        reloj.alRecibirOrden = { [weak self] orden in self?.atender(orden) }
-        reloj.activar()
-        publicar(procesador.estado)
     }
-
-    var resumen: ResumenReloj { ResumenReloj.Companion.shared.de(estado: estado) }
 
     // MARK: Cámara
 
@@ -79,7 +72,7 @@ final class ModeloReconocimiento: ObservableObject {
         }
     }
 
-    // MARK: Órdenes (botones y reloj)
+    // MARK: Órdenes (botones)
 
     func pausarOReanudar() { establecerPausa(!pausado) }
 
@@ -91,16 +84,6 @@ final class ModeloReconocimiento: ObservableObject {
     private func establecerPausa(_ valor: Bool) {
         pausado = valor
         camara.cola.async { self.analizando = !valor }
-        enviarAlReloj()
-    }
-
-    private func atender(_ orden: MensajeReloj.Orden) {
-        switch orden {
-        case .iniciar: establecerPausa(false)
-        case .pausar: establecerPausa(true)
-        case .borrar: limpiar()
-        case .interpretar: interpretar()
-        }
     }
 
     private func orden(_ accion: @escaping (ProcesadorCompartido) throws -> EstadoReconocimiento) {
@@ -117,12 +100,5 @@ final class ModeloReconocimiento: ObservableObject {
 
     private func publicar(_ nuevo: EstadoReconocimiento) {
         estado = nuevo
-        enviarAlReloj()
-    }
-
-    private func enviarAlReloj() {
-        var mensaje = resumen.aMapa()
-        mensaje[MensajeReloj.Clave.pausado] = pausado ? "true" : "false"
-        reloj.enviar(mensaje)
     }
 }

@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
-// Lógica de reconocimiento compartida entre Android, iPhone y los relojes: coordinador, estado,
-// fachada para Swift y resumen para el reloj.
+// Lógica de reconocimiento compartida entre Android e iPhone: coordinador, estado y fachada
+// para Swift.
 //
 // En iOS se usa como SenasShared.xcframework (solo se puede generar en una Mac):
 //   ./gradlew :shared:assembleSenasSharedXCFramework

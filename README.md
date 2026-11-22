@@ -58,9 +58,9 @@ Requisitos: Android Studio reciente, JDK 17 o superior y SDK de Android 37 (ver
 [docs/05-entorno.md](docs/05-entorno.md)). La primera compilación necesita Internet para descargar
 el modelo de MediaPipe.
 
-**iPhone y Apple Watch:** la lógica de reconocimiento se comparte con Kotlin Multiplatform
-(módulos marcados KMP). La app de iPhone reconoce las señas y el reloj muestra la frase en la
-muñeca, porque el reloj no tiene cámara. Se compila en una Mac: ver [ios/README.md](ios/README.md).
+**iPhone:** la lógica de reconocimiento se comparte con Kotlin Multiplatform (módulos marcados
+KMP). La app de iPhone reconoce las señas con la cámara frontal. Se compila en una Mac: ver
+[ios/README.md](ios/README.md).
 
 ## Estructura del repositorio
 
@@ -68,7 +68,7 @@ muñeca, porque el reloj no tiene cámara. Se compila en una Mac: ver [ios/READM
 senas-lsc/
 ├── app/                   Aplicación Android (Kotlin, Jetpack Compose)
 ├── shared/                Lógica de reconocimiento común (KMP) y XCFramework para iOS
-├── ios/                   App de iPhone y de Apple Watch (SwiftUI; ver ios/README.md)
+├── ios/                   App de iPhone (SwiftUI; ver ios/README.md)
 ├── core/model/            Tipos de dominio y lector JSON, sin dependencias de Android (KMP)
 ├── core/descargas/        Descarga reanudable, progreso y espacio (Kotlin puro)
 ├── data/history/          Historial cifrado (AES-GCM) y su formato (Kotlin puro)

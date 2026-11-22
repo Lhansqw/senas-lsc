@@ -22,7 +22,7 @@ struct PantallaAcerca: View {
                 Text("La app reconoce un vocabulario limitado de la LSC, no toda la lengua. La frase es siempre una propuesta: revísala antes de usarla.")
             }
             Section("Privacidad") {
-                Text("Las imágenes de la cámara se analizan en el iPhone y no se guardan ni se envían a ningún sitio. Al Apple Watch solo llega el texto de la frase.")
+                Text("Las imágenes de la cámara se analizan en el iPhone y no se guardan ni se envían a ningún sitio.")
             }
             Section("Datos de entrenamiento") {
                 Text(Self.citaLSC70)
