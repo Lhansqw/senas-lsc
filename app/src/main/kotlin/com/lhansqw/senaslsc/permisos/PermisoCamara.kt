@@ -15,11 +15,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -40,6 +40,9 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import com.lhansqw.senaslsc.R
+import com.lhansqw.senaslsc.ui.brutal.BotonBrutal
+import com.lhansqw.senaslsc.ui.brutal.VarianteBoton
+import com.lhansqw.senaslsc.ui.theme.LocalBrutal
 
 /**
  * Muestra [contenido] solo si el permiso de cámara está concedido. Si no, explica para qué se usa
@@ -108,9 +111,25 @@ private fun PantallaPermiso(
     onAccion: () -> Unit,
     onVolver: () -> Unit,
 ) {
+    val brutal = LocalBrutal.current
+    // Esta pantalla no va dentro de un Scaffold: el fondo y el color del texto se ponen aquí.
+    Surface(color = brutal.fondo, contentColor = brutal.texto, modifier = Modifier.fillMaxSize()) {
+        ContenidoPermiso(titulo, texto, accion, onAccion, onVolver)
+    }
+}
+
+@Composable
+private fun ContenidoPermiso(
+    titulo: String,
+    texto: String,
+    accion: String,
+    onAccion: () -> Unit,
+    onVolver: () -> Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .safeDrawingPadding()
             .verticalScroll(rememberScrollState())
             .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
@@ -126,13 +145,11 @@ private fun PantallaPermiso(
         Text(
             text = stringResource(R.string.permiso_privacidad),
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = LocalBrutal.current.textoSuave,
             textAlign = TextAlign.Center,
         )
-        Button(onClick = onAccion, modifier = Modifier.fillMaxWidth()) { Text(accion) }
-        OutlinedButton(onClick = onVolver, modifier = Modifier.fillMaxWidth()) {
-            Text(stringResource(R.string.accion_volver))
-        }
+        BotonBrutal(accion, onClick = onAccion, modifier = Modifier.fillMaxWidth())
+        BotonBrutal(stringResource(R.string.accion_volver), onClick = onVolver, variante = VarianteBoton.Secundario, modifier = Modifier.fillMaxWidth())
     }
 }
 

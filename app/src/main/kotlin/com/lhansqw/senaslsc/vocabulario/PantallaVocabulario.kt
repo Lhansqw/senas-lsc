@@ -12,25 +12,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -38,8 +29,17 @@ import com.lhansqw.senaslsc.R
 import com.lhansqw.senaslsc.core.model.EntradaVocabulario
 import com.lhansqw.senaslsc.core.model.TipoSena
 import com.lhansqw.senaslsc.reconocimiento.resumenMetricas
+import com.lhansqw.senaslsc.ui.brutal.AvisoBrutal
+import com.lhansqw.senaslsc.ui.brutal.BarraSuperiorBrutal
+import com.lhansqw.senaslsc.ui.brutal.CampoBrutal
+import com.lhansqw.senaslsc.ui.brutal.FichaFiltro
+import com.lhansqw.senaslsc.ui.brutal.Insignia
+import com.lhansqw.senaslsc.ui.brutal.Separador
+import com.lhansqw.senaslsc.ui.brutal.TarjetaBrutal
+import com.lhansqw.senaslsc.ui.brutal.TipoAviso
+import com.lhansqw.senaslsc.ui.theme.ColoresBrutal
+import com.lhansqw.senaslsc.ui.theme.LocalBrutal
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PantallaVocabulario(onVolver: () -> Unit, viewModel: VocabularioViewModel = viewModel()) {
     BackHandler(onBack = onVolver)
@@ -49,16 +49,7 @@ fun PantallaVocabulario(onVolver: () -> Unit, viewModel: VocabularioViewModel = 
     val tipo by viewModel.tipo.collectAsStateWithLifecycle()
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.vocabulario_titulo)) },
-                navigationIcon = {
-                    IconButton(onClick = onVolver) {
-                        Icon(painterResource(R.drawable.ic_volver), contentDescription = stringResource(R.string.accion_volver))
-                    }
-                },
-            )
-        },
+        topBar = { BarraSuperiorBrutal(stringResource(R.string.vocabulario_titulo), onVolver) },
     ) { relleno ->
         LazyColumn(
             modifier = Modifier
@@ -73,19 +64,15 @@ fun PantallaVocabulario(onVolver: () -> Unit, viewModel: VocabularioViewModel = 
             when (val e = estado) {
                 EstadoVocabulario.Cargando -> item { Text(stringResource(R.string.vocabulario_cargando)) }
                 EstadoVocabulario.SinModelo -> item {
-                    Text(stringResource(R.string.vocabulario_sin_modelo), color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    AvisoBrutal(stringResource(R.string.vocabulario_sin_modelo), tipo = TipoAviso.Info)
                 }
-                is EstadoVocabulario.Invalido -> items(e.errores) { Text("• $it", color = MaterialTheme.colorScheme.error) }
+                is EstadoVocabulario.Invalido -> item {
+                    AvisoBrutal(e.errores.joinToString("\n") { "• $it" }, tipo = TipoAviso.Error)
+                }
                 is EstadoVocabulario.Listo -> {
                     item { FichaModelo(e) }
                     item {
-                        OutlinedTextField(
-                            value = consulta,
-                            onValueChange = viewModel::buscar,
-                            label = { Text(stringResource(R.string.vocabulario_buscar)) },
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth(),
-                        )
+                        CampoBrutal(valor = consulta, onCambio = viewModel::buscar, etiqueta = stringResource(R.string.vocabulario_buscar))
                     }
                     item { FiltroTipos(tipo, viewModel::filtrarTipo) }
                     if (grupos.isEmpty()) {
@@ -93,11 +80,14 @@ fun PantallaVocabulario(onVolver: () -> Unit, viewModel: VocabularioViewModel = 
                     }
                     grupos.forEach { grupo ->
                         item(key = "titulo-${grupo.tipo}") {
-                            Text(
-                                stringResource(nombreTipo(grupo.tipo)) + " (${grupo.entradas.size})",
-                                style = MaterialTheme.typography.titleMedium,
-                                modifier = Modifier.semantics { heading() },
-                            )
+                            Column(Modifier.padding(top = 8.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                Text(
+                                    stringResource(nombreTipo(grupo.tipo)) + " (${grupo.entradas.size})",
+                                    style = MaterialTheme.typography.titleLarge,
+                                    modifier = Modifier.semantics { heading() },
+                                )
+                                Separador(grosor = LocalBrutal.current.grosor)
+                            }
                         }
                         items(grupo.entradas, key = { it.id }) { FilaSena(it) }
                     }
@@ -110,17 +100,14 @@ fun PantallaVocabulario(onVolver: () -> Unit, viewModel: VocabularioViewModel = 
 @Composable
 private fun FichaModelo(listo: EstadoVocabulario.Listo) {
     val c = listo.contrato
-    Card(Modifier.fillMaxWidth()) {
-        Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(stringResource(R.string.vocabulario_modelo, c.nombre, c.version, c.visibles.size), fontWeight = FontWeight.SemiBold)
-            resumenMetricas(c.metricas)?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
-            if (c.datosEntrenamiento.isNotEmpty()) {
-                Text(
-                    stringResource(R.string.vocabulario_datos, c.datosEntrenamiento.joinToString("; ")),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
+    TarjetaBrutal(color = ColoresBrutal.Amarillo, espacio = 4.dp) {
+        Text(stringResource(R.string.vocabulario_modelo, c.nombre, c.version, c.visibles.size), style = MaterialTheme.typography.titleSmall)
+        resumenMetricas(c.metricas)?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
+        if (c.datosEntrenamiento.isNotEmpty()) {
+            Text(
+                stringResource(R.string.vocabulario_datos, c.datosEntrenamiento.joinToString("; ")),
+                style = MaterialTheme.typography.bodySmall,
+            )
         }
     }
 }
@@ -128,28 +115,26 @@ private fun FichaModelo(listo: EstadoVocabulario.Listo) {
 @Composable
 private fun FiltroTipos(actual: TipoSena?, onCambiar: (TipoSena?) -> Unit) {
     Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        FilterChip(selected = actual == null, onClick = { onCambiar(null) }, label = { Text(stringResource(R.string.vocabulario_todas)) })
+        FichaFiltro(stringResource(R.string.vocabulario_todas), elegida = actual == null, onClick = { onCambiar(null) })
         listOf(TipoSena.PALABRA, TipoSena.NUMERO, TipoSena.LETRA).forEach { t ->
-            FilterChip(selected = actual == t, onClick = { onCambiar(t) }, label = { Text(stringResource(nombreTipo(t))) })
+            FichaFiltro(stringResource(nombreTipo(t)), elegida = actual == t, onClick = { onCambiar(t) })
         }
     }
 }
 
 @Composable
 private fun FilaSena(e: EntradaVocabulario) {
-    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(e.glosa, fontWeight = FontWeight.Bold)
-            Text("«${e.significado}»", color = MaterialTheme.colorScheme.onSurfaceVariant)
+    val brutal = LocalBrutal.current
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(e.glosa, style = MaterialTheme.typography.titleMedium)
+            Text("«${e.significado}»", color = brutal.textoSuave, modifier = Modifier.weight(1f))
+            if (e.interrogativa) Insignia(stringResource(R.string.vocabulario_interrogativa), color = ColoresBrutal.Magenta)
         }
-        val detalles = buildList {
-            if (e.interrogativa) add(stringResource(R.string.vocabulario_interrogativa))
-            e.variante?.let { add(stringResource(R.string.vocabulario_variante, it)) }
+        e.variante?.let {
+            Text(stringResource(R.string.vocabulario_variante, it), style = MaterialTheme.typography.bodySmall, color = brutal.textoSuave)
         }
-        if (detalles.isNotEmpty()) {
-            Text(detalles.joinToString(" · "), style = MaterialTheme.typography.bodySmall)
-        }
-        HorizontalDivider()
+        Separador(Modifier.padding(top = 6.dp))
     }
 }
 

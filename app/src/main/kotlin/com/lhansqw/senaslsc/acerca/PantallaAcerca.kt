@@ -3,29 +3,25 @@ package com.lhansqw.senaslsc.acerca
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.heading
-import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import com.lhansqw.senaslsc.BuildConfig
 import com.lhansqw.senaslsc.R
@@ -33,11 +29,16 @@ import com.lhansqw.senaslsc.recognizer.ContratoModelo
 import com.lhansqw.senaslsc.recognizer.ResultadoContrato
 import com.lhansqw.senaslsc.recognizer.litert.CargadorReconocedor
 import com.lhansqw.senaslsc.reconocimiento.resumenMetricas
+import com.lhansqw.senaslsc.ui.brutal.BarraSuperiorBrutal
+import com.lhansqw.senaslsc.ui.brutal.Insignia
+import com.lhansqw.senaslsc.ui.brutal.Separador
+import com.lhansqw.senaslsc.ui.brutal.TarjetaBrutal
+import com.lhansqw.senaslsc.ui.brutal.TituloSeccion
+import com.lhansqw.senaslsc.ui.theme.LocalBrutal
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /** «Acerca de»: qué hace la app, privacidad, modelo instalado, créditos y licencias (fase 12). */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PantallaAcerca(onVolver: () -> Unit) {
     BackHandler(onBack = onVolver)
@@ -50,16 +51,7 @@ fun PantallaAcerca(onVolver: () -> Unit) {
     }
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.acerca_titulo)) },
-                navigationIcon = {
-                    IconButton(onClick = onVolver) {
-                        Icon(painterResource(R.drawable.ic_volver), contentDescription = stringResource(R.string.accion_volver))
-                    }
-                },
-            )
-        },
+        topBar = { BarraSuperiorBrutal(stringResource(R.string.acerca_titulo), onVolver) },
     ) { relleno ->
         Column(
             modifier = Modifier
@@ -79,7 +71,7 @@ fun PantallaAcerca(onVolver: () -> Unit) {
                 if (c == null) {
                     Text(stringResource(R.string.vocabulario_sin_modelo), style = MaterialTheme.typography.bodyMedium)
                 } else {
-                    Text(stringResource(R.string.vocabulario_modelo, c.nombre, c.version, c.visibles.size), fontWeight = FontWeight.SemiBold)
+                    Text(stringResource(R.string.vocabulario_modelo, c.nombre, c.version, c.visibles.size), style = MaterialTheme.typography.titleSmall)
                     resumenMetricas(c.metricas)?.let {
                         Text(stringResource(R.string.acerca_metricas, it), style = MaterialTheme.typography.bodySmall)
                     }
@@ -88,35 +80,42 @@ fun PantallaAcerca(onVolver: () -> Unit) {
             }
             Seccion(stringResource(R.string.acerca_datos)) {
                 Text(Creditos.CITA_LSC70, style = MaterialTheme.typography.bodyMedium)
-                Text(Creditos.datos.enlace, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+                Enlace(Creditos.datos.enlace)
+                Separador()
                 Text(Creditos.CITA_LSC50, style = MaterialTheme.typography.bodyMedium)
-                Text(Creditos.datosLsc50.enlace, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+                Enlace(Creditos.datosLsc50.enlace)
             }
             Seccion(stringResource(R.string.acerca_licencias)) {
                 Creditos.componentes.forEachIndexed { i, comp ->
-                    if (i > 0) HorizontalDivider()
+                    if (i > 0) Separador()
                     Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                        Text("${comp.nombre} · ${comp.licencia}", fontWeight = FontWeight.SemiBold)
+                        Text("${comp.nombre} · ${comp.licencia}", style = MaterialTheme.typography.titleSmall)
                         Text(comp.uso, style = MaterialTheme.typography.bodySmall)
-                        Text(comp.enlace, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+                        Enlace(comp.enlace)
                     }
                 }
             }
-            Text(
-                stringResource(R.string.inicio_version, BuildConfig.VERSION_NAME),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+            Insignia(stringResource(R.string.inicio_version, BuildConfig.VERSION_NAME))
         }
     }
 }
 
 @Composable
 private fun Seccion(titulo: String, contenido: @Composable () -> Unit) {
-    Card(Modifier.fillMaxWidth()) {
-        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(titulo, style = MaterialTheme.typography.titleMedium, modifier = Modifier.semantics { heading() })
-            contenido()
-        }
+    TarjetaBrutal {
+        TituloSeccion(titulo)
+        contenido()
     }
+}
+
+/** Dirección web que se abre en el navegador: negrita y subrayada, como en la referencia. */
+@Composable
+private fun Enlace(url: String) {
+    val estilo = TextLinkStyles(
+        SpanStyle(color = LocalBrutal.current.enlace, fontWeight = FontWeight.Bold, textDecoration = TextDecoration.Underline),
+    )
+    Text(
+        buildAnnotatedString { withLink(LinkAnnotation.Url(url, estilo)) { append(url) } },
+        style = MaterialTheme.typography.bodySmall,
+    )
 }
