@@ -1,13 +1,18 @@
 package com.lhansqw.senaslsc
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lhansqw.senaslsc.acerca.PantallaAcerca
 import com.lhansqw.senaslsc.camara.PantallaCamara
 import com.lhansqw.senaslsc.dispositivo.EvaluadorCapacidad
@@ -15,6 +20,7 @@ import com.lhansqw.senaslsc.dispositivo.LectorPerfilDispositivo
 import com.lhansqw.senaslsc.historial.PantallaHistorial
 import com.lhansqw.senaslsc.ia.PantallaIa
 import com.lhansqw.senaslsc.ui.PantallaInicio
+import com.lhansqw.senaslsc.ui.theme.ModoTema
 import com.lhansqw.senaslsc.ui.theme.TemaSenasLSC
 import com.lhansqw.senaslsc.vocabulario.PantallaVocabulario
 
@@ -30,14 +36,36 @@ class MainActivity : ComponentActivity() {
         val perfil = LectorPerfilDispositivo.leer(this)
         val capacidad = EvaluadorCapacidad.evaluar(perfil)
 
+        val preferenciasTema = (application as SenasApp).preferenciasTema
+
         setContent {
             var pantalla by rememberSaveable { mutableStateOf(Pantalla.INICIO) }
+            val modo by preferenciasTema.modo.collectAsStateWithLifecycle()
+            val oscuro = when (modo) {
+                ModoTema.SISTEMA -> isSystemInDarkTheme()
+                ModoTema.CLARO -> false
+                ModoTema.OSCURO -> true
+            }
+            // Los íconos de la barra de estado siguen al tema de la app, no al del sistema: si no,
+            // en modo claro con el sistema en oscuro quedarían blancos sobre el papel. La cámara
+            // dibuja sobre negro en los dos modos, así que ahí van siempre claros.
+            val barrasOscuras = oscuro || pantalla == Pantalla.CAMARA || pantalla == Pantalla.GRABACION
+            LaunchedEffect(barrasOscuras) {
+                val barras = if (barrasOscuras) {
+                    SystemBarStyle.dark(Color.TRANSPARENT)
+                } else {
+                    SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
+                }
+                enableEdgeToEdge(statusBarStyle = barras, navigationBarStyle = barras)
+            }
 
-            TemaSenasLSC {
+            TemaSenasLSC(oscuro = oscuro) {
                 when (pantalla) {
                     Pantalla.INICIO -> PantallaInicio(
                         perfil = perfil,
                         capacidad = capacidad,
+                        oscuro = oscuro,
+                        onAlternarTema = { preferenciasTema.establecer(if (oscuro) ModoTema.CLARO else ModoTema.OSCURO) },
                         onAbrirCamara = { pantalla = Pantalla.CAMARA },
                         onAbrirIa = { pantalla = Pantalla.IA },
                         onAbrirHistorial = { pantalla = Pantalla.HISTORIAL },

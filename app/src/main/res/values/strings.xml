@@ -19,6 +19,8 @@
     <string name="inicio_abrir_vocabulario">Vocabulario compatible</string>
     <string name="inicio_abrir_grabacion">Grabar muestras para entrenar</string>
     <string name="inicio_abrir_acerca">Acerca de, privacidad y licencias</string>
+    <string name="inicio_modo_claro">Cambiar a modo claro</string>
+    <string name="inicio_modo_oscuro">Cambiar a modo oscuro</string>
     <string name="inicio_version">Versión %1$s</string>
 
     <string name="dispositivo_titulo">Tu dispositivo</string>
