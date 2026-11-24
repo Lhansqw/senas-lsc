@@ -57,6 +57,7 @@ import com.lhansqw.senaslsc.ui.AccionesTexto
 import com.lhansqw.senaslsc.ui.theme.ColoresCamara
 import com.lhansqw.senaslsc.ui.theme.EstiloCamara
 import com.lhansqw.senaslsc.ui.theme.TemaSenasLSC
+import com.lhansqw.senaslsc.vision.ExtractorLandmarks
 import java.util.Locale
 
 private val CARGAS_SIMULADAS_MS = listOf(0L, 50L, 150L)
@@ -270,6 +271,7 @@ private fun Diagnostico(
                             stringResource(if (estadoModelo.enGpu) R.string.mediapipe_gpu else R.string.mediapipe_cpu),
                         ),
                     )
+                    add(stringResource(R.string.mediapipe_desglose, r.manosMs, r.poseMs, ExtractorLandmarks.CADA_POSE))
                     val manos = listOfNotNull(r.frame.manoIzquierda, r.frame.manoDerecha).size
                     add(
                         stringResource(

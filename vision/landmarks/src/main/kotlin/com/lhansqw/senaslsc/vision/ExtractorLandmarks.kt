@@ -20,9 +20,16 @@ import com.lhansqw.senaslsc.reconocimiento.ManoDetectada
 /** Resultado de procesar un fotograma. */
 data class Extraccion(
     val frame: LandmarkFrame,
+    /** Tiempo de Hand Landmarker en este fotograma, en milisegundos. */
+    val manosMs: Long,
+    /** Tiempo de Pose Landmarker la última vez que se ejecutó (no siempre es en este fotograma). */
+    val poseMs: Long,
+    /** En este fotograma se reutilizó la pose anterior en vez de calcularla. */
+    val poseReutilizada: Boolean,
+) {
     /** Tiempo de MediaPipe para este fotograma, en milisegundos. */
-    val inferenciaMs: Long,
-)
+    val inferenciaMs: Long get() = manosMs + if (poseReutilizada) 0 else poseMs
+}
 
 /**
  * Convierte imágenes en [LandmarkFrame] con MediaPipe Hand Landmarker (hasta 2 manos) y Pose
@@ -51,22 +58,33 @@ class ExtractorLandmarks private constructor(
     val enGpu: Boolean get() = delegado == Delegate.GPU
 
     private var ultimoTimestampMs = Long.MIN_VALUE
+    private val planificador = PlanificadorPose(CADA_POSE)
+    private var ultimaPose: FloatArray? = null
+    private var ultimaPoseMs = 0L
 
     /**
      * Procesa una imagen ya girada en vertical (como la ve la cámara, **sin espejo**).
      *
      * @param timestampMs marca de tiempo del fotograma. En modo VIDEO debe crecer siempre; si no
      *   crece, el fotograma se ignora y se devuelve `null`.
+     * @param poseSiempre calcular la pose en este fotograma aunque no toque (al grabar muestras de
+     *   entrenamiento hace falta la de cada fotograma).
      */
-    fun extraer(imagen: Bitmap, timestampMs: Long): Extraccion? {
+    fun extraer(imagen: Bitmap, timestampMs: Long, poseSiempre: Boolean = false): Extraccion? {
         if (timestampMs <= ultimoTimestampMs) return null
         ultimoTimestampMs = timestampMs
 
         val mpImage = BitmapImageBuilder(imagen).build()
         val inicio = SystemClock.elapsedRealtime()
         val resultadoManos = manos.detectForVideo(mpImage, timestampMs)
-        val resultadoPose = pose.detectForVideo(mpImage, timestampMs)
-        val inferenciaMs = SystemClock.elapsedRealtime() - inicio
+        val manosMs = SystemClock.elapsedRealtime() - inicio
+
+        val calcularPose = planificador.debeEjecutar(resultadoManos.landmarks().size, ultimaPose != null, poseSiempre)
+        if (calcularPose) {
+            val inicioPose = SystemClock.elapsedRealtime()
+            ultimaPose = pose.detectForVideo(mpImage, timestampMs).landmarks().firstOrNull()?.aCoordenadas()
+            ultimaPoseMs = SystemClock.elapsedRealtime() - inicioPose
+        }
 
         val detectadas = resultadoManos.landmarks().mapIndexed { i, puntos ->
             // MediaPipe etiqueta las manos suponiendo una imagen en espejo. Esta llega sin espejo,
@@ -77,10 +95,10 @@ class ExtractorLandmarks private constructor(
         val frame = ConstructorFotograma.construir(
             timestampMs = timestampMs,
             manos = detectadas,
-            pose = resultadoPose.landmarks().firstOrNull()?.aCoordenadas(),
+            pose = ultimaPose,
             relacionAspecto = imagen.width.toFloat() / imagen.height,
         )
-        return Extraccion(frame, inferenciaMs)
+        return Extraccion(frame, manosMs, ultimaPoseMs, poseReutilizada = !calcularPose)
     }
 
     override fun close() {
@@ -92,6 +110,9 @@ class ExtractorLandmarks private constructor(
         /** Modelos en los assets; los descargan las tareas de Gradle `descargarModeloManos` y `descargarModeloPose`. */
         const val MODELO_MANOS = "hand_landmarker.task"
         const val MODELO_POSE = "pose_landmarker_full.task"
+
+        /** La pose se calcula uno de cada tantos fotogramas (ver [PlanificadorPose]). */
+        const val CADA_POSE = 3
 
         /**
          * Crea el extractor. Lanza una excepción si un modelo no está en los assets o no se puede
