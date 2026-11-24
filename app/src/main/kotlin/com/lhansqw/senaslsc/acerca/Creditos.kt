@@ -86,6 +86,12 @@ object Creditos {
             "https://github.com/googlefonts/atkinson-hyperlegible-next",
         ),
         Componente(
+            "Archivo Black",
+            "Tipografía de los títulos",
+            "SIL OFL 1.1",
+            "https://github.com/Omnibus-Type/ArchivoBlack",
+        ),
+        Componente(
             "Kotlin y kotlinx.coroutines",
             "Lenguaje y tareas en segundo plano",
             "Apache 2.0",
