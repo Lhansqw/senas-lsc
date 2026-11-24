@@ -17,6 +17,9 @@ data class ResultadoLandmarks(
     val anchoImagen: Int,
     val altoImagen: Int,
     val inferenciaMs: Long,
+    /** Hand Landmarker en este fotograma y Pose Landmarker la última vez que se calculó. */
+    val manosMs: Long,
+    val poseMs: Long,
 )
 
 sealed interface EstadoModelo {
@@ -74,7 +77,8 @@ class AnalizadorLandmarks(context: Context) : AnalizadorFotogramas, AutoCloseabl
 
             val bitmap = preparador.preparar(imagen)
             val extraccion = try {
-                ext.extraer(bitmap, marcaNs / 1_000_000)
+                // Al grabar muestras hace falta la pose de cada fotograma.
+                ext.extraer(bitmap, marcaNs / 1_000_000, poseSiempre = sinReposo)
             } catch (e: Exception) {
                 // Algunas GPU aceptan el modelo pero fallan al ejecutarlo: se pasa a la CPU.
                 if (!ext.enGpu) throw e
@@ -92,6 +96,8 @@ class AnalizadorLandmarks(context: Context) : AnalizadorFotogramas, AutoCloseabl
                 anchoImagen = bitmap.width,
                 altoImagen = bitmap.height,
                 inferenciaMs = extraccion.inferenciaMs,
+                manosMs = extraccion.manosMs,
+                poseMs = extraccion.poseMs,
             )
             alExtraer?.invoke(extraccion.frame)
             true
@@ -125,7 +131,7 @@ class AnalizadorLandmarks(context: Context) : AnalizadorFotogramas, AutoCloseabl
         // Falta el asset, el archivo está dañado o el dispositivo no puede ejecutar el modelo.
         Log.e(TAG, "No se pudo cargar MediaPipe", e)
         _estadoModelo.value = EstadoModelo.Error(
-            "No se pudo cargar el modelo de MediaPipe (${ExtractorLandmarks.MODELO}). " +
+            "No se pudieron cargar los modelos de MediaPipe (${ExtractorLandmarks.MODELO_MANOS}, ${ExtractorLandmarks.MODELO_POSE}). " +
                 "Compila de nuevo para descargarlo. Detalle: ${e.message ?: e.javaClass.simpleName}",
         )
         null
