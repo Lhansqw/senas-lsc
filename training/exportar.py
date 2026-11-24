@@ -106,7 +106,7 @@ def main(argv=None) -> int:
         ASSETS_APP.mkdir(parents=True, exist_ok=True)
         shutil.copy2(ruta_tflite, ASSETS_APP / ruta_tflite.name)
         shutil.copy2(ruta_json, ASSETS_APP / ruta_json.name)
-        print(f"Instalado en {ASSETS_APP}. Recompila la app (gradlew.bat installDebug).")
+        print(f"Instalado en {ASSETS_APP}. Recompila la app (./gradlew installDebug; en Windows, gradlew.bat installDebug).")
     return 0
 
 

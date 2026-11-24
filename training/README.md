@@ -27,11 +27,24 @@ volver a ejecutarlo continúa), entrena, evalúa, exporta y copia el modelo a la
 revisa `outputs\lsc70-v0.1.0\informe.md` y ejecuta `.\gradlew.bat installDebug` desde
 `C:\dev\senas-lsc`. Opciones: `-SoloExtraer`, `-SinInstalar`, `-Version 0.2.0`, `-Epocas 120`.
 
+## Entrenar con LSC70 en macOS o Linux
+
+Lo mismo con `entrenar_lsc70.sh`. Hace falta Python 3.12 o 3.13 (en una Mac:
+`brew install python@3.12`):
+
+```bash
+cd training
+./entrenar_lsc70.sh
+```
+
+Al terminar, `./gradlew installDebug` desde la raíz. Opciones: `--solo-extraer`, `--sin-instalar`,
+`--version 0.2.0`, `--epocas 120`, `--arquitectura conv`, `--cuantizacion float16`.
+
 Los pasos de abajo son los mismos, uno a uno.
 
 ## Preparación (una vez)
 
-Necesitas Python 3.11–3.13.
+Necesitas Python 3.12 o 3.13.
 
 ```bash
 cd training
@@ -61,7 +74,7 @@ python -m pytest pruebas        # todo debe salir en verde
    ```bash
    python exportar.py --entrenamiento outputs/v1 --muestras data/puntos --vocabulario vocabulario.json --version 0.1.0 --instalar
    ```
-   Copia los dos archivos a `recognizer/litert/src/main/assets/`. Después: `gradlew.bat installDebug`.
+   Copia los dos archivos a `recognizer/litert/src/main/assets/`. Después: `./gradlew installDebug` (Windows: `gradlew.bat installDebug`).
 
 ## Reglas
 
@@ -87,7 +100,7 @@ python -m pytest pruebas        # todo debe salir en verde
 | `senas/metricas.py`, `calibracion.py` | Métricas, temperatura y umbral de energía |
 | `senas/contrato.py` | Escritura y validación de `modelo.json` |
 | `entrenar.py`, `evaluar.py`, `exportar.py` | Los tres pasos del entrenamiento |
-| `entrenar_lsc70.ps1`, `vocabulario.lsc70.json` | Todo el proceso con LSC70 en Windows |
+| `entrenar_lsc70.ps1`, `entrenar_lsc70.sh`, `vocabulario.lsc70.json` | Todo el proceso con LSC70 (`.ps1` en Windows, `.sh` en macOS y Linux) |
 | `importar_lsc50.py`, `vocabulario.lsc.json` | Puntos de LSC50 y vocabulario de LSC70 + LSC50 (91 señas) |
 | `optimizar.py` | Tamaño, exactitud y latencia de float32, float16 e int8 |
-| `comparar.py`, `comparar_lsc70.ps1` | Entrena y compara GRU, convolucional y Transformer |
+| `comparar.py`, `comparar_lsc70.ps1`, `comparar_lsc70.sh` | Entrena y compara GRU, convolucional y Transformer |

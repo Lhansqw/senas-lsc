@@ -29,7 +29,7 @@ android {
     }
 
     // Firma de la versión de producción: keystore.properties en la raíz (no se sube al repositorio;
-    // lo crea scripts/crear_firma.ps1). Sin él, assembleRelease genera un APK sin firmar.
+    // lo crea scripts/crear_firma.sh en macOS o scripts/crear_firma.ps1 en Windows). Sin él, assembleRelease genera un APK sin firmar.
     val archivoFirma = rootProject.file("keystore.properties")
     val firma = Properties().apply { if (archivoFirma.isFile) archivoFirma.inputStream().use(::load) }
     signingConfigs {

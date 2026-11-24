@@ -55,8 +55,9 @@ Dos componentes de IA, independientes entre sí:
 ```
 
 Requisitos: Android Studio reciente, JDK 17 o superior y SDK de Android 37 (ver
-[docs/05-entorno.md](docs/05-entorno.md)). La primera compilación necesita Internet para descargar
-el modelo de MediaPipe.
+[docs/05-entorno.md](docs/05-entorno.md)). Se compila igual en Windows, macOS y Linux; los scripts
+de `scripts/` y `training/` tienen versión `.ps1` (Windows) y `.sh` (macOS y Linux). La primera compilación necesita
+Internet para descargar el modelo de MediaPipe.
 
 **iPhone y Apple Watch:** la lógica de reconocimiento se comparte con Kotlin Multiplatform
 (módulos marcados KMP). La app de iPhone reconoce las señas y el reloj muestra la frase en la

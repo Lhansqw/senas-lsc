@@ -3,7 +3,8 @@
 LSC50 ya trae los puntos de MediaPipe Holistic en CSV, así que no hace falta procesar vídeos. Basta
 con `LANDMARKS.zip` (se lee sin descomprimir):
 
-    powershell -ExecutionPolicy Bypass -File .\\descargar_lsc50.ps1 -Filtro LANDMARKS
+    powershell -ExecutionPolicy Bypass -File .\\descargar_lsc50.ps1 -Filtro LANDMARKS   # Windows
+    ./descargar_lsc50.sh --filtro LANDMARKS                                     # macOS o Linux
     python importar_lsc50.py --zip data/LSC50/LANDMARKS.zip --salida data/puntos --vocabulario vocabulario.lsc.json
 
 Formato (comprobado con la descarga real):

@@ -15,7 +15,7 @@ que se añadió son instrumentos de medida; las cifras las ponen ellos, no este 
 | `entrenar.py --arquitectura gru\|conv\|transformer` | Tres modelos para comparar. Los tres se convierten a LiteRT solo con operaciones nativas |
 | `optimizar.py` | Para float32, float16 e int8: tamaño, exactitud **ejecutando el `.tflite`** con las personas de prueba, coincidencia con float32 y latencia p50/p95 en el PC |
 | `exportar.py --cuantizacion float16\|int8` | Exporta la versión elegida; comprueba que elige la misma seña que Keras en ≥ 95 % de las muestras |
-| `comparar.py` y `comparar_lsc70.ps1` | Entrena las tres arquitecturas con la misma partición de personas y escribe una tabla |
+| `comparar.py` y `comparar_lsc70.ps1` (`.sh` en macOS) | Entrena las tres arquitecturas con la misma partición de personas y escribe una tabla |
 
 Lo que ya se sabe sin datos reales (modelos sin entrenar, 32 instantes, 42 señas):
 
@@ -79,12 +79,14 @@ git pull
 powershell -ExecutionPolicy Bypass -File .\comparar_lsc70.ps1
 ```
 
+En macOS o Linux: `cd training && ./comparar_lsc70.sh`.
+
 Escribe `outputs\comparacion\comparacion.md` y, en cada carpeta, `optimizacion.md`. Con 10
 personas de prueba, diferencias de 1–2 puntos son ruido: a igualdad, gana la más rápida.
 
 ### 2. Latencia en el teléfono
 
-1. `.\gradlew.bat installDebug` y abre la cámara.
+1. `.\gradlew.bat installDebug` (macOS: `./gradlew installDebug`) y abre la cámara.
 2. Señas durante ~30 s y anota las dos líneas de p50/p95.
 3. Repite con el modelo nuevo (otra arquitectura o cuantización) en las mismas condiciones.
 
@@ -105,7 +107,7 @@ con el mismo brillo y la misma luz.
 ## Archivos
 
 - `training/senas/modelo.py`: arquitecturas y cuantización.
-- `training/optimizar.py`, `training/comparar.py`, `training/comparar_lsc70.ps1`.
+- `training/optimizar.py`, `training/comparar.py`, `training/comparar_lsc70.ps1`, `training/comparar_lsc70.sh`.
 - `core/model/.../rendimiento/EstadisticaLatencia.kt`: percentiles.
 - `camera/.../MedidorRendimiento.kt` (p50/p95) y `camera/.../ReguladorAnalisis.kt` (reposo).
 - `app/.../CoordinadorReconocimiento.kt`: mide el modelo de señas.

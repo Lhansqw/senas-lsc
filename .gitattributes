@@ -6,3 +6,4 @@
 *.jpg binary
 *.jar binary
 *.ps1 text eol=crlf
+*.sh text eol=lf

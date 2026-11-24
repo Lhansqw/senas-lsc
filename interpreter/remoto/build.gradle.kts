@@ -9,8 +9,8 @@ dependencies {
 }
 
 // Comparativa reglas frente a Gemini con secuencias de prueba (fase 10):
-//   set GEMINI_API_KEY=...   (en PowerShell: $env:GEMINI_API_KEY="...")
-//   gradlew.bat :interpreter:remoto:compararGemini
+//   export GEMINI_API_KEY=...   (cmd: set GEMINI_API_KEY=...; PowerShell: $env:GEMINI_API_KEY="...")
+//   ./gradlew :interpreter:remoto:compararGemini   (Windows: gradlew.bat ...)
 // La clave se lee de la variable de entorno; nunca se escribe en archivos ni en la salida.
 tasks.register<JavaExec>("compararGemini") {
     group = "verification"

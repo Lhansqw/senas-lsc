@@ -9,8 +9,8 @@
 |---|---|
 | `app/proguard-rules.pro` | R8 conserva MediaPipe, LiteRT y LiteRT-LM (su código nativo los busca por nombre; sin estas reglas la versión de producción se cierra al cargar los modelos) |
 | `app/build.gradle.kts` | Firma desde `keystore.properties`; versión desde `gradle.properties`; `-Psenas.r8=false` para compilar sin R8 |
-| `scripts/crear_firma.ps1` | Crea la clave de firma fuera del repositorio (una sola vez) |
-| `scripts/version_instalable.ps1` | Pruebas → APK y AAB firmados → verifica la firma → `dist\` con SHA-256 |
+| `scripts/crear_firma.ps1`, `.sh` | Crea la clave de firma fuera del repositorio (una sola vez) |
+| `scripts/version_instalable.ps1`, `.sh` | Pruebas → APK y AAB firmados → verifica la firma → `dist/` con SHA-256 |
 | Pantalla «Acerca de» | Qué hace y qué no, privacidad, modelo instalado, citas de LSC70 y LSC50 (obligatorias por CC BY 4.0) y licencias |
 | [`docs/ficha-modelo.md`](ficha-modelo.md) | Ficha del modelo con las cifras medidas; la regenera `training/ficha.py` |
 
@@ -27,10 +27,19 @@ powershell -ExecutionPolicy Bypass -File .\scripts\crear_firma.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\version_instalable.ps1
 ```
 
+En macOS o Linux:
+
+```bash
+cd ~/dev/senas-lsc
+git pull origin main
+./scripts/crear_firma.sh            # solo la primera vez
+./scripts/version_instalable.sh     # opciones: --sin-r8, --sin-pruebas
+```
+
 El resultado queda en `dist\senas-lsc-1.0.0.apk` (instalar directamente) y
 `dist\senas-lsc-1.0.0.aab` (Google Play), con `dist\SHA256SUMS.txt`.
 
-**Guarda una copia de la clave** (`%USERPROFILE%\senas-lsc-firma\senas-lsc.jks`) y de su
+**Guarda una copia de la clave** (`%USERPROFILE%\senas-lsc-firma\senas-lsc.jks` en Windows, `~/senas-lsc-firma/senas-lsc.jks` en macOS) y de su
 contraseña. Sin ellas no se puede instalar una actualización encima de esta versión.
 
 Si la app de producción se cierra al abrir la cámara y la de depuración no, repite con

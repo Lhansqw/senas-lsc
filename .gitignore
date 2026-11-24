@@ -38,5 +38,5 @@ Thumbs.db
 secrets.properties
 keystore.properties
 
-# Versiones instalables generadas (scripts/version_instalable.ps1)
+# Versiones instalables generadas (scripts/version_instalable.sh o .ps1)
 dist/

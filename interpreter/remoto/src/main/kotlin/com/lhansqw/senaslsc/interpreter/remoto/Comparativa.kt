@@ -132,11 +132,14 @@ fun informe(modelo: String, resultados: List<ResultadoCaso>): String {
     return sb.toString()
 }
 
-/** `gradlew.bat :interpreter:remoto:compararGemini`, con la clave en GEMINI_API_KEY. */
+/** `./gradlew :interpreter:remoto:compararGemini` (Windows: `gradlew.bat`), con la clave en GEMINI_API_KEY. */
 fun main(args: Array<String>) {
     val clave = System.getenv("GEMINI_API_KEY")
     if (clave.isNullOrBlank()) {
-        System.err.println("Falta la variable de entorno GEMINI_API_KEY (en PowerShell: \$env:GEMINI_API_KEY=\"tu-clave\").")
+        System.err.println(
+            "Falta la variable de entorno GEMINI_API_KEY " +
+                "(macOS o Linux: export GEMINI_API_KEY=\"tu-clave\"; PowerShell: \$env:GEMINI_API_KEY=\"tu-clave\").",
+        )
         exitProcess(2)
     }
     val salida = File(args.getOrElse(0) { "comparativa-gemini.md" })

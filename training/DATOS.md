@@ -32,13 +32,14 @@ data/LSC70/
 
 - Descarga: <https://figshare.com/articles/dataset/27383016> (DOI 10.6084/m9.figshare.27383016).
   Solo hacen falta los puntos (2,6 GB):
-  `powershell -ExecutionPolicy Bypass -File .\descargar_lsc50.ps1 -Filtro LANDMARKS`.
+  `powershell -ExecutionPolicy Bypass -File .\descargar_lsc50.ps1 -Filtro LANDMARKS`
+  (macOS o Linux: `./descargar_lsc50.sh --filtro LANDMARKS`).
 - Licencia **CC BY 4.0** (verificada en DataCite), como LSC70.
 - Contenido: 50 señas de conversación (GRACIAS, POR FAVOR, ¿CÓMO ESTÁS?, FAMILIA, ¿DÓNDE?…) de
   5 personas (3 señantes nativas), unas 4 repeticiones cada una. Los puntos ya vienen de
   MediaPipe Holistic en CSV, a 24 fps y sin espejo.
 - `importar_lsc50.py` los lee del zip, recorta cada clip a la parte en que se hace la seña y la
-  reparte en 1000 ms, como LSC70. `entrenar_lsc70.ps1` lo hace solo si encuentra
+  reparte en 1000 ms, como LSC70. `entrenar_lsc70.ps1` (o `.sh`) lo hace solo si encuentra
   `data\LSC50\LANDMARKS.zip`, y entonces entrena con `vocabulario.lsc.json` (91 señas).
 - HOLA, NOMBRE y YO están en los dos conjuntos y se entrenan como una sola seña. BUENOS DÍAS,
   BUENAS TARDES y BUENAS NOCHES de LSC50 no se usan: la app las forma con BUENAS + DÍAS/TARDES/NOCHES.
