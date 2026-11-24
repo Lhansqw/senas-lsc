@@ -56,7 +56,7 @@ import com.lhansqw.senaslsc.reconocimiento.PanelReconocimiento
 import com.lhansqw.senaslsc.ui.AccionesTexto
 import com.lhansqw.senaslsc.ui.theme.ColoresCamara
 import com.lhansqw.senaslsc.ui.theme.EstiloCamara
-import com.lhansqw.senaslsc.ui.theme.TemaSenasLSC
+import com.lhansqw.senaslsc.ui.theme.TemaCamara
 import com.lhansqw.senaslsc.vision.ExtractorLandmarks
 import java.util.Locale
 
@@ -67,7 +67,7 @@ fun PantallaCamara(onVolver: () -> Unit, modoGrabacion: Boolean = false) {
     BackHandler(onBack = onVolver)
     ConPermisoCamara(onVolver = onVolver) {
         // Tema oscuro fijo: los controles se dibujan sobre la imagen de la cámara.
-        TemaSenasLSC(oscuro = true, colorDinamico = false) {
+        TemaCamara {
             VistaCamara(onVolver = onVolver, modoGrabacion = modoGrabacion)
         }
     }

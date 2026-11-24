@@ -109,6 +109,8 @@
     <string name="ia_no_compatible_titulo">Este teléfono no puede ejecutar el modelo de lenguaje</string>
     <string name="ia_ficha">Licencia %1$s · unos %2$s</string>
     <string name="ia_estado_no_instalado">No instalado.</string>
+    <string name="ia_insignia_instalado">Instalado</string>
+    <string name="ia_insignia_no_instalado">No instalado</string>
     <string name="ia_estado_parcial">Descarga interrumpida: %1$s de %2$s. Puedes continuarla.</string>
     <string name="ia_estado_descargando">Descargando…</string>
     <string name="ia_estado_importando">Copiando el archivo…</string>

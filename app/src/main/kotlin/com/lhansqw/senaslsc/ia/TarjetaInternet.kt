@@ -3,21 +3,9 @@ package com.lhansqw.senaslsc.ia
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,14 +14,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.heading
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.lhansqw.senaslsc.R
 import com.lhansqw.senaslsc.interpreter.PreferenciaInterprete
+import com.lhansqw.senaslsc.ui.brutal.AvisoBrutal
+import com.lhansqw.senaslsc.ui.brutal.BotonBrutal
+import com.lhansqw.senaslsc.ui.brutal.CampoBrutal
+import com.lhansqw.senaslsc.ui.brutal.DialogoBrutal
+import com.lhansqw.senaslsc.ui.brutal.FilaInterruptor
+import com.lhansqw.senaslsc.ui.brutal.OpcionBrutal
+import com.lhansqw.senaslsc.ui.brutal.Separador
+import com.lhansqw.senaslsc.ui.brutal.TarjetaBrutal
+import com.lhansqw.senaslsc.ui.brutal.TipoAviso
+import com.lhansqw.senaslsc.ui.brutal.TituloSeccion
+import com.lhansqw.senaslsc.ui.brutal.VarianteBoton
+import com.lhansqw.senaslsc.ui.brutal.grupoOpciones
+import com.lhansqw.senaslsc.ui.theme.ColoresBrutal
+import com.lhansqw.senaslsc.ui.theme.LocalBrutal
 
 /** Resultado de «Probar conexión». */
 sealed interface EstadoPrueba {
@@ -63,37 +62,27 @@ fun TarjetaInternet(
 ) {
     var pedirConsentimiento by rememberSaveable { mutableStateOf(false) }
 
-    Card(Modifier.fillMaxWidth()) {
-        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Text(
-                stringResource(R.string.remota_titulo),
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.semantics { heading() },
-            )
-            Text(stringResource(R.string.remota_explicacion), style = MaterialTheme.typography.bodyMedium)
+    TarjetaBrutal(espacio = 12.dp) {
+        TituloSeccion(stringResource(R.string.remota_titulo))
+        Text(stringResource(R.string.remota_explicacion), style = MaterialTheme.typography.bodyMedium)
 
-            if (!consentimiento) {
-                Button(onClick = { pedirConsentimiento = true }) { Text(stringResource(R.string.remota_activar)) }
-            } else {
-                AjustesInternet(hayClave, modelo, preferencia, prueba, onConsentimiento, onGuardarClave, onBorrarClave, onModelo, onPreferencia, onProbar)
-            }
+        if (!consentimiento) {
+            BotonBrutal(stringResource(R.string.remota_activar), onClick = { pedirConsentimiento = true }, color = ColoresBrutal.Magenta)
+        } else {
+            AjustesInternet(hayClave, modelo, preferencia, prueba, onConsentimiento, onGuardarClave, onBorrarClave, onModelo, onPreferencia, onProbar)
         }
     }
 
     if (pedirConsentimiento) {
-        AlertDialog(
-            onDismissRequest = { pedirConsentimiento = false },
-            title = { Text(stringResource(R.string.remota_consentimiento_titulo)) },
-            text = { Text(stringResource(R.string.remota_consentimiento_texto)) },
-            confirmButton = {
-                Button(onClick = {
-                    pedirConsentimiento = false
-                    onConsentimiento(true)
-                }) { Text(stringResource(R.string.remota_acepto)) }
+        DialogoBrutal(
+            titulo = stringResource(R.string.remota_consentimiento_titulo),
+            texto = stringResource(R.string.remota_consentimiento_texto),
+            accion = stringResource(R.string.remota_acepto),
+            onAccion = {
+                pedirConsentimiento = false
+                onConsentimiento(true)
             },
-            dismissButton = {
-                TextButton(onClick = { pedirConsentimiento = false }) { Text(stringResource(R.string.accion_cancelar)) }
-            },
+            onCerrar = { pedirConsentimiento = false },
         )
     }
 }
@@ -111,63 +100,63 @@ private fun AjustesInternet(
     onPreferencia: (PreferenciaInterprete) -> Unit,
     onProbar: () -> Unit,
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(stringResource(R.string.remota_permitida), modifier = Modifier.weight(1f))
-            Switch(checked = true, onCheckedChange = { if (!it) onConsentimiento(false) })
-        }
+    val brutal = LocalBrutal.current
+    Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+        FilaInterruptor(
+            texto = stringResource(R.string.remota_permitida),
+            activo = true,
+            onCambio = { if (!it) onConsentimiento(false) },
+        )
+        Separador()
 
         if (hayClave) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(stringResource(R.string.remota_clave_guardada), modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium)
-                TextButton(onClick = onBorrarClave) { Text(stringResource(R.string.remota_borrar_clave)) }
+                BotonBrutal(stringResource(R.string.remota_borrar_clave), onBorrarClave, variante = VarianteBoton.Texto)
             }
         } else {
             var clave by rememberSaveable { mutableStateOf("") }
-            OutlinedTextField(
-                value = clave,
-                onValueChange = { clave = it },
-                label = { Text(stringResource(R.string.remota_clave)) },
-                singleLine = true,
+            CampoBrutal(
+                valor = clave,
+                onCambio = { clave = it },
+                etiqueta = stringResource(R.string.remota_clave),
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                modifier = Modifier.fillMaxWidth(),
             )
-            Text(stringResource(R.string.remota_clave_ayuda), style = MaterialTheme.typography.bodySmall)
-            Button(onClick = { onGuardarClave(clave); clave = "" }, enabled = clave.isNotBlank()) {
-                Text(stringResource(R.string.remota_guardar_clave))
-            }
+            Text(stringResource(R.string.remota_clave_ayuda), style = MaterialTheme.typography.bodySmall, color = brutal.textoSuave)
+            BotonBrutal(
+                stringResource(R.string.remota_guardar_clave),
+                onClick = { onGuardarClave(clave); clave = "" },
+                enabled = clave.isNotBlank(),
+            )
         }
 
         var modeloEditado by rememberSaveable(modelo) { mutableStateOf(modelo) }
-        OutlinedTextField(
-            value = modeloEditado,
-            onValueChange = { modeloEditado = it },
-            label = { Text(stringResource(R.string.remota_modelo)) },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
-        )
+        CampoBrutal(valor = modeloEditado, onCambio = { modeloEditado = it }, etiqueta = stringResource(R.string.remota_modelo))
         if (modeloEditado.trim() != modelo) {
-            TextButton(onClick = { onModelo(modeloEditado) }) { Text(stringResource(R.string.remota_usar_modelo)) }
+            BotonBrutal(stringResource(R.string.remota_usar_modelo), onClick = { onModelo(modeloEditado) }, variante = VarianteBoton.Secundario)
         }
 
+        Separador()
         Text(stringResource(R.string.remota_cuando), style = MaterialTheme.typography.titleSmall)
-        Column(Modifier.selectableGroup()) {
+        Column(Modifier.grupoOpciones()) {
             OpcionPreferencia(PreferenciaInterprete.AUTOMATICO, R.string.remota_pref_auto, preferencia, onPreferencia)
             OpcionPreferencia(PreferenciaInterprete.PREFERIR_INTERNET, R.string.remota_pref_internet, preferencia, onPreferencia)
             OpcionPreferencia(PreferenciaInterprete.SOLO_TELEFONO, R.string.remota_pref_telefono, preferencia, onPreferencia)
         }
 
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            OutlinedButton(onClick = onProbar, enabled = hayClave && prueba != EstadoPrueba.Probando) {
-                Text(stringResource(R.string.remota_probar))
-            }
-            when (prueba) {
-                EstadoPrueba.Ninguna -> Unit
-                EstadoPrueba.Probando -> Text(stringResource(R.string.remota_probando))
-                EstadoPrueba.Correcta -> Text(stringResource(R.string.remota_prueba_ok), color = MaterialTheme.colorScheme.primary)
-                is EstadoPrueba.Fallida -> Text(prueba.motivo, color = MaterialTheme.colorScheme.error)
-            }
+        Separador()
+        BotonBrutal(
+            stringResource(R.string.remota_probar),
+            onClick = onProbar,
+            variante = VarianteBoton.Secundario,
+            enabled = hayClave && prueba != EstadoPrueba.Probando,
+        )
+        when (prueba) {
+            EstadoPrueba.Ninguna -> Unit
+            EstadoPrueba.Probando -> Text(stringResource(R.string.remota_probando))
+            EstadoPrueba.Correcta -> AvisoBrutal(stringResource(R.string.remota_prueba_ok), tipo = TipoAviso.Info)
+            is EstadoPrueba.Fallida -> AvisoBrutal(prueba.motivo, tipo = TipoAviso.Error)
         }
     }
 }
@@ -179,14 +168,5 @@ private fun OpcionPreferencia(
     actual: PreferenciaInterprete,
     onElegir: (PreferenciaInterprete) -> Unit,
 ) {
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .selectable(selected = valor == actual, onClick = { onElegir(valor) }, role = Role.RadioButton)
-            .padding(vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        RadioButton(selected = valor == actual, onClick = null)
-        Text(stringResource(texto), modifier = Modifier.padding(start = 8.dp), style = MaterialTheme.typography.bodyMedium)
-    }
+    OpcionBrutal(stringResource(texto), elegida = valor == actual, onElegir = { onElegir(valor) })
 }

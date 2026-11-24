@@ -29,12 +29,39 @@ val Atkinson = FontFamily(
     peso(FontWeight.ExtraBold),
 )
 
+/** Archivo Black (SIL OFL 1.1): un solo peso, muy grueso. Solo para títulos de las pantallas de menú. */
+val Archivo = FontFamily(Font(R.font.archivo_black, FontWeight.Black))
+
 private val base = Typography()
 
 private fun TextStyle.conAtkinson() = copy(fontFamily = Atkinson)
 
-/** La escala de Material 3 con Atkinson en todos los estilos. */
+private fun TextStyle.conArchivo() = copy(fontFamily = Archivo, fontWeight = FontWeight.Black, letterSpacing = 0.em)
+
+/**
+ * Escala de los menús: títulos en Archivo y todo lo demás en Atkinson, que es la que se lee de corrido.
+ * Las etiquetas van en negrita porque son botones.
+ */
 val TipografiaSenas = Typography(
+    displayLarge = base.displayLarge.conArchivo(),
+    displayMedium = base.displayMedium.conArchivo(),
+    displaySmall = base.displaySmall.conArchivo(),
+    headlineLarge = base.headlineLarge.conArchivo(),
+    headlineMedium = base.headlineMedium.conArchivo(),
+    headlineSmall = base.headlineSmall.conArchivo(),
+    titleLarge = base.titleLarge.conArchivo(),
+    titleMedium = base.titleMedium.conAtkinson().copy(fontWeight = FontWeight.Bold),
+    titleSmall = base.titleSmall.conAtkinson().copy(fontWeight = FontWeight.Bold),
+    bodyLarge = base.bodyLarge.conAtkinson(),
+    bodyMedium = base.bodyMedium.conAtkinson(),
+    bodySmall = base.bodySmall.conAtkinson(),
+    labelLarge = base.labelLarge.conAtkinson().copy(fontWeight = FontWeight.Bold),
+    labelMedium = base.labelMedium.conAtkinson().copy(fontWeight = FontWeight.Bold),
+    labelSmall = base.labelSmall.conAtkinson().copy(fontWeight = FontWeight.Bold),
+)
+
+/** La escala de Material 3 con Atkinson en todos los estilos, como la usa la vista de cámara. */
+val TipografiaCamara = Typography(
     displayLarge = base.displayLarge.conAtkinson(),
     displayMedium = base.displayMedium.conAtkinson(),
     displaySmall = base.displaySmall.conAtkinson(),

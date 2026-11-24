@@ -2,28 +2,27 @@ package com.lhansqw.senaslsc.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.lhansqw.senaslsc.BuildConfig
@@ -31,9 +30,18 @@ import com.lhansqw.senaslsc.R
 import com.lhansqw.senaslsc.dispositivo.CapacidadDispositivo
 import com.lhansqw.senaslsc.dispositivo.EvaluadorCapacidad
 import com.lhansqw.senaslsc.dispositivo.PerfilDispositivo
+import com.lhansqw.senaslsc.ui.brutal.AvisoBrutal
+import com.lhansqw.senaslsc.ui.brutal.BotonBrutal
+import com.lhansqw.senaslsc.ui.brutal.Insignia
+import com.lhansqw.senaslsc.ui.brutal.Separador
+import com.lhansqw.senaslsc.ui.brutal.TarjetaBrutal
+import com.lhansqw.senaslsc.ui.brutal.TipoAviso
+import com.lhansqw.senaslsc.ui.brutal.TituloSeccion
+import com.lhansqw.senaslsc.ui.brutal.VarianteBoton
+import com.lhansqw.senaslsc.ui.theme.ColoresBrutal
+import com.lhansqw.senaslsc.ui.theme.LocalBrutal
 import com.lhansqw.senaslsc.ui.theme.TemaSenasLSC
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PantallaInicio(
     perfil: PerfilDispositivo,
@@ -46,138 +54,155 @@ fun PantallaInicio(
     onAbrirGrabacion: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Scaffold(
-        modifier = modifier.fillMaxSize(),
-        topBar = { TopAppBar(title = { Text(stringResource(R.string.app_name)) }) },
-    ) { relleno ->
+    val brutal = LocalBrutal.current
+    Scaffold(modifier = modifier.fillMaxSize()) { relleno ->
         Column(
             modifier = Modifier
                 .padding(relleno)
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+                .padding(horizontal = 16.dp, vertical = 20.dp),
+            verticalArrangement = Arrangement.spacedBy(18.dp),
         ) {
-            Text(
-                text = stringResource(R.string.inicio_titulo),
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.semantics { heading() },
-            )
-            Text(
-                text = stringResource(R.string.inicio_descripcion),
-                style = MaterialTheme.typography.bodyLarge,
-            )
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    text = stringResource(R.string.app_name),
+                    style = MaterialTheme.typography.displaySmall,
+                    modifier = Modifier.semantics { heading() },
+                )
+                Text(text = stringResource(R.string.inicio_titulo), style = MaterialTheme.typography.titleMedium)
+                Text(
+                    text = stringResource(R.string.inicio_descripcion),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = brutal.textoSuave,
+                )
+            }
 
-            Button(
+            BotonBrutal(
                 onClick = onAbrirCamara,
                 enabled = capacidad.reconocedorLocal,
-                modifier = Modifier.fillMaxWidth(),
-            ) { Text(stringResource(R.string.inicio_abrir_camara)) }
-            OutlinedButton(
-                onClick = onAbrirIa,
-                modifier = Modifier.fillMaxWidth(),
-            ) { Text(stringResource(R.string.inicio_abrir_ia)) }
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-                OutlinedButton(onClick = onAbrirVocabulario, modifier = Modifier.weight(1f)) {
-                    Text(stringResource(R.string.inicio_abrir_vocabulario))
-                }
-                OutlinedButton(onClick = onAbrirHistorial, modifier = Modifier.weight(1f)) {
-                    Text(stringResource(R.string.inicio_abrir_historial))
-                }
+                modifier = Modifier.fillMaxWidth().heightIn(min = 88.dp),
+            ) {
+                Text(stringResource(R.string.inicio_abrir_camara), style = MaterialTheme.typography.headlineSmall)
+            }
+            // Sin reconocedor la cámara no sirve: se dice por qué en vez de dejar el botón apagado sin más.
+            if (!capacidad.reconocedorLocal && capacidad.motivos.isNotEmpty()) {
+                AvisoBrutal(capacidad.motivos.joinToString("\n"), tipo = TipoAviso.Error)
             }
 
-            TextButton(onClick = onAbrirGrabacion, enabled = capacidad.reconocedorLocal, modifier = Modifier.fillMaxWidth()) {
-                Text(stringResource(R.string.inicio_abrir_grabacion))
-            }
-            TextButton(onClick = onAbrirAcerca, modifier = Modifier.fillMaxWidth()) {
-                Text(stringResource(R.string.inicio_abrir_acerca))
-            }
+            Mosaicos(
+                Mosaico(R.string.inicio_abrir_ia, ColoresBrutal.Magenta, onAbrirIa),
+                Mosaico(R.string.inicio_abrir_vocabulario, ColoresBrutal.Amarillo, onAbrirVocabulario),
+            )
+            Mosaicos(
+                Mosaico(R.string.inicio_abrir_historial, null, onAbrirHistorial),
+                Mosaico(R.string.inicio_abrir_grabacion, null, onAbrirGrabacion, enabled = capacidad.reconocedorLocal),
+            )
+            BotonBrutal(
+                stringResource(R.string.inicio_abrir_acerca),
+                onClick = onAbrirAcerca,
+                variante = VarianteBoton.Texto,
+                modifier = Modifier.fillMaxWidth(),
+            )
 
             TarjetaDispositivo(perfil, capacidad)
-            TarjetaLimitaciones()
+            AvisoBrutal(stringResource(R.string.limitaciones_texto), titulo = stringResource(R.string.limitaciones_titulo))
 
-            Text(
-                text = stringResource(R.string.inicio_version, BuildConfig.VERSION_NAME),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+            Insignia(stringResource(R.string.inicio_version, BuildConfig.VERSION_NAME))
+        }
+    }
+}
+
+/** Un acceso de la cuadrícula de inicio. Sin color usa el de la superficie. */
+private class Mosaico(val texto: Int, val color: Color?, val onClick: () -> Unit, val enabled: Boolean = true)
+
+/** Dos mosaicos lado a lado, con la misma altura aunque uno tenga más texto. */
+@Composable
+private fun Mosaicos(izquierdo: Mosaico, derecho: Mosaico) {
+    Row(
+        Modifier.fillMaxWidth().height(IntrinsicSize.Min),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        listOf(izquierdo, derecho).forEach { m ->
+            BotonBrutal(
+                onClick = m.onClick,
+                enabled = m.enabled,
+                variante = VarianteBoton.Secundario,
+                color = m.color,
+                modifier = Modifier.weight(1f).fillMaxHeight().heightIn(min = 96.dp),
+            ) {
+                Text(stringResource(m.texto), style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center)
+            }
         }
     }
 }
 
 @Composable
 private fun TarjetaDispositivo(perfil: PerfilDispositivo, capacidad: CapacidadDispositivo) {
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(
-                text = stringResource(R.string.dispositivo_titulo),
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.semantics { heading() },
-            )
-            Fila(stringResource(R.string.dispositivo_android), "API ${perfil.nivelApi}")
-            Fila(stringResource(R.string.dispositivo_ram), EvaluadorCapacidad.formatearGb(perfil.ramTotalMb))
-            Fila(stringResource(R.string.dispositivo_nucleos), perfil.nucleos.toString())
-            Fila(
-                stringResource(R.string.dispositivo_reconocedor),
-                estado(capacidad.reconocedorLocal),
-            )
-            Fila(
-                stringResource(R.string.dispositivo_interprete),
-                if (capacidad.interpreteLocal) {
-                    stringResource(R.string.estado_disponible)
-                } else {
-                    stringResource(R.string.estado_solo_reglas)
-                },
-            )
+    TarjetaBrutal(espacio = 10.dp) {
+        TituloSeccion(stringResource(R.string.dispositivo_titulo))
+        Separador()
+        Fila(stringResource(R.string.dispositivo_android)) { Valor("API ${perfil.nivelApi}") }
+        Separador()
+        Fila(stringResource(R.string.dispositivo_ram)) { Valor(EvaluadorCapacidad.formatearGb(perfil.ramTotalMb)) }
+        Separador()
+        Fila(stringResource(R.string.dispositivo_nucleos)) { Valor(perfil.nucleos.toString()) }
+        Separador()
+        Fila(stringResource(R.string.dispositivo_reconocedor)) {
+            if (capacidad.reconocedorLocal) {
+                Insignia(stringResource(R.string.estado_disponible), color = ColoresBrutal.Cian)
+            } else {
+                Insignia(stringResource(R.string.estado_no_disponible))
+            }
+        }
+        Separador()
+        Fila(stringResource(R.string.dispositivo_interprete)) {
+            if (capacidad.interpreteLocal) {
+                Insignia(stringResource(R.string.estado_disponible), color = ColoresBrutal.Cian)
+            } else {
+                Insignia(stringResource(R.string.estado_solo_reglas), color = ColoresBrutal.Amarillo)
+            }
+        }
+        // Si falta el reconocedor, los motivos ya están en el aviso de arriba.
+        if (capacidad.reconocedorLocal) {
             capacidad.motivos.forEach { motivo ->
-                Text(
-                    text = motivo,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+                Text(text = motivo, style = MaterialTheme.typography.bodyMedium, color = LocalBrutal.current.textoSuave)
             }
         }
     }
 }
 
 @Composable
-private fun TarjetaLimitaciones() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-        ),
+private fun Fila(etiqueta: String, valor: @Composable () -> Unit) {
+    Row(
+        Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(
-                text = stringResource(R.string.limitaciones_titulo),
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.semantics { heading() },
-            )
-            Text(
-                text = stringResource(R.string.limitaciones_texto),
-                style = MaterialTheme.typography.bodyMedium,
-            )
-        }
+        Text(etiqueta, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
+        valor()
     }
 }
 
 @Composable
-private fun Fila(etiqueta: String, valor: String) {
-    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-        Text(etiqueta, style = MaterialTheme.typography.bodyMedium)
-        Text(valor, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
-    }
+private fun Valor(texto: String) {
+    Text(texto, style = MaterialTheme.typography.titleSmall)
 }
 
-@Composable
-private fun estado(disponible: Boolean): String =
-    stringResource(if (disponible) R.string.estado_disponible else R.string.estado_no_disponible)
-
-@Preview(showBackground = true, name = "Gama media")
+@Preview(showBackground = true, name = "Gama media · claro", heightDp = 1400)
+@Preview(showBackground = true, name = "Gama media · oscuro", heightDp = 1400, uiMode = 0x21)
 @Composable
 private fun VistaPreviaInicio() {
     val perfil = PerfilDispositivo(nivelApi = 34, ramTotalMb = 3_800, esDispositivoBajaMemoria = false, nucleos = 8)
-    TemaSenasLSC(colorDinamico = false) {
+    TemaSenasLSC {
+        PantallaInicio(perfil, EvaluadorCapacidad.evaluar(perfil), onAbrirCamara = {}, onAbrirIa = {}, onAbrirHistorial = {}, onAbrirVocabulario = {}, onAbrirAcerca = {}, onAbrirGrabacion = {})
+    }
+}
+
+@Preview(showBackground = true, name = "Gama baja", heightDp = 1400)
+@Composable
+private fun VistaPreviaInicioGamaBaja() {
+    val perfil = PerfilDispositivo(nivelApi = 26, ramTotalMb = 1_500, esDispositivoBajaMemoria = true, nucleos = 4)
+    TemaSenasLSC {
         PantallaInicio(perfil, EvaluadorCapacidad.evaluar(perfil), onAbrirCamara = {}, onAbrirIa = {}, onAbrirHistorial = {}, onAbrirVocabulario = {}, onAbrirAcerca = {}, onAbrirGrabacion = {})
     }
 }

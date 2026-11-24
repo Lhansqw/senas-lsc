@@ -52,7 +52,7 @@ import com.lhansqw.senaslsc.core.model.SenaConfirmada
 import com.lhansqw.senaslsc.core.model.TipoSena
 import com.lhansqw.senaslsc.ui.theme.ColoresCamara
 import com.lhansqw.senaslsc.ui.theme.EstiloCamara
-import com.lhansqw.senaslsc.ui.theme.TemaSenasLSC
+import com.lhansqw.senaslsc.ui.theme.TemaCamara
 
 /** El velo es blando (radio grande); el papel es un recorte (radio pequeño). Así se distinguen. */
 private val FormaVelo = RoundedCornerShape(20.dp)
@@ -399,7 +399,7 @@ private fun VistaPreviaPanel() {
             preguntaAclaracion = null,
         ),
     )
-    TemaSenasLSC(oscuro = true, colorDinamico = false) {
+    TemaCamara {
         Box(Modifier.padding(12.dp)) {
             PanelReconocimiento(estado, {}, {}, {}, onGuardar = {}, detalles = true)
         }
