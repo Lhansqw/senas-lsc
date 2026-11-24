@@ -9,6 +9,7 @@ import com.lhansqw.senaslsc.historial.ServicioHistorial
 import com.lhansqw.senaslsc.ia.PreferenciasIa
 import com.lhansqw.senaslsc.ia.PreferenciasIaRemota
 import com.lhansqw.senaslsc.interpreter.litertlm.GestorModeloLenguaje
+import com.lhansqw.senaslsc.ui.theme.PreferenciasTema
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -28,4 +29,5 @@ class SenasApp : Application() {
     val gestorModelo: GestorModeloLenguaje by lazy { GestorModeloLenguaje(this, ambito) }
     val preferenciasHistorial: PreferenciasHistorial by lazy { PreferenciasHistorial(this) }
     val historial: ServicioHistorial by lazy { ServicioHistorial(this, ambito).also { it.cargar() } }
+    val preferenciasTema: PreferenciasTema by lazy { PreferenciasTema(this) }
 }
